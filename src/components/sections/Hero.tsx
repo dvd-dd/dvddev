@@ -77,21 +77,14 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Stronger zoom (1.0 → 1.22) makes the scroll-driven transform read
-  // as a clear response to scrolling, not as ambient video motion.
+  // Only the video reads from scroll. Previously the overlay also bound
+  // its opacity + y to scrollYProgress, but on initial mount the motion
+  // value sequence (uninitialized → 0 → measured) flickered the overlay
+  // to opacity 0 and never recovered, making logo + HUDs disappear.
+  // Solution: leave the overlay in normal document flow — it scrolls
+  // out with the section naturally, no extra transforms required.
   const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.22]);
   const videoY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
-
-  // Hold the HTML overlay (logo + HUD + CTA) visible across more of
-  // the scroll range — fading at 40% felt like the page went blank
-  // before the next section arrived. Now: full visibility until 50%,
-  // gone by 75%.
-  const overlayOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.5, 0.75],
-    [1, 1, 0]
-  );
-  const overlayY = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
 
   return (
     <section
@@ -121,10 +114,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/3 bg-gradient-to-t from-space-black/80 to-transparent"
       />
 
-      <motion.div
-        style={{ opacity: overlayOpacity, y: overlayY }}
-        className="relative z-20 mx-auto flex h-full max-w-7xl flex-col items-center justify-between px-6 py-8 md:px-12 md:py-12"
-      >
+      <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col items-center justify-between px-6 py-8 md:px-12 md:py-12">
         <motion.div
           variants={hudContainer}
           initial="hidden"
@@ -185,7 +175,7 @@ export function Hero() {
           </motion.span>
           <motion.span variants={hudItem}>{t.hud.version}</motion.span>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }
