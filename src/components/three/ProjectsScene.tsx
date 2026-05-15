@@ -75,6 +75,12 @@ export function ProjectsScene({ activeId, onActivate }: ProjectsSceneProps) {
 
   return (
     <Canvas
+      // !absolute inset-0 forces the canvas to fill its sticky parent
+      // regardless of how R3F's default `position: relative; width: 100%;
+      // height: 100%` interacts with the parent's sticky + overflow-hidden
+      // (which can otherwise collapse the canvas to 0×0 — that's why
+      // earlier scrolling past the section showed empty).
+      className="!absolute inset-0"
       camera={{ position: [0, 0, 9], fov: 50 }}
       dpr={[1, 1.5]}
       gl={{
