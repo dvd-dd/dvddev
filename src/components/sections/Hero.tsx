@@ -116,10 +116,11 @@ export function Hero() {
         </motion.div>
 
         <div className="flex flex-col items-center text-center">
-          <div className="w-[70vw] max-w-[1100px] md:w-[55vw] lg:w-[50vw]">
-            {/* No `color` prop → cosmic violet→magenta gradient with
-                purple aurora glow. Pops against the warm-gold Saturn
-                video underneath via complementary contrast. */}
+          <div className="w-[80vw] max-w-[1300px] md:w-[65vw] lg:w-[58vw]">
+            {/* Sized up from 70/55/50vw → 80/65/58vw so the logo owns
+                more of the frame against the Saturn backdrop. No
+                `color` prop = pink-galaxy gradient with tight nebula
+                glow (see DvdLogo). */}
             <DvdLogo className="h-auto w-full" />
           </div>
 

@@ -91,15 +91,19 @@ export interface DvdLogoProps {
   color?: string;
 }
 
-// Pink-galaxy gradient — leads with hot pink/rose so the read is
-// "Carina Nebula", not "generic violet brand". Magenta + fuchsia
-// stops bridge into a soft pink tail so the right glyph doesn't
-// dump back to the same hue as the left.
+// Pink-galaxy gradient — leads with hot pink, has a near-white
+// pink-starlight hot-spot mid-stroke (offset 50%), then ramps back
+// into magenta and finishes in soft pink. The white-ish core is the
+// trick that gives the outlined letters DEFINITION against the
+// warm-gold Saturn underneath: a single high-luminance stop reads
+// as the "centerline" of each stroke and keeps the silhouette
+// crisp instead of dissolving into the glow halo.
 const COSMIC_STOPS = [
-  { offset: "0%", color: "#f43f5e" }, // rose-500 (hot)
-  { offset: "35%", color: "#ec4899" }, // pink-500
-  { offset: "65%", color: "#d946ef" }, // fuchsia-500 (magenta bridge)
-  { offset: "100%", color: "#fbcfe8" }, // pink-200 (soft starlight tail)
+  { offset: "0%", color: "#f43f5e" }, // rose-500 (hot lead-in)
+  { offset: "30%", color: "#ec4899" }, // pink-500
+  { offset: "50%", color: "#fce7f3" }, // pink-100 (starlight core)
+  { offset: "70%", color: "#d946ef" }, // fuchsia-500 (magenta bridge)
+  { offset: "100%", color: "#f9a8d4" }, // pink-300 (soft tail)
 ] as const;
 
 // Stable id — only one DvdLogo renders on the page at a time, but
@@ -138,16 +142,17 @@ export function DvdLogo({ className, color }: DvdLogoProps) {
       style={
         useGradient
           ? {
-              // Pink-galaxy aura — three drop-shadows stacked for a
-              // depth-of-glow effect:
-              //   • 16px tight rose halo hugs the silhouette
-              //   • 40px mid fuchsia wash gives core radiance
-              //   • 80px wide pink bleed pushes the light into the
-              //     surrounding space, reads as nebula illumination
-              // Filter applies after the clip-path paint reveal so the
-              // glow expands with each glyph as it lands.
+              // Tightened pink-galaxy aura — the previous 80px spread
+              // bled too far and washed the outlined letters out
+              // ("estourou"). Pulled radii in (14/28/52) and bumped
+              // opacities (0.85 / 0.65 / 0.45) so the same glow
+              // intensity stays concentrated NEAR the silhouette
+              // instead of dissipating into the background.
+              //   • 14px rose halo hugs the stroke
+              //   • 28px fuchsia mid-glow defines the letter edge
+              //   • 52px pink bleed reads as nebula light, not blur
               filter:
-                "drop-shadow(0 0 16px rgba(244, 63, 94, 0.65)) drop-shadow(0 0 40px rgba(217, 70, 239, 0.5)) drop-shadow(0 0 80px rgba(236, 72, 153, 0.35))",
+                "drop-shadow(0 0 14px rgba(244, 63, 94, 0.85)) drop-shadow(0 0 28px rgba(217, 70, 239, 0.65)) drop-shadow(0 0 52px rgba(236, 72, 153, 0.45))",
             }
           : undefined
       }
