@@ -133,6 +133,15 @@ export function Planet({
           map={texture}
           roughness={0.85}
           metalness={0}
+          // Emissive fallback — keeps the planet readable even on its
+          // dark hemisphere when lighting alone isn't enough. Using
+          // the texture as the emissive map means surface detail
+          // carries through into the self-glow rather than washing
+          // the whole sphere uniform. Intensity 0.12 stays well under
+          // "neon" — just enough to never go pitch black.
+          emissiveMap={texture}
+          emissive={new Color(project.planet.atmosphereColor)}
+          emissiveIntensity={0.12}
         />
       </mesh>
 

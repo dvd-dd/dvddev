@@ -48,10 +48,9 @@ export const PROJECTS: Project[] = [
     techStack: ["Next.js", "Tailwind", "i18n PT/EN", "Dynamic Routes"],
     planet: {
       // Jupiter — the "anchor world" at the center of the system.
-      // Slight tilt none; this is the keystone project.
       texture: "/textures/8k_jupiter.jpg",
       position: [0, 0, 0],
-      radius: 1.7,
+      radius: 1.45,
       atmosphereColor: "#d4a574", // saturn-gold echo
       rotationSpeed: 0.0012,
     },
@@ -65,8 +64,8 @@ export const PROJECTS: Project[] = [
     techStack: ["Next.js", "i18n EN/ES", "3D Configurator", "Image Optim"],
     planet: {
       texture: "/textures/8k_mars.jpg",
-      position: [-2.7, -0.4, -0.5],
-      radius: 1.25,
+      position: [-3.5, -0.4, -0.5],
+      radius: 1.05,
       atmosphereColor: "#c4623a", // mars red-orange
       rotationSpeed: 0.0008,
     },
@@ -80,8 +79,8 @@ export const PROJECTS: Project[] = [
     planet: {
       // Uranus + a violet ring drives the security/cyberpunk read.
       texture: "/textures/8k_uranus.jpg",
-      position: [2.7, 0.5, -0.5],
-      radius: 1.3,
+      position: [3.5, 0.5, -0.5],
+      radius: 1.1,
       atmosphereColor: "#7c3aed", // phoenix purple
       rotationSpeed: 0.0010,
       ringEnabled: true,
@@ -96,8 +95,8 @@ export const PROJECTS: Project[] = [
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
     planet: {
       texture: "/textures/8k_neptune.jpg",
-      position: [-1.8, 1.0, -2.2],
-      radius: 1.0,
+      position: [-2.4, 1.0, -2.2],
+      radius: 0.85,
       atmosphereColor: "#1f6bff", // pecaai electric blue
       rotationSpeed: 0.0009,
     },
@@ -112,8 +111,8 @@ export const PROJECTS: Project[] = [
       // Mercury — quiet, monastic, gold-lit. Matches Luxor's
       // editorial-luxury palette without forcing a custom texture.
       texture: "/textures/8k_mercury.jpg",
-      position: [1.9, -1.1, -2.0],
-      radius: 0.95,
+      position: [2.5, -1.1, -2.0],
+      radius: 0.8,
       atmosphereColor: "#d4a853", // luxor gold
       rotationSpeed: 0.0006,
     },
@@ -129,7 +128,7 @@ export const PROJECTS: Project[] = [
       // Wood Frame's natural-material palette better than a gas giant.
       texture: "/textures/8k_venus_surface.jpg",
       position: [0.4, 1.6, -3],
-      radius: 0.85,
+      radius: 0.7,
       atmosphereColor: "#b8956a", // wood-accent brown
       rotationSpeed: 0.0005,
     },

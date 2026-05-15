@@ -1,8 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { ProjectInfoPanel } from "@/components/ui/ProjectInfoPanel";
 import { CaseStudyModal } from "@/components/ui/CaseStudyModal";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -37,6 +37,16 @@ export function Projects() {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  // Lazy-mount the 3D scene: only construct the WebGL context + load
+  // the planet textures when the section is approaching the viewport,
+  // and tear it down once it's fully scrolled off.
+  // Frees ~60–80 MB of GPU memory (textures + framebuffers + post-FX
+  // buffers) and stops the per-frame render loop while the user is
+  // anywhere else on the page. `margin: "200px"` pre-warms ~200px
+  // before the section becomes visible so there's no pop-in at entry.
+  const sectionRef = useRef<HTMLElement>(null);
+  const sceneInView = useInView(sectionRef, { margin: "200px" });
+
   const handleActivate = (project: Project) => {
     setActiveProject(project);
   };
@@ -56,17 +66,22 @@ export function Projects() {
 
   return (
     <section
+      ref={sectionRef}
       id="projects"
       className="relative min-h-[200vh] w-full bg-gradient-to-b from-deep-space via-space-black to-deep-space"
     >
       {/* Sticky inner — keeps the scene pinned for an extra viewport
           of scroll so the user can pause to investigate. */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* 3D scene as the interactive backdrop. */}
-        <ProjectsScene
-          activeId={activeProject?.id ?? null}
-          onActivate={handleActivate}
-        />
+        {/* 3D scene gated on viewport proximity. Unmounted when the
+            user is elsewhere on the page so we don't burn GPU + RAM
+            on idle planets. */}
+        {sceneInView && (
+          <ProjectsScene
+            activeId={activeProject?.id ?? null}
+            onActivate={handleActivate}
+          />
+        )}
 
         {/* Chapter header overlaid at the top. Pointer-events off
             on the wrapper so it never blocks planet clicks; chrome

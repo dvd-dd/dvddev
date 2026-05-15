@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
 import {
   Bloom,
   EffectComposer,
@@ -81,7 +82,7 @@ export function ProjectsScene({ activeId, onActivate }: ProjectsSceneProps) {
       // (which can otherwise collapse the canvas to 0×0 — that's why
       // earlier scrolling past the section showed empty).
       className="!absolute inset-0"
-      camera={{ position: [0, 0, 9], fov: 50 }}
+      camera={{ position: [0, 0, 11], fov: 50 }}
       dpr={[1, 1.5]}
       gl={{
         antialias: true,
@@ -91,21 +92,46 @@ export function ProjectsScene({ activeId, onActivate }: ProjectsSceneProps) {
         toneMappingExposure: 1.0,
       }}
     >
-      {/* Soft fill so no planet hemisphere goes pitch black. */}
-      <ambientLight intensity={0.4} />
+      {/* Milky Way as scene.environment — provides reflective fill on
+          every MeshStandardMaterial. Without this, the planets' shadow
+          hemispheres were rendering as black silhouettes because there
+          was no environment to sample for indirect lighting.
+          background={false} keeps it lighting-only (the HUD already
+          gives us a starfield via HyperspaceStreaks). */}
+      <Suspense fallback={null}>
+        <Environment
+          // 2k version is the one that actually ships — we downgraded
+          // from 8k earlier when the Saturn-hero context-loss crash
+          // pointed to GPU memory pressure.
+          files="/textures/2k_stars_milky_way.jpg"
+          background={false}
+          environmentIntensity={0.4}
+        />
+      </Suspense>
 
-      {/* Warm key light — same direction as the hero scene to keep
-          a consistent sunlight angle across the page. */}
+      {/* Strong ambient fill so even unlit hemispheres read clearly. */}
+      <ambientLight intensity={0.9} />
+
+      {/* Warm key light — primary illumination from upper-right. */}
       <directionalLight
         position={[3, 4, 5]}
-        intensity={1.2}
+        intensity={2.0}
         color="#fff4d6"
       />
 
-      {/* Cool back rim from the far side — distant nebula bounce. */}
+      {/* Cool fill light from opposite side — reads as bounce from
+          distant nebula and ensures the planets have visible form on
+          the side the key doesn't reach. */}
+      <directionalLight
+        position={[-3, -2, 4]}
+        intensity={0.7}
+        color="#88aaff"
+      />
+
+      {/* Cool back rim — distant point source for silhouette pop. */}
       <pointLight
         position={[-5, -2, -3]}
-        intensity={0.5}
+        intensity={0.7}
         color="#5577aa"
       />
 
@@ -126,7 +152,10 @@ export function ProjectsScene({ activeId, onActivate }: ProjectsSceneProps) {
 
         <EffectComposer>
           <Bloom
-            intensity={0.45}
+            // Pulled from 0.45 → 0.3 because the planets now have
+            // much stronger direct + env lighting; aggressive bloom
+            // would mask the texture detail we just unlocked.
+            intensity={0.3}
             luminanceThreshold={0.55}
             luminanceSmoothing={0.9}
           />
