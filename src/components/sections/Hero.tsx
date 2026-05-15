@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HUDPanel } from "@/components/ui/HUDPanel";
@@ -50,12 +50,13 @@ const copyItem = {
 export function Hero() {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
-  // Note: the <video> element is intentionally NEVER played. With
-  // preload="auto" and no autoPlay/play() call, the browser loads
-  // the first frame and holds it as a static image — full H.264
-  // fidelity, no JPG compression artifacts the poster would have.
-  // The orbital animation was distracting under the logo's paint
-  // reveal; freezing on frame 0 lets the cosmic gradient shine.
+  // Note: we use the poster JPG as a plain <img>, not the <video>
+  // element. The video was paused on frame 0 anyway (showing the
+  // poster image visually), but the <video> element keeps a decoder
+  // pipeline active and forces a separate compositing layer that's
+  // expensive to transform every frame — that's what was making the
+  // scroll zoom feel laggy. An <img> with the same poster renders
+  // pixel-identical and transforms straight on the GPU.
 
   // Scroll-driven cinematic. Offset maps "hero top at top of viewport"
   // → "hero bottom at top of viewport" to scrollYProgress 0 → 1 across
@@ -65,14 +66,22 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Only the video reads from scroll. Previously the overlay also bound
-  // its opacity + y to scrollYProgress, but on initial mount the motion
-  // value sequence (uninitialized → 0 → measured) flickered the overlay
-  // to opacity 0 and never recovered, making logo + HUDs disappear.
-  // Solution: leave the overlay in normal document flow — it scrolls
-  // out with the section naturally, no extra transforms required.
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.22]);
-  const videoY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  // Raw scroll-driven targets. y is in pixels (number) instead of "%"
+  // strings — Framer Motion doesn't have to parse the unit each frame
+  // and the spring layer below can interpolate scalars cleanly.
+  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 1.22]);
+  const rawY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+
+  // Spring layer: scrollYProgress can jitter slightly (especially under
+  // Lenis's lerp + native scroll event timing differences). Piping it
+  // through a stiff spring smooths any micro-stutter into continuous
+  // motion. Tuned for "responsive but never sloppy":
+  //   stiffness 220 = catches up to target within ~150ms
+  //   damping 32    = no perceptible overshoot
+  //   mass 0.45     = light feel, snappy follow-through
+  const springConfig = { stiffness: 220, damping: 32, mass: 0.45 };
+  const videoScale = useSpring(rawScale, springConfig);
+  const videoY = useSpring(rawY, springConfig);
 
   return (
     <section
@@ -80,16 +89,22 @@ export function Hero() {
       id="hero"
       className="relative h-screen w-full overflow-hidden bg-space-black"
     >
-      <motion.video
-        muted
-        playsInline
-        preload="auto"
-        poster="/hero-orbit-poster.jpg"
-        className="absolute inset-0 h-full w-full object-cover"
-        style={{ scale: videoScale, y: videoY }}
-      >
-        <source src="/hero-orbit.mp4" type="video/mp4" />
-      </motion.video>
+      <motion.img
+        src="/hero-orbit-poster.jpg"
+        alt=""
+        aria-hidden
+        draggable={false}
+        className="absolute inset-0 h-full w-full select-none object-cover"
+        // `willChange: transform` promotes the element to its own
+        // GPU compositing layer up front, so the browser doesn't pay
+        // the promotion cost on the first scroll event (the kind of
+        // first-frame hitch that reads as "laggy start").
+        style={{
+          scale: videoScale,
+          y: videoY,
+          willChange: "transform",
+        }}
+      />
 
       <div
         aria-hidden
