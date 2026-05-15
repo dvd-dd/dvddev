@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { scrollVelocityRef } from "@/lib/scrollVelocity";
 
 /**
  * Boots a Lenis instance that drives the page scroll on every RAF tick.
@@ -22,6 +23,13 @@ export function useSmoothScroll() {
       duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+    });
+
+    // Forward Lenis's per-frame velocity into the shared ref so
+    // visual layers (HyperspaceStreaks) can read scroll energy
+    // without a React subscription.
+    lenis.on("scroll", (e: { velocity: number }) => {
+      scrollVelocityRef.current = e.velocity;
     });
 
     let rafId = 0;

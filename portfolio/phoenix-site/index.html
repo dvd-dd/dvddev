@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phoenix — The Security Network</title>
+    <meta
+      name="description"
+      content="AI-native threat detection, response, and protection. Phoenix sees what others miss — and learns from every signal."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 10 L80 50 L65 90 L35 90 L20 50 Z' fill='%237C3AED'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ━━━━━━━━━ NAV ━━━━━━━━━ -->
+    <nav class="nav">
+      <a href="#top" class="nav-brand">
+        <svg class="nav-mark" width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M20 4 L34 20 L27 36 L13 36 L6 20 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+          <path d="M20 12 L26 20 L23 28 L17 28 L14 20 Z" fill="currentColor" />
+        </svg>
+        <span>PHOENIX</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#platform" data-i18n="nav.platform">Platform</a></li>
+        <li><a href="#how" data-i18n="nav.how">How it works</a></li>
+        <li><a href="#dashboard" data-i18n="nav.dashboard">Dashboard</a></li>
+        <li><a href="#developers" data-i18n="nav.developers">Developers</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="nav-lang" role="group" aria-label="Language">
+          <button type="button" class="nav-lang-btn" data-lang="en">EN</button>
+          <span class="nav-lang-sep">/</span>
+          <button type="button" class="nav-lang-btn" data-lang="pt">PT</button>
+        </div>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M6.34 17.66l-1.41 1.41"></path>
+            <path d="M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <a href="#cta" class="nav-cta" data-i18n="nav.cta">Request Access</a>
+        <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu overlay -->
+    <div class="nav-mobile" aria-hidden="true">
+      <button class="nav-mobile-close" type="button" aria-label="Close menu">
+        <span></span><span></span>
+      </button>
+      <ul>
+        <li><a href="#platform" data-i18n="nav.platform">Platform</a></li>
+        <li><a href="#how" data-i18n="nav.how">How it works</a></li>
+        <li><a href="#dashboard" data-i18n="nav.dashboard">Dashboard</a></li>
+        <li><a href="#developers" data-i18n="nav.developers">Developers</a></li>
+        <li><a href="#cta" class="nav-cta" data-i18n="nav.cta">Request Access</a></li>
+      </ul>
+    </div>
+
+    <!-- ━━━━━━━━━ 1. HERO ━━━━━━━━━ -->
+    <section class="hero" id="top">
+      <div class="grid-bg" aria-hidden="true"></div>
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+
+      <div class="hero-inner">
+        <div class="status-pill" data-reveal>
+          <span class="status-dot"></span>
+          <span data-i18n="hero.status">All systems operational</span>
+          <span class="status-sep">·</span>
+          <span class="status-version" data-i18n="hero.version">v4.12 — released today</span>
+        </div>
+
+        <h1 class="hero-title" data-reveal data-i18n-html="hero.titleHtml">
+          We see what<br />
+          <span class="grad">others miss.</span>
+        </h1>
+
+        <p class="hero-sub" data-reveal data-i18n="hero.sub">
+          Phoenix is an AI-native security network that detects, analyzes, and
+          responds to threats in real time — and learns from every signal,
+          across every endpoint, every second of every day.
+        </p>
+
+        <div class="hero-cta-row" data-reveal>
+          <a href="#cta" class="btn btn-primary">
+            <span data-i18n="hero.ctaPrimary">Request Access</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+          <a href="#dashboard" class="btn btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span data-i18n="hero.ctaSecondary">View live dashboard</span>
+          </a>
+        </div>
+
+        <div class="hero-counter" data-reveal>
+          <p class="counter-label" data-i18n="hero.counterLabel">Threats neutralized — last 24 hours</p>
+          <p class="counter-value" data-counter="1247892" data-counter-tick="true">0</p>
+          <div class="counter-bar"><div class="counter-bar-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 2. LIVE FEED ━━━━━━━━━ -->
+    <section class="feed" id="feed">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow" data-i18n="feed.eyebrow">— Live Network</p>
+        <h2 class="section-title" data-i18n="feed.title">A planet under watch.</h2>
+        <p class="section-lede" data-i18n="feed.lede">
+          Every dot is a real-time signal from our global sensor network.
+          Every line is a threat being neutralized while you read this.
+        </p>
+      </div>
+
+      <div class="feed-grid">
+        <!-- Map -->
+        <div class="map-card" data-reveal>
+          <div class="map-card-header">
+            <div class="map-card-title">
+              <span class="map-pulse"></span>
+              <span data-i18n="feed.mapTitle">Global Sensor Network</span>
+            </div>
+            <span class="map-card-meta" data-i18n="feed.mapMeta">237 nodes online</span>
+          </div>
+          <div class="map" aria-hidden="true">
+            <svg viewBox="0 0 800 400" class="map-svg">
+              <!-- simplified continents (rough land masses) -->
+              <g class="map-land">
+                <path d="M120 80 L210 70 L260 100 L240 160 L160 180 L100 140 Z" />
+                <path d="M150 200 L240 195 L260 280 L180 320 L120 280 Z" />
+                <path d="M310 80 L460 70 L510 130 L470 180 L350 175 L300 120 Z" />
+                <path d="M340 200 L420 200 L440 290 L380 320 L330 280 Z" />
+                <path d="M520 100 L640 90 L700 150 L680 230 L580 240 L510 180 Z" />
+                <path d="M610 270 L680 260 L700 320 L640 340 L590 310 Z" />
+              </g>
+              <!-- node dots -->
+              <g class="map-nodes">
+                <circle cx="160" cy="120" r="3" class="node node-1"/>
+                <circle cx="200" cy="240" r="3" class="node node-2"/>
+                <circle cx="380" cy="110" r="3" class="node node-3"/>
+                <circle cx="420" cy="160" r="3" class="node node-4"/>
+                <circle cx="380" cy="250" r="3" class="node node-5"/>
+                <circle cx="580" cy="140" r="3" class="node node-6"/>
+                <circle cx="630" cy="200" r="3" class="node node-7"/>
+                <circle cx="650" cy="290" r="3" class="node node-8"/>
+                <circle cx="240" cy="180" r="3" class="node node-9"/>
+                <circle cx="490" cy="180" r="3" class="node node-10"/>
+              </g>
+              <!-- connecting lines -->
+              <g class="map-lines" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3">
+                <line x1="160" y1="120" x2="380" y2="110"/>
+                <line x1="380" y1="110" x2="580" y2="140"/>
+                <line x1="200" y1="240" x2="380" y2="250"/>
+                <line x1="380" y1="250" x2="650" y2="290"/>
+                <line x1="420" y1="160" x2="630" y2="200"/>
+                <line x1="160" y1="120" x2="240" y2="180"/>
+                <line x1="490" y1="180" x2="630" y2="200"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Ticker -->
+        <div class="ticker-card" data-reveal>
+          <div class="ticker-header">
+            <span data-i18n="feed.tickerHeader">Recent activity</span>
+            <span class="ticker-live"><span class="live-dot"></span><span data-i18n="feed.live">LIVE</span></span>
+          </div>
+          <ul class="ticker" data-ticker>
+            <!-- populated by JS -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="feed-stats">
+        <div class="feed-stat" data-reveal>
+          <p class="stat-value">23.7<span>s</span></p>
+          <p class="stat-label" data-i18n="feed.stats.detection">Avg detection time</p>
+        </div>
+        <div class="feed-stat" data-reveal>
+          <p class="stat-value">99.997<span>%</span></p>
+          <p class="stat-label" data-i18n="feed.stats.accuracy">Detection accuracy</p>
+        </div>
+        <div class="feed-stat" data-reveal>
+          <p class="stat-value">0</p>
+          <p class="stat-label" data-i18n="feed.stats.breaches">Successful breaches</p>
+        </div>
+        <div class="feed-stat" data-reveal>
+          <p class="stat-value">24/7</p>
+          <p class="stat-label" data-i18n="feed.stats.soc">SOC analysts on call</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 3. PLATFORM ━━━━━━━━━ -->
+    <section class="platform" id="platform">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow" data-i18n="platform.eyebrow">— The Platform</p>
+        <h2 class="section-title" data-i18n-html="platform.titleHtml">One network. <span class="grad">Six instincts.</span></h2>
+        <p class="section-lede" data-i18n="platform.lede">
+          Every Phoenix module talks to every other module. Together they form
+          a single nervous system — built to detect, decide, and respond
+          without human latency.
+        </p>
+      </div>
+
+      <div class="modules">
+        <article class="module" data-reveal data-module="sentinel" tabindex="0" role="button" aria-label="Open Sentinel module details">
+          <div class="module-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <p class="module-tag" data-i18n="modules.sentinel.tag">01 — Endpoint</p>
+          <h3 class="module-name" data-i18n="modules.sentinel.name">Sentinel</h3>
+          <p class="module-desc" data-i18n="modules.sentinel.desc">
+            Lightweight agent on every device. Behavior-based detection
+            without signatures. Self-quarantines in milliseconds.
+          </p>
+          <span class="module-arrow">→</span>
+        </article>
+
+        <article class="module" data-reveal data-module="compass" tabindex="0" role="button" aria-label="Open Compass module details">
+          <div class="module-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          <p class="module-tag" data-i18n="modules.compass.tag">02 — Network</p>
+          <h3 class="module-name" data-i18n="modules.compass.name">Compass</h3>
+          <p class="module-desc" data-i18n="modules.compass.desc">
+            Deep packet inspection across cloud, edge, and on-prem. Maps
+            every connection, flags every anomaly.
+          </p>
+          <span class="module-arrow">→</span>
+        </article>
+
+        <article class="module" data-reveal data-module="aegis" tabindex="0" role="button" aria-label="Open Aegis module details">
+          <div class="module-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-1 0-3-1-3-3s2-3 3-3-3-2-3-2-3 2-3 2-1-3-3-3-3 3-3 3-2-2-3-2-3 1-3 3 3 3 3 3-3 1-3 3 2 3 3 3 3-2 3-2 1 3 3 3 3-3 3-3 2 2 3 2 3-1 3-3z"></path></svg>
+          </div>
+          <p class="module-tag" data-i18n="modules.aegis.tag">03 — Firewall</p>
+          <h3 class="module-name" data-i18n="modules.aegis.name">Aegis</h3>
+          <p class="module-desc" data-i18n="modules.aegis.desc">
+            Adaptive policy engine. Rules generated by intent, not by
+            checkbox. Blocks zero-day attacks before they have a name.
+          </p>
+          <span class="module-arrow">→</span>
+        </article>
+
+        <article class="module" data-reveal data-module="forge" tabindex="0" role="button" aria-label="Open Forge module details">
+          <div class="module-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          </div>
+          <p class="module-tag" data-i18n="modules.forge.tag">04 — Response</p>
+          <h3 class="module-name" data-i18n="modules.forge.name">Forge</h3>
+          <p class="module-desc" data-i18n="modules.forge.desc">
+            Automated playbooks built by the SOC, executed by the network.
+            Containment in seconds, full forensics in minutes.
+          </p>
+          <span class="module-arrow">→</span>
+        </article>
+
+        <article class="module" data-reveal data-module="oracle" tabindex="0" role="button" aria-label="Open Oracle module details">
+          <div class="module-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m7.07 7.07l4.24 4.24"></path><path d="M1 12h6m6 0h6"></path><path d="M4.22 19.78l4.24-4.24m7.07-7.07l4.24-4.24"></path></svg>
+          </div>
+          <p class="module-tag" data-i18n="modules.oracle.tag">05 — Intelligence</p>
+          <h3 class="module-name" data-i18n="modules.oracle.name">Oracle</h3>
+          <p class="module-desc" data-i18n="modules.oracle.desc">
+            Threat intel fused from 12,000 sources. Updated in real time and
+            piped to every agent in the network within 90 seconds.
+          </p>
+          <span class="module-arrow">→</span>
+        </article>
+
+        <article class="module" data-reveal data-module="vault" tabindex="0" role="button" aria-label="Open Vault module details">
+          <div class="module-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>
+          <p class="module-tag" data-i18n="modules.vault.tag">06 — Encryption</p>
+          <h3 class="module-name" data-i18n="modules.vault.name">Vault</h3>
+          <p class="module-desc" data-i18n="modules.vault.desc">
+            Post-quantum encryption for data at rest and in flight. Keys
+            rotated automatically. Compliance built in, not bolted on.
+          </p>
+          <span class="module-arrow">→</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 4. HOW IT WORKS ━━━━━━━━━ -->
+    <section class="how" id="how">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow" data-i18n="how.eyebrow">— The Loop</p>
+        <h2 class="section-title" data-i18n-html="how.titleHtml">Detect. Decide. Respond. <span class="grad">Evolve.</span></h2>
+        <p class="section-lede" data-i18n="how.lede">
+          Phoenix is not a product. It is a closed loop that gets smarter
+          every minute it runs — and runs every minute.
+        </p>
+      </div>
+
+      <div class="loop">
+        <div class="loop-step" data-reveal>
+          <div class="loop-num">01</div>
+          <h3 data-i18n="how.detect.title">Detect</h3>
+          <p data-i18n="how.detect.desc">
+            Every signal — network, endpoint, identity, cloud — streams into
+            Phoenix in real time. Nothing is filtered out before analysis.
+          </p>
+        </div>
+        <div class="loop-arrow" aria-hidden="true">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 10 L36 10 M28 2 L36 10 L28 18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="loop-step" data-reveal>
+          <div class="loop-num">02</div>
+          <h3 data-i18n="how.decide.title">Decide</h3>
+          <p data-i18n="how.decide.desc">
+            A federated AI model scores every signal in under 80
+            milliseconds. False positives are filtered. True threats are
+            prioritized.
+          </p>
+        </div>
+        <div class="loop-arrow" aria-hidden="true">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 10 L36 10 M28 2 L36 10 L28 18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="loop-step" data-reveal>
+          <div class="loop-num">03</div>
+          <h3 data-i18n="how.respond.title">Respond</h3>
+          <p data-i18n="how.respond.desc">
+            Containment runs automatically — quarantine, block, isolate.
+            The SOC takes over only when human judgment is required.
+          </p>
+        </div>
+        <div class="loop-arrow" aria-hidden="true">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 10 L36 10 M28 2 L36 10 L28 18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="loop-step" data-reveal>
+          <div class="loop-num">04</div>
+          <h3 data-i18n="how.evolve.title">Evolve</h3>
+          <p data-i18n="how.evolve.desc">
+            Every response feeds back into the model. Phoenix tomorrow is
+            not the Phoenix of today. The network reinvents itself.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 5. DASHBOARD ━━━━━━━━━ -->
+    <section class="dashboard" id="dashboard">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow" data-i18n="dashboard.eyebrow">— Inside the Console</p>
+        <h2 class="section-title" data-i18n-html="dashboard.titleHtml">Built for analysts. <span class="grad">Loved by them.</span></h2>
+        <p class="section-lede" data-i18n="dashboard.lede">
+          A single pane of glass for every signal in your environment. No
+          tabs to chase. No alerts to babysit.
+        </p>
+      </div>
+
+      <div class="console" data-reveal>
+        <div class="console-chrome">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="console-url">phoenix.io/ops/overview</span>
+        </div>
+        <div class="console-body">
+          <aside class="console-side">
+            <p class="side-label" data-i18n="dashboard.workspace">WORKSPACE</p>
+            <ul>
+              <li class="active"><span class="side-ico"></span><span data-i18n="dashboard.side.overview">Overview</span></li>
+              <li><span class="side-ico"></span><span data-i18n="dashboard.side.threats">Threats</span></li>
+              <li><span class="side-ico"></span><span data-i18n="dashboard.side.network">Network</span></li>
+              <li><span class="side-ico"></span><span data-i18n="dashboard.side.endpoints">Endpoints</span></li>
+              <li><span class="side-ico"></span><span data-i18n="dashboard.side.identity">Identity</span></li>
+              <li><span class="side-ico"></span><span data-i18n="dashboard.side.reports">Reports</span></li>
+            </ul>
+          </aside>
+          <main class="console-main">
+            <div class="console-row">
+              <div class="kpi">
+                <p class="kpi-label" data-i18n="dashboard.kpi.activeThreats">Active Threats</p>
+                <p class="kpi-value">14</p>
+                <p class="kpi-delta down" data-i18n="dashboard.kpi.activeDelta">↓ 38% vs last 24h</p>
+              </div>
+              <div class="kpi">
+                <p class="kpi-label" data-i18n="dashboard.kpi.endpoints">Endpoints</p>
+                <p class="kpi-value">12,408</p>
+                <p class="kpi-delta" data-i18n="dashboard.kpi.endpointsDelta">all healthy</p>
+              </div>
+              <div class="kpi">
+                <p class="kpi-label" data-i18n="dashboard.kpi.queue">SOC Queue</p>
+                <p class="kpi-value">3</p>
+                <p class="kpi-delta" data-i18n="dashboard.kpi.queueDelta">avg 2.4 min</p>
+              </div>
+            </div>
+
+            <div class="console-chart">
+              <p class="chart-label" data-i18n="dashboard.chartLabel">Threat surface — last 24h</p>
+              <svg viewBox="0 0 600 140" class="chart-svg">
+                <defs>
+                  <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="currentColor" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0 100 L40 80 L80 95 L120 60 L160 75 L200 50 L240 70 L280 40 L320 55 L360 30 L400 45 L440 25 L480 50 L520 35 L560 60 L600 45 L600 140 L0 140 Z" fill="url(#chartFill)"/>
+                <path d="M0 100 L40 80 L80 95 L120 60 L160 75 L200 50 L240 70 L280 40 L320 55 L360 30 L400 45 L440 25 L480 50 L520 35 L560 60 L600 45" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <div class="console-row console-row-half">
+              <div class="alerts">
+                <p class="alerts-label" data-i18n="dashboard.alerts.label">Recent alerts</p>
+                <div class="alert">
+                  <span class="alert-sev sev-h" data-i18n="feed.sev.h">HIGH</span>
+                  <span class="alert-text" data-i18n="dashboard.alerts.a1">Lateral movement detected — node 412</span>
+                  <span class="alert-time">2m</span>
+                </div>
+                <div class="alert">
+                  <span class="alert-sev sev-m" data-i18n="feed.sev.m">MED</span>
+                  <span class="alert-text" data-i18n="dashboard.alerts.a2">Anomalous DNS pattern — region eu-west</span>
+                  <span class="alert-time">7m</span>
+                </div>
+                <div class="alert">
+                  <span class="alert-sev sev-l" data-i18n="feed.sev.l">LOW</span>
+                  <span class="alert-text" data-i18n="dashboard.alerts.a3">Outdated agent — 4 endpoints</span>
+                  <span class="alert-time">14m</span>
+                </div>
+              </div>
+              <div class="health">
+                <p class="alerts-label" data-i18n="dashboard.health.label">Network health</p>
+                <div class="bar"><span class="bar-label" data-i18n="dashboard.health.na">North America</span><span class="bar-track"><span class="bar-fill" style="width:96%"></span></span><span class="bar-pct">96%</span></div>
+                <div class="bar"><span class="bar-label" data-i18n="dashboard.health.eu">Europe</span><span class="bar-track"><span class="bar-fill" style="width:99%"></span></span><span class="bar-pct">99%</span></div>
+                <div class="bar"><span class="bar-label" data-i18n="dashboard.health.ap">Asia-Pacific</span><span class="bar-track"><span class="bar-fill" style="width:94%"></span></span><span class="bar-pct">94%</span></div>
+                <div class="bar"><span class="bar-label" data-i18n="dashboard.health.latam">LATAM</span><span class="bar-track"><span class="bar-fill" style="width:97%"></span></span><span class="bar-pct">97%</span></div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 6. NUMBERS ━━━━━━━━━ -->
+    <section class="numbers">
+      <div class="numbers-grid">
+        <div class="number" data-reveal>
+          <p class="number-value" data-counter="10400000" data-suffix="+">0</p>
+          <p class="number-label" data-i18n="numbers.endpoints">Endpoints protected</p>
+        </div>
+        <div class="number" data-reveal>
+          <p class="number-value" data-counter="237" data-suffix="">0</p>
+          <p class="number-label" data-i18n="numbers.clients">Enterprise clients</p>
+        </div>
+        <div class="number" data-reveal>
+          <p class="number-value" data-counter="64" data-suffix="">0</p>
+          <p class="number-label" data-i18n="numbers.countries">Countries served</p>
+        </div>
+        <div class="number" data-reveal>
+          <p class="number-value" data-counter="99997" data-divide="1000" data-suffix="%" data-fixed="3">0</p>
+          <p class="number-label" data-i18n="numbers.accuracy">Detection accuracy</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 7. WHY ━━━━━━━━━ -->
+    <section class="why">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow" data-i18n="why.eyebrow">— Why Phoenix</p>
+        <h2 class="section-title" data-i18n-html="why.titleHtml">Security that <span class="grad">evolves with you.</span></h2>
+      </div>
+
+      <div class="why-grid">
+        <article class="why-card" data-reveal>
+          <p class="why-num">/01</p>
+          <h3 data-i18n="why.aiNative.title">AI-Native</h3>
+          <p data-i18n="why.aiNative.desc">
+            Built around models from day one — not bolted on as a feature.
+            Every layer of the stack speaks the same language as the brain.
+          </p>
+        </article>
+        <article class="why-card" data-reveal>
+          <p class="why-num">/02</p>
+          <h3 data-i18n="why.realtime.title">Real-Time</h3>
+          <p data-i18n="why.realtime.desc">
+            From signal to containment in under one second. Every other
+            metric is theater compared to time-to-action.
+          </p>
+        </article>
+        <article class="why-card" data-reveal>
+          <p class="why-num">/03</p>
+          <h3 data-i18n="why.evolving.title">Self-Evolving</h3>
+          <p data-i18n="why.evolving.desc">
+            Phoenix re-trains nightly on every new attack pattern observed
+            across the entire network. Customers benefit from each other.
+          </p>
+        </article>
+        <article class="why-card" data-reveal>
+          <p class="why-num">/04</p>
+          <h3 data-i18n="why.humanLed.title">Human-Led SOC</h3>
+          <p data-i18n="why.humanLed.desc">
+            A 24/7 team of analysts watches every escalation. AI does the
+            volume; humans do the judgment. We don't replace either.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 8. TRUSTED BY ━━━━━━━━━ -->
+    <section class="trusted">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow" data-i18n="trusted.eyebrow">— Trusted By</p>
+        <h2 class="section-title" data-i18n-html="trusted.titleHtml">Banks. Hospitals. <span class="grad">Governments.</span></h2>
+        <p class="section-lede" data-i18n="trusted.lede">
+          Phoenix protects organizations where downtime is not measured in
+          dollars but in lives, votes, and treaties.
+        </p>
+      </div>
+
+      <div class="logos">
+        <div class="logo-cell" data-reveal>NORDLINE</div>
+        <div class="logo-cell" data-reveal>HELIOS&nbsp;BANK</div>
+        <div class="logo-cell" data-reveal>VANTAGE&nbsp;CORP</div>
+        <div class="logo-cell" data-reveal>NEXARO</div>
+        <div class="logo-cell" data-reveal>STRATAGEM</div>
+        <div class="logo-cell" data-reveal>ATLAS&nbsp;HEALTH</div>
+        <div class="logo-cell" data-reveal>QUANTLEAF</div>
+        <div class="logo-cell" data-reveal>CIPHERBLOCK</div>
+        <div class="logo-cell" data-reveal>ORION&nbsp;FED</div>
+        <div class="logo-cell" data-reveal>ZENITHWORKS</div>
+        <div class="logo-cell" data-reveal>NORTHWIND</div>
+        <div class="logo-cell" data-reveal>MERIDIAN&nbsp;9</div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 9. DEVELOPERS ━━━━━━━━━ -->
+    <section class="developers" id="developers">
+      <div class="dev-grid">
+        <div class="dev-text" data-reveal>
+          <p class="eyebrow" data-i18n="developers.eyebrow">— For Developers</p>
+          <h2 class="section-title" data-i18n-html="developers.titleHtml">An API <span class="grad">that gets out of your way.</span></h2>
+          <p class="dev-lede" data-i18n="developers.lede">
+            Stream events. Trigger playbooks. Pull threat intel. Phoenix is
+            REST-first, gRPC-ready, and fully typed in nine SDKs.
+          </p>
+          <ul class="dev-features">
+            <li><span class="dev-check">→</span> <span data-i18n="developers.f1">Event streaming via WebSocket or Kafka</span></li>
+            <li><span class="dev-check">→</span> <span data-i18n="developers.f2">99.99% uptime SLA on all endpoints</span></li>
+            <li><span class="dev-check">→</span> <span data-i18n="developers.f3">SDKs: Go, Python, Rust, TypeScript, Java, Ruby, C#, PHP, Swift</span></li>
+            <li><span class="dev-check">→</span> <span data-i18n="developers.f4">Webhooks for every threat lifecycle event</span></li>
+          </ul>
+          <a href="#cta" class="btn btn-ghost dev-cta">
+            <span data-i18n="developers.docs">Read the docs</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+
+        <div class="terminal" data-reveal>
+          <div class="terminal-chrome">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+            <span class="terminal-title">~/phoenix — bash</span>
+          </div>
+          <pre class="terminal-body" data-typewriter><code><span class="prompt">$</span> <span class="cmd">curl -X POST https://api.phoenix.io/v1/scan \</span>
+   -H "Authorization: Bearer phoenix_***" \
+   -d '{"target": "node-412", "depth": "full"}'
+
+<span class="resp">{
+  "scan_id": "sc_7f2a9b",
+  "status": "complete",
+  "threats_found": 0,
+  "duration_ms": 412,
+  "model": "phoenix-v4.12",
+  "next_action": "monitor"
+}</span>
+
+<span class="prompt">$</span> <span class="cmd">phoenix events stream --severity high</span>
+<span class="ok">[OK]</span> connected to wss://stream.phoenix.io
+<span class="ok">[OK]</span> subscribed: severity=high, region=*
+<span class="resp">▷ waiting for events...</span><span class="cursor">█</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 10. CTA ━━━━━━━━━ -->
+    <section class="cta" id="cta">
+      <div class="cta-glow" aria-hidden="true"></div>
+      <div class="cta-inner" data-reveal>
+        <p class="eyebrow" data-i18n="cta.eyebrow">— Get Started</p>
+        <h2 class="section-title cta-title" data-i18n-html="cta.titleHtml">
+          Start protecting <span class="grad">in sixty seconds.</span>
+        </h2>
+        <p class="section-lede" data-i18n="cta.lede">
+          Drop your work email. We'll send a sandbox key, a quick-start
+          guide, and a calendar link to a Phoenix engineer.
+        </p>
+
+        <form class="cta-form" onsubmit="return false;">
+          <input
+            type="email"
+            class="cta-input"
+            placeholder="you@company.com"
+            data-i18n-attr="placeholder:cta.emailPh"
+            required
+            autocomplete="email"
+          />
+          <button type="submit" class="btn btn-primary cta-submit">
+            <span data-i18n="cta.submit">Request Access</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </form>
+
+        <p class="cta-note" data-i18n="cta.note">SOC2 · ISO27001 · HIPAA · GDPR — compliance is the floor, not the ceiling.</p>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ FOOTER ━━━━━━━━━ -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-mark">
+            <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+              <path d="M20 4 L34 20 L27 36 L13 36 L6 20 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+              <path d="M20 12 L26 20 L23 28 L17 28 L14 20 Z" fill="currentColor" />
+            </svg>
+            <span>PHOENIX</span>
+          </div>
+          <p data-i18n="footer.tagline">The security network that learns.</p>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h4 data-i18n="footer.col.platform">Platform</h4>
+            <ul>
+              <li><a href="#" data-i18n="modules.sentinel.name">Sentinel</a></li>
+              <li><a href="#" data-i18n="modules.compass.name">Compass</a></li>
+              <li><a href="#" data-i18n="modules.aegis.name">Aegis</a></li>
+              <li><a href="#" data-i18n="modules.forge.name">Forge</a></li>
+              <li><a href="#" data-i18n="modules.oracle.name">Oracle</a></li>
+              <li><a href="#" data-i18n="modules.vault.name">Vault</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.solutions">Solutions</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.sol.finance">Finance</a></li>
+              <li><a href="#" data-i18n="footer.sol.healthcare">Healthcare</a></li>
+              <li><a href="#" data-i18n="footer.sol.government">Government</a></li>
+              <li><a href="#" data-i18n="footer.sol.saas">SaaS</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.developers">Developers</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.dev.api">API</a></li>
+              <li><a href="#" data-i18n="footer.dev.sdks">SDKs</a></li>
+              <li><a href="#" data-i18n="footer.dev.status">Status</a></li>
+              <li><a href="#" data-i18n="footer.dev.changelog">Changelog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.company">Company</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.co.about">About</a></li>
+              <li><a href="#" data-i18n="footer.co.careers">Careers</a></li>
+              <li><a href="#" data-i18n="footer.co.press">Press</a></li>
+              <li><a href="#" data-i18n="footer.co.contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-base">
+        <p data-i18n="footer.copyright">© 2025 Phoenix Security Networks · All rights reserved</p>
+        <p class="footer-status"><span class="live-dot"></span><span data-i18n="footer.status">All systems operational</span></p>
+      </div>
+    </footer>
+
+    <!-- ━━━━━━━━━ MODULE MODAL ━━━━━━━━━ -->
+    <div class="modal" id="moduleModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalName">
+      <div class="modal-backdrop" data-modal-close></div>
+      <div class="modal-dialog" role="document">
+        <button class="modal-close" data-modal-close aria-label="Close module details">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="modal-head">
+          <p class="modal-tag" id="modalTag"></p>
+          <h3 class="modal-name" id="modalName"></h3>
+          <p class="modal-tagline" id="modalTagline"></p>
+        </div>
+        <div class="modal-body">
+          <p class="modal-full" id="modalFull"></p>
+          <div class="modal-grid">
+            <div class="modal-features">
+              <p class="modal-sub" data-i18n="modal.capabilities">Capabilities</p>
+              <ul id="modalFeatures"></ul>
+            </div>
+            <div class="modal-stat">
+              <p class="modal-stat-value" id="modalStatValue"></p>
+              <p class="modal-stat-label" id="modalStatLabel"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>PeçaAí — Auto parts at the speed of an app</title>
+    <meta
+      name="description"
+      content="PeçaAí connects auto repair shops to parts suppliers in real time. Tap, find, delivered. The B2B marketplace that moved the parts hunt off the phone and into the app."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F6BFF'/%3E%3Ctext x='50' y='70' font-family='Inter,sans-serif' font-size='60' font-weight='800' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Decorative blobs -->
+    <div class="blobs" aria-hidden="true">
+      <span class="blob blob-1"></span>
+      <span class="blob blob-2"></span>
+      <span class="blob blob-3"></span>
+    </div>
+
+    <!-- ━━━━━━━━━ NAV ━━━━━━━━━ -->
+    <header class="nav" id="nav">
+      <div class="nav-inner">
+        <a class="nav-logo" href="#top" aria-label="PeçaAí">
+          <span class="logo-mark">
+            <svg width="26" height="26" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="24" fill="#1F6BFF"/><path d="M32 30 L56 30 Q70 30 70 44 Q70 58 56 58 L44 58 L44 74 L32 74 Z M44 40 L44 48 L54 48 Q58 48 58 44 Q58 40 54 40 Z" fill="white"/></svg>
+          </span>
+          <span class="logo-word">PeçaAí</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#how" data-i18n="nav.how">How it works</a>
+          <a href="#for-mechanics" data-i18n="nav.mech">For shops</a>
+          <a href="#for-sellers" data-i18n="nav.sellers">For suppliers</a>
+          <a href="#coverage" data-i18n="nav.coverage">Coverage</a>
+        </nav>
+        <div class="nav-lang" role="group" aria-label="Language">
+          <button type="button" class="nav-lang-btn" data-lang="en">EN</button>
+          <span class="nav-lang-sep">/</span>
+          <button type="button" class="nav-lang-btn" data-lang="pt">PT</button>
+        </div>
+        <a href="#download" class="btn btn-pill">
+          <span data-i18n="nav.cta">Get the app</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
+        </a>
+        <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nav-mobile" aria-hidden="true">
+      <button class="nav-mobile-close" type="button" aria-label="Close menu">
+        <span></span><span></span>
+      </button>
+      <ul>
+        <li><a href="#how" data-i18n="nav.how">How it works</a></li>
+        <li><a href="#for-mechanics" data-i18n="nav.mech">For shops</a></li>
+        <li><a href="#for-sellers" data-i18n="nav.sellers">For suppliers</a></li>
+        <li><a href="#coverage" data-i18n="nav.coverage">Coverage</a></li>
+        <li><a href="#download" class="btn btn-pill" data-i18n="nav.cta">Get the app</a></li>
+      </ul>
+    </div>
+
+    <main id="top">
+      <!-- ━━━━━━━━━ 1. HERO ━━━━━━━━━ -->
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-text">
+            <div class="hero-badge" data-reveal>
+              <span class="pulse-dot"></span>
+              <span data-i18n="hero.badge">10,482 parts shipped right now</span>
+            </div>
+            <h1 class="hero-title" data-reveal data-i18n-html="hero.titleHtml">
+              The part you<br />
+              need, <span class="grad">in the app.</span><br />
+              <span class="hero-alt">Same day.</span>
+            </h1>
+            <p class="hero-lede" data-reveal data-i18n="hero.lede">
+              PeçaAí is the marketplace that connects auto repair shops to the best
+              parts suppliers in their city — in real time, with transparent pricing
+              and same-day delivery.
+            </p>
+            <div class="hero-ctas" data-reveal>
+              <a href="#download" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.44-1.09-.45-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.44C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                <span data-i18n="hero.appStore">App Store</span>
+              </a>
+              <a href="#download" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.9 5c.8.4 1.2 1.3 1 2.2l-1.6 5.3 1.7 5.7c.2.9-.2 1.8-1 2.2-.8.4-1.8.1-2.3-.7l-3.2-4.5-3.1 4.5c-.5.7-1.5 1-2.3.6-.8-.4-1.2-1.3-1-2.2l1.7-5.7-1.6-5.3c-.2-.9.2-1.7 1-2.1.8-.4 1.8-.1 2.3.7l3 4.4 3.1-4.5c.5-.8 1.5-1.1 2.3-.6z"/></svg>
+                <span data-i18n="hero.googlePlay">Google Play</span>
+              </a>
+            </div>
+            <div class="hero-trust" data-reveal>
+              <div class="trust-item">
+                <p class="trust-num" data-counter="4800" data-suffix="+">0</p>
+                <p class="trust-label" data-i18n="hero.trust.shops">active shops</p>
+              </div>
+              <div class="trust-sep"></div>
+              <div class="trust-item">
+                <p class="trust-num" data-counter="312" data-suffix="">0</p>
+                <p class="trust-label" data-i18n="hero.trust.suppliers">suppliers</p>
+              </div>
+              <div class="trust-sep"></div>
+              <div class="trust-item">
+                <p class="trust-num" data-counter="47" data-suffix="min" data-i18n-attr="data-suffix:hero.trust.deliverySuffix">0</p>
+                <p class="trust-label" data-i18n="hero.trust.delivery">avg delivery</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ─── Phone mockup ─── -->
+          <div class="hero-phone-wrap" data-reveal>
+            <div class="phone-orbit">
+              <span class="orbit-chip chip-1">$ 47.00</span>
+              <span class="orbit-chip chip-2">Delivery 45min</span>
+              <span class="orbit-chip chip-3">4.9 ★</span>
+            </div>
+            <div class="phone">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="app-status">
+                  <span>9:41</span>
+                  <span class="status-icons">
+                    <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor"><rect x="0" y="6" width="2" height="4" rx="0.5"/><rect x="4" y="4" width="2" height="6" rx="0.5"/><rect x="8" y="2" width="2" height="8" rx="0.5"/><rect x="12" y="0" width="2" height="10" rx="0.5"/></svg>
+                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 4c4-4 8-4 12 0M3 6c2.5-2.5 5.5-2.5 8 0M6 8c.8-.8 2.2-.8 2 0"/></svg>
+                    <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1"><rect x="1" y="1" width="17" height="8" rx="2"/><rect x="3" y="3" width="13" height="4" rx="1" fill="currentColor"/><path d="M19 4v2"/></svg>
+                  </span>
+                </div>
+                <div class="app-header">
+                  <div class="app-greet">
+                    <p class="app-hello">Hey, Center Auto ✌️</p>
+                    <p class="app-where">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      Austin · TX
+                    </p>
+                  </div>
+                  <div class="app-avatar">CA</div>
+                </div>
+                <div class="app-search">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+                  <span>Brake pads Civic 2019...</span>
+                </div>
+                <div class="app-pill-row">
+                  <span class="app-pill is-active">All</span>
+                  <span class="app-pill">Brakes</span>
+                  <span class="app-pill">Engine</span>
+                  <span class="app-pill">Suspension</span>
+                </div>
+                <div class="app-card app-card-featured">
+                  <div class="app-card-head">
+                    <p class="app-card-tag">TOP ORDERED</p>
+                    <p class="app-card-rating">4.9 ★</p>
+                  </div>
+                  <p class="app-card-title">Front brake pads<br />Honda Civic 1.5 · 2019</p>
+                  <div class="app-card-stats">
+                    <span><strong>$ 47</strong><small>cash</small></span>
+                    <span><strong>45min</strong><small>delivery</small></span>
+                    <span><strong>Reis Auto</strong><small>supplier</small></span>
+                  </div>
+                  <button class="app-cta">Order now →</button>
+                </div>
+                <div class="app-card app-card-mini">
+                  <div class="mini-icon" style="background:#E8F0FF;color:#1F6BFF">◔</div>
+                  <div class="mini-text">
+                    <p class="mini-title">Timing belt kit</p>
+                    <p class="mini-sub">Civic 2017+ · 4 suppliers</p>
+                  </div>
+                  <p class="mini-price">$ 82</p>
+                </div>
+                <div class="app-card app-card-mini">
+                  <div class="mini-icon" style="background:#FFF2E8;color:#E67A15">◑</div>
+                  <div class="mini-text">
+                    <p class="mini-title">Oil filter</p>
+                    <p class="mini-sub">Universal · 12 suppliers</p>
+                  </div>
+                  <p class="mini-price">$ 7</p>
+                </div>
+                <div class="app-tabbar">
+                  <span class="tab is-active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                  </span>
+                  <span class="tab">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+                  </span>
+                  <span class="tab">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+                    <span class="tab-badge">3</span>
+                  </span>
+                  <span class="tab">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 2. MARQUEE ━━━━━━━━━ -->
+      <section class="marquee-strip" aria-hidden="true">
+        <div class="marquee-track">
+          <span>Brake pads</span><span>◉</span>
+          <span>Filters</span><span>◉</span>
+          <span>Belts</span><span>◉</span>
+          <span>Shocks</span><span>◉</span>
+          <span>Spark plugs</span><span>◉</span>
+          <span>Oils</span><span>◉</span>
+          <span>Batteries</span><span>◉</span>
+          <span>Clutches</span><span>◉</span>
+          <span>Suspension</span><span>◉</span>
+          <span>Radiators</span><span>◉</span>
+          <span>Brake pads</span><span>◉</span>
+          <span>Filters</span><span>◉</span>
+          <span>Belts</span><span>◉</span>
+          <span>Shocks</span><span>◉</span>
+          <span>Spark plugs</span><span>◉</span>
+          <span>Oils</span><span>◉</span>
+          <span>Batteries</span><span>◉</span>
+          <span>Clutches</span><span>◉</span>
+          <span>Suspension</span><span>◉</span>
+          <span>Radiators</span><span>◉</span>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 3. HOW IT WORKS ━━━━━━━━━ -->
+      <section class="how" id="how">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow-line"></span>
+            <span data-i18n="how.eyebrow">How it works</span>
+          </p>
+          <h2 class="section-title" data-reveal data-i18n-html="how.titleHtml">
+            Three taps<br />and the part is <span class="grad">on the way.</span>
+          </h2>
+          <p class="section-lede" data-reveal data-i18n="how.lede">
+            Forget the group chat, forget the counter. We turned that 40-minute
+            phone hunt into three simple steps on your phone.
+          </p>
+        </div>
+        <div class="how-steps">
+          <article class="how-step" data-reveal>
+            <p class="how-num">01</p>
+            <div class="how-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+            </div>
+            <h3 data-i18n="how.s1.title">Search the part</h3>
+            <p data-i18n="how.s1.desc">
+              Type the name, the car model, or scan the barcode on the old
+              packaging. The app finds it in milliseconds.
+            </p>
+          </article>
+          <article class="how-step how-step-lifted" data-reveal>
+            <p class="how-num">02</p>
+            <div class="how-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18l-2 13H5z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <h3 data-i18n="how.s2.title">Compare and order</h3>
+            <p data-i18n="how.s2.desc">
+              See every supplier in your area side by side. Price, rating,
+              delivery time — all transparent. Pick one and order.
+            </p>
+          </article>
+          <article class="how-step" data-reveal>
+            <p class="how-num">03</p>
+            <div class="how-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <h3 data-i18n="how.s3.title">Arrives at the shop</h3>
+            <p data-i18n="how.s3.desc">
+              The supplier's courier leaves right away. Track live on the map
+              and receive it straight at your bay — in 45 minutes, on average.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 4. FOR MECHANICS ━━━━━━━━━ -->
+      <section class="audience audience-mechanics" id="for-mechanics">
+        <div class="audience-inner">
+          <div class="audience-text">
+            <p class="eyebrow" data-reveal>
+              <span class="eyebrow-line"></span>
+              <span data-i18n="mech.eyebrow">For shops</span>
+            </p>
+            <h2 class="section-title" data-reveal data-i18n-html="mech.titleHtml">
+              Less phone.<br />
+              More cars<br />
+              <span class="grad">back on the road.</span>
+            </h2>
+            <p class="audience-lede" data-reveal data-i18n="mech.lede">
+              Every minute idle is an upset customer and a booked bay. We cut
+              the average time to find a part from 38 minutes to 4.
+            </p>
+            <ul class="audience-list" data-reveal>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="mech.l1">Prices from up to 5 suppliers side by side, instantly</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="mech.l2">Full part history per vehicle serviced</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="mech.l3">Automatic warranty — no paperwork, no arguments</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="mech.l4">Month-end billing, one single invoice</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="mech.l5">Human support 24/7 by chat</span>
+              </li>
+            </ul>
+            <a href="#download" class="btn btn-primary" data-reveal>
+              <span data-i18n="mech.cta">Register my shop</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="audience-stat-card" data-reveal>
+            <p class="asc-label" data-i18n="mech.ascLabel">Average time per part</p>
+            <div class="asc-compare">
+              <div class="asc-row">
+                <span class="asc-name" data-i18n="mech.ascRow1">Phone, chat, counter</span>
+                <div class="asc-bar">
+                  <span class="asc-fill asc-fill-bad" style="width:100%"></span>
+                  <span class="asc-val">38min</span>
+                </div>
+              </div>
+              <div class="asc-row">
+                <span class="asc-name" data-i18n="mech.ascRow2">PeçaAí</span>
+                <div class="asc-bar">
+                  <span class="asc-fill asc-fill-good" style="width:11%"></span>
+                  <span class="asc-val">4min</span>
+                </div>
+              </div>
+            </div>
+            <p class="asc-save" data-i18n-html="mech.ascSaveHtml">
+              <strong>−89%</strong> time spent searching.<br />
+              <span>That's cars getting back on the road.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 5. FOR SELLERS ━━━━━━━━━ -->
+      <section class="audience audience-sellers" id="for-sellers">
+        <div class="audience-inner reverse">
+          <div class="audience-text">
+            <p class="eyebrow" data-reveal>
+              <span class="eyebrow-line"></span>
+              <span data-i18n="sellers.eyebrow">For suppliers</span>
+            </p>
+            <h2 class="section-title" data-reveal data-i18n-html="sellers.titleHtml">
+              Your inventory<br />
+              in front of the<br />
+              <span class="grad">entire city.</span>
+            </h2>
+            <p class="audience-lede" data-reveal data-i18n="sellers.lede">
+              Stop waiting for the shop to call. We put your stock in the hands
+              of thousands of mechanics at once — with fair pricing and
+              guaranteed settlements.
+            </p>
+            <ul class="audience-list" data-reveal>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="sellers.l1">One-click catalog import from your spreadsheet</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="sellers.l2">Orders drop straight into your dashboard, no phone</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="sellers.l3">Simple commission, no fine print</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="sellers.l4">Guaranteed payout in 2 business days</span>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <span data-i18n="sellers.l5">Sales analytics by part, area, and customer</span>
+              </li>
+            </ul>
+            <a href="#download" class="btn btn-primary" data-reveal>
+              <span data-i18n="sellers.cta">Become a supplier</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="seller-panel" data-reveal>
+            <div class="sp-head">
+              <p class="sp-title" data-i18n="sellers.spTitle">Supplier dashboard</p>
+              <span class="sp-live">
+                <span class="pulse-dot"></span>
+                <span data-i18n="sellers.spLive">live</span>
+              </span>
+            </div>
+            <div class="sp-metric">
+              <p class="sp-num" data-counter="18420" data-prefix="$ ">0</p>
+              <p class="sp-label" data-i18n="sellers.spLabel">sales today</p>
+              <p class="sp-delta" data-i18n="sellers.spDelta">▲ 23% vs yesterday</p>
+            </div>
+            <div class="sp-chart" aria-hidden="true">
+              <svg viewBox="0 0 240 80" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="spg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1F6BFF" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#1F6BFF" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,60 L20,55 L40,62 L60,48 L80,52 L100,38 L120,42 L140,28 L160,32 L180,20 L200,24 L220,10 L240,14 L240,80 L0,80 Z" fill="url(#spg)"/>
+                <path d="M0,60 L20,55 L40,62 L60,48 L80,52 L100,38 L120,42 L140,28 L160,32 L180,20 L200,24 L220,10 L240,14" fill="none" stroke="#1F6BFF" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="sp-rows">
+              <div class="sp-row">
+                <span class="sp-dot"></span>
+                <span class="sp-row-name">Front brake pads Civic</span>
+                <span class="sp-row-price">$ 47</span>
+              </div>
+              <div class="sp-row">
+                <span class="sp-dot"></span>
+                <span class="sp-row-name">Oil filter Corolla 1.8</span>
+                <span class="sp-row-price">$ 7</span>
+              </div>
+              <div class="sp-row">
+                <span class="sp-dot"></span>
+                <span class="sp-row-name">Spark plug Elantra</span>
+                <span class="sp-row-price">$ 18</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 6. COVERAGE ━━━━━━━━━ -->
+      <section class="coverage" id="coverage">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow-line"></span>
+            <span data-i18n="coverage.eyebrow">Coverage</span>
+          </p>
+          <h2 class="section-title" data-reveal data-i18n-html="coverage.titleHtml">
+            Live in <span class="grad">14 cities.</span><br />
+            Yours could be next.
+          </h2>
+        </div>
+        <div class="city-grid">
+          <div class="city" data-reveal><p>Austin</p><small data-i18n="coverage.hq">TX · HQ</small></div>
+          <div class="city" data-reveal><p>Houston</p><small>TX</small></div>
+          <div class="city" data-reveal><p>Dallas</p><small>TX</small></div>
+          <div class="city" data-reveal><p>San Antonio</p><small>TX</small></div>
+          <div class="city" data-reveal><p>Los Angeles</p><small>CA</small></div>
+          <div class="city" data-reveal><p>San Diego</p><small>CA</small></div>
+          <div class="city" data-reveal><p>San Jose</p><small>CA</small></div>
+          <div class="city" data-reveal><p>Phoenix</p><small>AZ</small></div>
+          <div class="city" data-reveal><p>Tucson</p><small>AZ</small></div>
+          <div class="city" data-reveal><p>Denver</p><small>CO</small></div>
+          <div class="city" data-reveal><p>Atlanta</p><small>GA</small></div>
+          <div class="city" data-reveal><p>Miami</p><small>FL</small></div>
+          <div class="city" data-reveal><p>Orlando</p><small>FL</small></div>
+          <div class="city" data-reveal><p>Chicago</p><small>IL</small></div>
+          <div class="city city-soon" data-reveal><p>Seattle</p><small data-i18n="coverage.comingSoon">coming soon</small></div>
+          <div class="city city-soon" data-reveal><p>New York</p><small data-i18n="coverage.comingSoon">coming soon</small></div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 7. TESTIMONIALS ━━━━━━━━━ -->
+      <section class="testimonials">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow-line"></span>
+            <span data-i18n="testi.eyebrow">Who's using it</span>
+          </p>
+          <h2 class="section-title" data-reveal data-i18n-html="testi.titleHtml">
+            Shops saying<br />
+            <span class="grad">what nobody asks.</span>
+          </h2>
+        </div>
+        <div class="testi-grid">
+          <figure class="testi" data-reveal>
+            <blockquote data-i18n="testi.q1">
+              I used to have one guy just chasing parts on the phone. Today he's
+              back at the bench with me. PeçaAí freed up a whole mechanic for
+              the work that actually matters.
+            </blockquote>
+            <figcaption>
+              <span class="avatar" style="background:#1F6BFF">RM</span>
+              <span>
+                <strong>Ricardo Martins</strong>
+                <small data-i18n="testi.s1">Martins Auto · Austin</small>
+              </span>
+            </figcaption>
+          </figure>
+          <figure class="testi" data-reveal>
+            <blockquote data-i18n="testi.q2">
+              What sold me was the transparent pricing. Before, each supplier
+              charged whatever they felt like. Now I see every quote side by
+              side and pick the best one for my customer.
+            </blockquote>
+            <figcaption>
+              <span class="avatar" style="background:#10B981">JS</span>
+              <span>
+                <strong>Julia Stone</strong>
+                <small data-i18n="testi.s2">Box 14 Auto · San Diego</small>
+              </span>
+            </figcaption>
+          </figure>
+          <figure class="testi" data-reveal>
+            <blockquote data-i18n="testi.q3">
+              I place 180 orders a month. At month-end I get a single invoice,
+              pay it, done. No more receipts all over the desk, no more random
+              bills to track.
+            </blockquote>
+            <figcaption>
+              <span class="avatar" style="background:#E67A15">CL</span>
+              <span>
+                <strong>Carlos Lopes</strong>
+                <small data-i18n="testi.s3">Lopes Mechanics · Phoenix</small>
+              </span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 8. FAQ ━━━━━━━━━ -->
+      <section class="faq">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow-line"></span>
+            <span data-i18n="faq.eyebrow">Questions</span>
+          </p>
+          <h2 class="section-title" data-reveal data-i18n-html="faq.titleHtml">
+            Before<br />
+            <span class="grad">you ask.</span>
+          </h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item" data-reveal>
+            <summary>
+              <span data-i18n="faq.q1">How much does it cost for a shop?</span>
+              <span class="faq-plus"></span>
+            </summary>
+            <p data-i18n="faq.a1">
+              Zero. Shops pay nothing to use the app — no subscription, no fee
+              per order. Our revenue comes from the supplier side, who wins by
+              selling more without a sales team.
+            </p>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary>
+              <span data-i18n="faq.q2">What if the wrong part shows up?</span>
+              <span class="faq-plus"></span>
+            </summary>
+            <p data-i18n="faq.a2">
+              We swap it, no questions. Warranty is automatic in the app and the
+              courier comes back with the correct part the same day. If we
+              can't deliver, you're refunded within 24 hours.
+            </p>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary>
+              <span data-i18n="faq.q3">What are the payment options?</span>
+              <span class="faq-plus"></span>
+            </summary>
+            <p data-i18n="faq.a3">
+              Pay per order by card or ACH, or roll everything into a single
+              end-of-month invoice for all your purchases. No paperwork, no
+              separate bills from each supplier.
+            </p>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary>
+              <span data-i18n="faq.q4">Does it work with any car?</span>
+              <span class="faq-plus"></span>
+            </summary>
+            <p data-i18n="faq.a4">
+              Yes. We cover more than 240 popular models and over 18,000
+              cataloged parts. If a part isn't in the app, our team tracks it
+              down within 2 hours and reports back.
+            </p>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary>
+              <span data-i18n="faq.q5">I want to be a supplier. How?</span>
+              <span class="faq-plus"></span>
+            </summary>
+            <p data-i18n="faq.a5">
+              Send your business details through the contact form (or by chat)
+              and one of our account managers will reach out within 24 hours.
+              Catalog integration takes about 2 days on average.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 9. FINAL CTA ━━━━━━━━━ -->
+      <section class="final-cta" id="download">
+        <div class="fc-inner">
+          <div class="fc-bg" aria-hidden="true">
+            <div class="fc-grid-lines"></div>
+          </div>
+          <p class="eyebrow light" data-reveal>
+            <span class="eyebrow-line"></span>
+            <span data-i18n="fc.eyebrow">Download now</span>
+          </p>
+          <h2 class="fc-title" data-reveal data-i18n-html="fc.titleHtml">
+            Tap, <span class="grad-light">find,</span><br />
+            delivered.
+          </h2>
+          <p class="fc-lede" data-reveal data-i18n="fc.lede">
+            Free on the App Store and Google Play. Your first PeçaAí order ships
+            with free delivery on us.
+          </p>
+          <div class="fc-ctas" data-reveal>
+            <a href="#" class="btn btn-white">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.44-1.09-.45-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.44C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+              <span data-i18n="fc.appStore">Download on App Store</span>
+            </a>
+            <a href="#" class="btn btn-white">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.9 5c.8.4 1.2 1.3 1 2.2l-1.6 5.3 1.7 5.7c.2.9-.2 1.8-1 2.2-.8.4-1.8.1-2.3-.7l-3.2-4.5-3.1 4.5c-.5.7-1.5 1-2.3.6-.8-.4-1.2-1.3-1-2.2l1.7-5.7-1.6-5.3c-.2-.9.2-1.7 1-2.1.8-.4 1.8-.1 2.3.7l3 4.4 3.1-4.5c.5-.8 1.5-1.1 2.3-.6z"/></svg>
+              <span data-i18n="fc.googlePlay">Get it on Google Play</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ━━━━━━━━━ FOOTER ━━━━━━━━━ -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="nav-logo" href="#top">
+            <span class="logo-mark">
+              <svg width="26" height="26" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="24" fill="#1F6BFF"/><path d="M32 30 L56 30 Q70 30 70 44 Q70 58 56 58 L44 58 L44 74 L32 74 Z M44 40 L44 48 L54 48 Q58 48 58 44 Q58 40 54 40 Z" fill="white"/></svg>
+            </span>
+            <span class="logo-word">PeçaAí</span>
+          </a>
+          <p class="footer-tag" data-i18n="footer.tagline">
+            The auto-parts marketplace that moved the parts hunt out of the shop
+            phone and into the mechanic's pocket.
+          </p>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h4 data-i18n="footer.col.product">Product</h4>
+            <ul>
+              <li><a href="#how" data-i18n="footer.prod.how">How it works</a></li>
+              <li><a href="#for-mechanics" data-i18n="footer.prod.mech">For shops</a></li>
+              <li><a href="#for-sellers" data-i18n="footer.prod.sellers">For suppliers</a></li>
+              <li><a href="#coverage" data-i18n="footer.prod.coverage">Coverage</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.company">Company</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.co.about">About</a></li>
+              <li><a href="#" data-i18n="footer.co.blog">Blog</a></li>
+              <li><a href="#" data-i18n="footer.co.careers">Careers</a></li>
+              <li><a href="#" data-i18n="footer.co.press">Press</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.support">Support</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.sup.help">Help center</a></li>
+              <li><a href="#" data-i18n="footer.sup.chat">24/7 chat</a></li>
+              <li><a href="#" data-i18n="footer.sup.terms">Terms</a></li>
+              <li><a href="#" data-i18n="footer.sup.privacy">Privacy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-base">
+        <p data-i18n="footer.copyright">© 2026 PeçaAí Technologies</p>
+        <p data-i18n="footer.builtBy">Built with care for shops everywhere.</p>
+      </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

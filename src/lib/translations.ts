@@ -47,9 +47,64 @@ export const translations = {
     },
     sections: {
       projects: {
-        chapter: "· Chapter 02 · Discovered Planets",
-        heading: "Worlds shipped.",
-        placeholder: "Project catalog launching in the next deploy window.",
+        chapter: "· Chapter 02 · Discovered Worlds",
+        heading: "Six worlds. One trajectory.",
+        instruction: "Click a planet to investigate",
+        statusLive: "◉ LIVE",
+        statusCase: "◌ CASE STUDY",
+        ctaVisit: "Visit Surface →",
+        ctaInspect: "View Specimen",
+        ctaClose: "Close",
+        signatureFeature: "SIGNATURE FEATURE",
+        techStackLabel: "TECH STACK",
+        caseStudyDisclaimer:
+          "Case study — not deployed publicly. Source available on request.",
+        screenshotPending: "Screenshot pending",
+        items: {
+          upward: {
+            tagline:
+              "Full-service digital agency engineered for performance",
+            description:
+              "Full-stack site I built for my own digital studio. Multi-route Next.js architecture with dynamic case study pages, native EN/PT i18n, and a content layer tuned for rapid client onboarding.",
+            highlight:
+              "Multi-route portfolio with dynamic case studies + native bilingual i18n",
+          },
+          smartfloors: {
+            tagline: "Premium floor installation in Connecticut",
+            description:
+              "First real client of Upward Media. Marketing site with EN/ES, trust signals (15+ years, 300+ projects), and an interactive 3D floor configurator.",
+            highlight:
+              "Interactive 3D Floor Studio — pick material + color, see it rendered in a sunlit room",
+          },
+          phoenix: {
+            tagline: "AI-native cybersecurity platform",
+            description:
+              "Marketing site for a fictional SaaS in the spirit of Vercel + Linear, but tuned for security ops: dashboard mockup, terminal UI, live-ticking counters, threat feed.",
+            highlight:
+              "Live-ticking ops counter that keeps incrementing in real time after the reveal",
+          },
+          pecaai: {
+            tagline: "Auto parts at the speed of an app",
+            description:
+              "Landing page for a B2B marketplace app connecting mechanics to parts suppliers in real time. Clean app-marketing aesthetic with dual narratives.",
+            highlight:
+              "CSS-only phone mockup with orbit ring — pure CSS, no images, even the notch",
+          },
+          luxor: {
+            tagline: "Private membership for an invitation-only world",
+            description:
+              "Editorial-luxury institutional site for a fictional ultra-exclusive club. Soho House / NoMad territory. Monastic minimalism, Roman numerals, four-city geography.",
+            highlight:
+              "Cursor spotlight with lerp + char-by-char hero stagger + SVG film grain overlay",
+          },
+          woodframe: {
+            tagline: "Objects & interiors hand-carved in Minas Gerais",
+            description:
+              "Institutional site for a fictional design boutique — handcrafted furniture and bespoke interiors from Minas Gerais, Brazil. Kinfolk magazine territory.",
+            highlight:
+              "Triple typography stack — Clash Display + Inter + Instrument Serif italic — for editorial-magazine personality",
+          },
+        },
       },
       skills: {
         chapter: "· Chapter 03 · Constellation",
@@ -109,9 +164,65 @@ export const translations = {
     },
     sections: {
       projects: {
-        chapter: "· Capítulo 02 · Planetas Descobertos",
-        heading: "Mundos lançados.",
-        placeholder: "Catálogo de projetos em breve.",
+        chapter: "· Capítulo 02 · Mundos Descobertos",
+        heading: "Seis mundos. Uma trajetória.",
+        instruction: "Clique num planeta para investigar",
+        statusLive: "◉ NO AR",
+        statusCase: "◌ ESTUDO DE CASO",
+        ctaVisit: "Visitar Superfície →",
+        ctaInspect: "Ver Espécime",
+        ctaClose: "Fechar",
+        signatureFeature: "DIFERENCIAL",
+        techStackLabel: "STACK TÉCNICA",
+        caseStudyDisclaimer:
+          "Estudo de caso — não publicado online. Código disponível mediante pedido.",
+        screenshotPending: "Screenshot em breve",
+        items: {
+          upward: {
+            tagline: "Agência digital full-service focada em performance",
+            description:
+              "Site full-stack que construí pra minha própria agência digital. Arquitetura Next.js multi-rota com páginas de case dinâmicas, i18n bilíngue EN/PT nativo, e camada de conteúdo afinada pra onboarding rápido de clientes.",
+            highlight:
+              "Portfólio multi-rota com cases dinâmicos + i18n bilíngue nativo",
+          },
+          smartfloors: {
+            tagline: "Instalação de pisos premium em Connecticut",
+            description:
+              "Primeiro cliente real da Upward Media. Site institucional bilíngue EN/ES, com trust signals (15+ anos, 300+ projetos) e configurador 3D de pisos interativo.",
+            highlight:
+              "3D Floor Studio interativo — escolhe material + cor e vê renderizado num quarto iluminado",
+          },
+          phoenix: {
+            tagline: "Plataforma de cibersegurança AI-native",
+            description:
+              "Site institucional pra SaaS fictício no espírito Vercel + Linear, mas afinado pra security ops: dashboard mockup, terminal UI, contadores live, threat feed.",
+            highlight:
+              "Contador live de ops que continua incrementando em tempo real depois do reveal",
+          },
+          pecaai: {
+            tagline: "Peças automotivas na velocidade de um app",
+            description:
+              "Landing page de app marketplace B2B conectando oficinas a fornecedores em tempo real. Estética app-marketing limpa com narrativas duplas.",
+            highlight:
+              "Phone mockup em CSS puro com orbit decorativo — sem imagens, até o notch é CSS",
+          },
+          luxor: {
+            tagline:
+              "Membership privado pra um mundo que só entra por convite",
+            description:
+              "Site institucional editorial-luxury pra clube privado fictício ultra-exclusivo. Território Soho House / NoMad. Minimalismo monástico, algarismos romanos, geografia de quatro cidades.",
+            highlight:
+              "Cursor spotlight com lerp + stagger char-por-char + SVG film grain overlay",
+          },
+          woodframe: {
+            tagline:
+              "Objetos e interiores entalhados à mão em Minas Gerais",
+            description:
+              "Site institucional pra boutique fictícia de design — móveis entalhados à mão e interiores sob encomenda de Minas Gerais, Brasil. Território Kinfolk magazine.",
+            highlight:
+              "Stack tipográfico tripla — Clash Display + Inter + Instrument Serif itálico — pra personalidade editorial-revista",
+          },
+        },
       },
       skills: {
         chapter: "· Capítulo 03 · Constelação",

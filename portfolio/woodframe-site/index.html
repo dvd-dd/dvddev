@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Wood Frame — Objects &amp; Interiors</title>
+    <meta
+      name="description"
+      content="Wood Frame is a boutique studio of natural design. Hand-carved objects and bespoke interiors, born from the forest."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='12' y='12' width='76' height='76' rx='4' fill='none' stroke='%23B8956A' stroke-width='10'/%3E%3Ccircle cx='50' cy='50' r='7' fill='%23B8956A'/%3E%3C/svg%3E" />
+
+    <!-- Fonts: Clash Display (Fontshare) + Inter + Instrument Serif -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ━━━━━━━━━ NAV ━━━━━━━━━ -->
+    <header class="nav" id="nav">
+      <div class="nav-inner">
+        <a class="nav-wordmark" href="#top" aria-label="Wood Frame home">
+          <span class="wm-wood">WOOD</span>
+          <span class="wm-dot"></span>
+          <span class="wm-frame">FRAME</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#collection" data-i18n="nav.objects">Objects</a>
+          <a href="#craft" data-i18n="nav.process">Process</a>
+          <a href="#atelier" data-i18n="nav.atelier">Atelier</a>
+          <a href="#commission" data-i18n="nav.commission">Commission</a>
+        </nav>
+        <div class="nav-lang" role="group" aria-label="Language">
+          <button type="button" class="nav-lang-btn" data-lang="en">EN</button>
+          <span class="nav-lang-sep" aria-hidden="true">/</span>
+          <button type="button" class="nav-lang-btn" data-lang="pt">PT</button>
+        </div>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="nav-mobile" aria-hidden="true">
+      <button class="nav-mobile-close" type="button" aria-label="Close menu">
+        <span></span><span></span>
+      </button>
+      <ul>
+        <li><a href="#collection" data-i18n="nav.objects">Objects</a></li>
+        <li><a href="#craft" data-i18n="nav.process">Process</a></li>
+        <li><a href="#atelier" data-i18n="nav.atelier">Atelier</a></li>
+        <li><a href="#commission" data-i18n="nav.commission">Commission</a></li>
+      </ul>
+      <div class="nav-mobile-lang" role="group" aria-label="Language">
+        <button type="button" class="nav-lang-btn" data-lang="en">EN</button>
+        <span class="nav-lang-sep" aria-hidden="true">/</span>
+        <button type="button" class="nav-lang-btn" data-lang="pt">PT</button>
+      </div>
+    </div>
+
+    <main id="top">
+      <!-- ━━━━━━━━━ 1. HERO ━━━━━━━━━ -->
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-text">
+            <p class="eyebrow" data-reveal data-i18n="hero.eyebrow">— Est. 2014 · Minas Gerais · Brazil</p>
+            <h1 class="hero-title">
+              <span class="line" data-reveal data-i18n="hero.line1">Objects</span>
+              <span class="line offset" data-reveal data-i18n="hero.line2">of</span>
+              <span class="line" data-reveal data-i18n-html="hero.line3Html">
+                <em>nature.</em>
+              </span>
+            </h1>
+            <p class="hero-lede" data-reveal data-i18n-html="hero.ledeHtml">
+              Each piece is carved once.<br />
+              Owned for a lifetime.
+            </p>
+            <div class="hero-ctas" data-reveal>
+              <a class="btn btn-primary" href="#collection">
+                <span data-i18n="hero.ctaPrimary">See the collection</span>
+                <span class="btn-arrow">↓</span>
+              </a>
+              <a class="btn btn-ghost" href="#commission" data-i18n="hero.ctaSecondary">Commission a piece</a>
+            </div>
+          </div>
+          <div class="hero-image" data-reveal>
+            <img src="images/hero.jpg" alt="Hand-carved wooden object" />
+            <p class="hero-caption">
+              <span data-i18n="hero.captionNo">№ 01</span>
+              <span data-i18n="hero.caption">Rovere stool — European oak — 2024</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-meta">
+          <div class="meta-item" data-reveal>
+            <p class="meta-num" data-i18n="hero.m1Num">11 yrs</p>
+            <p class="meta-label" data-i18n="hero.m1Label">of quiet practice</p>
+          </div>
+          <div class="meta-item" data-reveal>
+            <p class="meta-num" data-i18n="hero.m2Num">1 of 1</p>
+            <p class="meta-label" data-i18n="hero.m2Label">every piece unique</p>
+          </div>
+          <div class="meta-item" data-reveal>
+            <p class="meta-num" data-i18n="hero.m3Num">~40</p>
+            <p class="meta-label" data-i18n="hero.m3Label">objects per year</p>
+          </div>
+          <div class="meta-item" data-reveal>
+            <p class="meta-num" data-i18n="hero.m4Num">∞</p>
+            <p class="meta-label" data-i18n="hero.m4Label">lifetime repair</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ wave divider ━━━━━━━━━ -->
+      <div class="wave-divider" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path d="M0,64 C240,112 480,16 720,40 C960,64 1200,112 1440,72 L1440,120 L0,120 Z"></path>
+        </svg>
+      </div>
+
+      <!-- ━━━━━━━━━ 2. MANIFESTO ━━━━━━━━━ -->
+      <section class="manifesto">
+        <div class="rail rail-left" aria-hidden="true">
+          <span data-i18n="manifesto.rail">ESSENCE · SHAPE · NATURE · BALANCE · ESSENCE · SHAPE · NATURE · BALANCE</span>
+        </div>
+        <div class="manifesto-inner">
+          <p class="eyebrow" data-reveal data-i18n="manifesto.eyebrow">— A few words</p>
+          <h2 class="manifesto-quote" data-reveal data-i18n-html="manifesto.quoteHtml">
+            <em>
+              "We don't decorate spaces.<br />
+              We bring the forest indoors —<br />
+              one piece, one grain,<br />
+              one breath at a time."
+            </em>
+          </h2>
+          <div class="manifesto-body">
+            <p data-reveal data-i18n="manifesto.body1">
+              Wood Frame began in a small shed at the edge of a Minas Gerais
+              forest. One carpenter. One chisel. One idea — that a well-made
+              object should feel like it was always meant to exist.
+            </p>
+            <p data-reveal data-i18n="manifesto.body2">
+              Eleven years later, we are still a studio of three. We refuse
+              mass production, because mass production refuses the grain. Every
+              piece leaves our atelier with the marks of the hand that shaped
+              it, the species that grew it, and the season it was sourced in.
+            </p>
+            <p data-reveal data-i18n-html="manifesto.body3Html">
+              If you are looking for fast, we are not for you. If you are
+              looking for <em>forever</em>, welcome.
+            </p>
+          </div>
+          <p class="signature" data-reveal data-i18n="manifesto.signature">
+            — Caio &amp; Helena, founders
+          </p>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 3. COLLECTION ━━━━━━━━━ -->
+      <section class="collection" id="collection">
+        <div class="chapter" data-reveal>
+          <p class="chapter-roman">I</p>
+          <p class="chapter-label" data-i18n-html="collection.chapterHtml"><em>Chapter I</em> — Objects</p>
+        </div>
+        <div class="collection-head">
+          <h2 class="section-title" data-reveal data-i18n-html="collection.titleHtml">
+            Six pieces<br />
+            <em>in circulation.</em>
+          </h2>
+          <p class="section-lede" data-reveal data-i18n="collection.lede">
+            A small rotating collection — each one hand-carved, numbered,
+            signed on the underside. When they sell, we start again from a
+            fresh block. Drag to explore.
+          </p>
+        </div>
+
+        <div class="collection-track-wrap">
+          <div class="collection-track" data-horizontal>
+            <article class="object-card" data-tilt>
+              <div class="object-media">
+                <img src="images/obj-rovere.jpg" alt="Rovere stool" />
+                <span class="object-badge">01 / 06</span>
+              </div>
+              <div class="object-meta">
+                <p class="object-species" data-i18n="collection.items.rovere.species">European Oak</p>
+                <h3 class="object-name" data-i18n="collection.items.rovere.name">Rovere</h3>
+                <p class="object-sub" data-i18n="collection.items.rovere.sub">Carved stool · 42cm · Edition of 4</p>
+                <p class="object-price">$960</p>
+              </div>
+            </article>
+
+            <article class="object-card" data-tilt>
+              <div class="object-media">
+                <img src="images/obj-faggio.jpg" alt="Faggio bench" />
+                <span class="object-badge">02 / 06</span>
+              </div>
+              <div class="object-meta">
+                <p class="object-species" data-i18n="collection.items.faggio.species">Beechwood</p>
+                <h3 class="object-name" data-i18n="collection.items.faggio.name">Faggio</h3>
+                <p class="object-sub" data-i18n="collection.items.faggio.sub">Entrance bench · 140cm · Single piece</p>
+                <p class="object-price">$2,240</p>
+              </div>
+            </article>
+
+            <article class="object-card" data-tilt>
+              <div class="object-media">
+                <img src="images/obj-quercus.jpg" alt="Quercus frame" />
+                <span class="object-badge">03 / 06</span>
+              </div>
+              <div class="object-meta">
+                <p class="object-species" data-i18n="collection.items.quercus.species">Brazilian Oak</p>
+                <h3 class="object-name" data-i18n="collection.items.quercus.name">Quercus</h3>
+                <p class="object-sub" data-i18n="collection.items.quercus.sub">Wall frame · 60×80cm · Edition of 8</p>
+                <p class="object-price">$480</p>
+              </div>
+            </article>
+
+            <article class="object-card" data-tilt>
+              <div class="object-media">
+                <img src="images/obj-larix.jpg" alt="Larix shelf" />
+                <span class="object-badge">04 / 06</span>
+              </div>
+              <div class="object-meta">
+                <p class="object-species" data-i18n="collection.items.larix.species">Larch</p>
+                <h3 class="object-name" data-i18n="collection.items.larix.name">Larix</h3>
+                <p class="object-sub" data-i18n="collection.items.larix.sub">Floating shelf · 120cm · Edition of 6</p>
+                <p class="object-price">$720</p>
+              </div>
+            </article>
+
+            <article class="object-card" data-tilt>
+              <div class="object-media">
+                <img src="images/obj-cedro.jpg" alt="Cedro table" />
+                <span class="object-badge">05 / 06</span>
+              </div>
+              <div class="object-meta">
+                <p class="object-species" data-i18n="collection.items.cedro.species">Cedar</p>
+                <h3 class="object-name" data-i18n="collection.items.cedro.name">Cedro</h3>
+                <p class="object-sub" data-i18n="collection.items.cedro.sub">Low table · 110×60cm · Single piece</p>
+                <p class="object-price">$3,280</p>
+              </div>
+            </article>
+
+            <article class="object-card" data-tilt>
+              <div class="object-media">
+                <img src="images/obj-ulmo.jpg" alt="Ulmo mirror" />
+                <span class="object-badge">06 / 06</span>
+              </div>
+              <div class="object-meta">
+                <p class="object-species" data-i18n="collection.items.ulmo.species">Elm</p>
+                <h3 class="object-name" data-i18n="collection.items.ulmo.name">Ulmo</h3>
+                <p class="object-sub" data-i18n="collection.items.ulmo.sub">Standing mirror · 180cm · Edition of 3</p>
+                <p class="object-price">$1,580</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="track-progress" aria-hidden="true">
+            <span class="track-line"><span class="track-fill" data-track-fill></span></span>
+            <p class="track-hint" data-i18n="collection.trackHint">drag · scroll · swipe</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 4. MATERIALS ━━━━━━━━━ -->
+      <section class="materials">
+        <div class="chapter" data-reveal>
+          <p class="chapter-roman">II</p>
+          <p class="chapter-label" data-i18n-html="materials.chapterHtml"><em>Chapter II</em> — Materials</p>
+        </div>
+        <div class="materials-head">
+          <h2 class="section-title" data-reveal data-i18n-html="materials.titleHtml">
+            Four species.<br />
+            <em>No substitutes.</em>
+          </h2>
+          <p class="section-lede" data-reveal data-i18n="materials.lede">
+            We work with four species, and four only. Each has a temperament,
+            a density, a way of receiving oil. We learn them like old friends.
+          </p>
+        </div>
+        <div class="materials-grid">
+          <article class="material-card" data-reveal>
+            <div class="material-media">
+              <img src="images/grain-oak.jpg" alt="Oak grain close-up" />
+            </div>
+            <p class="material-tag">Quercus robur</p>
+            <h3 class="material-name" data-i18n="materials.oak.name">Oak</h3>
+            <p class="material-origin" data-i18n="materials.oak.origin">Minas Gerais · Brazil</p>
+            <ul class="material-data">
+              <li><span data-i18n="materials.density">Density</span><span>0.75 g/cm³</span></li>
+              <li><span data-i18n="materials.hardness">Hardness</span><span data-i18n="materials.oak.hardness">High</span></li>
+              <li><span data-i18n="materials.finish">Finish</span><span data-i18n="materials.oak.finish">Raw oil</span></li>
+            </ul>
+          </article>
+
+          <article class="material-card" data-reveal>
+            <div class="material-media">
+              <img src="images/grain-walnut.jpg" alt="Walnut grain close-up" />
+            </div>
+            <p class="material-tag">Juglans nigra</p>
+            <h3 class="material-name" data-i18n="materials.walnut.name">Walnut</h3>
+            <p class="material-origin" data-i18n="materials.walnut.origin">Paraná · Brazil</p>
+            <ul class="material-data">
+              <li><span data-i18n="materials.density">Density</span><span>0.64 g/cm³</span></li>
+              <li><span data-i18n="materials.hardness">Hardness</span><span data-i18n="materials.walnut.hardness">Medium-high</span></li>
+              <li><span data-i18n="materials.finish">Finish</span><span data-i18n="materials.walnut.finish">Dark wax</span></li>
+            </ul>
+          </article>
+
+          <article class="material-card" data-reveal>
+            <div class="material-media">
+              <img src="images/grain-ash.jpg" alt="Ash grain close-up" />
+            </div>
+            <p class="material-tag">Fraxinus excelsior</p>
+            <h3 class="material-name" data-i18n="materials.ash.name">Ash</h3>
+            <p class="material-origin" data-i18n="materials.ash.origin">Santa Catarina · Brazil</p>
+            <ul class="material-data">
+              <li><span data-i18n="materials.density">Density</span><span>0.68 g/cm³</span></li>
+              <li><span data-i18n="materials.hardness">Hardness</span><span data-i18n="materials.ash.hardness">Medium</span></li>
+              <li><span data-i18n="materials.finish">Finish</span><span data-i18n="materials.ash.finish">Natural soap</span></li>
+            </ul>
+          </article>
+
+          <article class="material-card" data-reveal>
+            <div class="material-media">
+              <img src="images/grain-teak.jpg" alt="Teak grain close-up" />
+            </div>
+            <p class="material-tag">Tectona grandis</p>
+            <h3 class="material-name" data-i18n="materials.teak.name">Teak</h3>
+            <p class="material-origin" data-i18n="materials.teak.origin">Bahia · Brazil</p>
+            <ul class="material-data">
+              <li><span data-i18n="materials.density">Density</span><span>0.66 g/cm³</span></li>
+              <li><span data-i18n="materials.hardness">Hardness</span><span data-i18n="materials.teak.hardness">High</span></li>
+              <li><span data-i18n="materials.finish">Finish</span><span data-i18n="materials.teak.finish">Tung oil</span></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 5. CRAFT ━━━━━━━━━ -->
+      <section class="craft" id="craft">
+        <div class="chapter" data-reveal>
+          <p class="chapter-roman">III</p>
+          <p class="chapter-label" data-i18n-html="craft.chapterHtml"><em>Chapter III</em> — Craft</p>
+        </div>
+        <div class="craft-head">
+          <h2 class="section-title" data-reveal data-i18n-html="craft.titleHtml">
+            Four acts.<br />
+            <em>Six months. Sometimes longer.</em>
+          </h2>
+        </div>
+
+        <div class="craft-steps">
+          <article class="craft-step" data-reveal>
+            <div class="craft-text">
+              <p class="craft-roman">I.</p>
+              <h3 class="craft-title" data-i18n="craft.sourcing.title">Sourcing</h3>
+              <p class="craft-desc" data-i18n="craft.sourcing.desc">
+                We walk the forests ourselves. Every tree is chosen standing,
+                and never felled before its time. A single sourcing trip can
+                take two weeks — and come back with nothing.
+              </p>
+            </div>
+            <div class="craft-media">
+              <img src="images/craft-sourcing.jpg" alt="Forest sourcing" />
+            </div>
+          </article>
+
+          <article class="craft-step reverse" data-reveal>
+            <div class="craft-text">
+              <p class="craft-roman">II.</p>
+              <h3 class="craft-title" data-i18n="craft.carving.title">Carving</h3>
+              <p class="craft-desc" data-i18n="craft.carving.desc">
+                The block is allowed to dry for 90 days before the first cut.
+                Then the hand takes over — chisel, plane, rasp, palm. No CNC.
+                No shortcut. The grain decides what is possible.
+              </p>
+            </div>
+            <div class="craft-media">
+              <img src="images/craft-carving.jpg" alt="Hand carving" />
+            </div>
+          </article>
+
+          <article class="craft-step" data-reveal>
+            <div class="craft-text">
+              <p class="craft-roman">III.</p>
+              <h3 class="craft-title" data-i18n="craft.finishing.title">Finishing</h3>
+              <p class="craft-desc" data-i18n="craft.finishing.desc">
+                Three layers of oil, each one rubbed in by hand and allowed to
+                cure for 48 hours. The surface is polished with beeswax until
+                it feels warm. This is the slowest part. It cannot be hurried.
+              </p>
+            </div>
+            <div class="craft-media">
+              <img src="images/craft-finishing.jpg" alt="Oil finishing" />
+            </div>
+          </article>
+
+          <article class="craft-step reverse" data-reveal>
+            <div class="craft-text">
+              <p class="craft-roman">IV.</p>
+              <h3 class="craft-title" data-i18n="craft.delivery.title">Delivery</h3>
+              <p class="craft-desc" data-i18n="craft.delivery.desc">
+                Each object is wrapped in unbleached cotton, boxed in
+                reclaimed cedar, and signed by the carver. A small card travels
+                with it, telling the story of the tree it came from.
+              </p>
+            </div>
+            <div class="craft-media">
+              <img src="images/craft-delivery.jpg" alt="Packaged piece" />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 6. ATELIER ━━━━━━━━━ -->
+      <section class="atelier" id="atelier">
+        <div class="chapter chapter-on-image" data-reveal>
+          <p class="chapter-roman">IV</p>
+          <p class="chapter-label" data-i18n-html="atelier.chapterHtml"><em>Chapter IV</em> — The Atelier</p>
+        </div>
+        <div class="atelier-media">
+          <img src="images/atelier.jpg" alt="Wood Frame atelier" />
+          <div class="atelier-overlay">
+            <p class="atelier-quote" data-i18n-html="atelier.quoteHtml">
+              <em>
+                "Our studio is a quiet room<br />
+                in the countryside of Minas Gerais.<br />
+                We answer the phone slowly."
+              </em>
+            </p>
+            <p class="atelier-meta" data-i18n="atelier.meta">— 21°S · 44°W · 1,140m elevation</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 7. RECOGNITION ━━━━━━━━━ -->
+      <section class="recognition">
+        <div class="chapter" data-reveal>
+          <p class="chapter-roman">V</p>
+          <p class="chapter-label" data-i18n-html="recognition.chapterHtml"><em>A few kind words</em></p>
+        </div>
+        <div class="recognition-head">
+          <h2 class="section-title" data-reveal data-i18n="recognition.title">
+            Quietly noticed.
+          </h2>
+        </div>
+        <div class="press-grid">
+          <figure class="press-quote" data-reveal>
+            <p class="press-mark">&ldquo;</p>
+            <blockquote data-i18n="recognition.q1.text">
+              A studio that measures time in grain rings, not quarters.
+              Wood Frame is the most considered object brand to come out of
+              South America in a decade.
+            </blockquote>
+            <figcaption data-i18n="recognition.q1.source">Dezeen — March 2024</figcaption>
+          </figure>
+          <figure class="press-quote" data-reveal>
+            <p class="press-mark">&ldquo;</p>
+            <blockquote data-i18n="recognition.q2.text">
+              There is a hush around these pieces. You feel the forest before
+              you feel the furniture. That is rare, and it is the whole point.
+            </blockquote>
+            <figcaption data-i18n="recognition.q2.source">Wallpaper* — Issue 287</figcaption>
+          </figure>
+          <figure class="press-quote" data-reveal>
+            <p class="press-mark">&ldquo;</p>
+            <blockquote data-i18n="recognition.q3.text">
+              No showroom. No catalogue. No rush. Wood Frame has rewritten
+              what a Brazilian design studio can refuse to be.
+            </blockquote>
+            <figcaption data-i18n="recognition.q3.source">Casa Vogue Brasil — Jan 2025</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ━━━━━━━━━ 8. COMMISSION ━━━━━━━━━ -->
+      <section class="commission" id="commission">
+        <div class="commission-inner">
+          <p class="eyebrow" data-reveal data-i18n="commission.eyebrow">— Bespoke</p>
+          <h2 class="section-title" data-reveal data-i18n-html="commission.titleHtml">
+            Want one<br />
+            <em>of your own?</em>
+          </h2>
+          <p class="commission-lede" data-reveal data-i18n="commission.lede">
+            Every Wood Frame object starts with a conversation. Tell us what
+            you are imagining — a piece, a room, a whole home — and we will
+            write back within a week.
+          </p>
+
+          <form class="commission-form" data-reveal novalidate>
+            <div class="form-row">
+              <label>
+                <span data-i18n="commission.name">Your name</span>
+                <input type="text" name="name" placeholder="Helena Ribeiro" data-i18n-attr="placeholder:commission.namePh" />
+              </label>
+              <label>
+                <span data-i18n="commission.email">Email</span>
+                <input type="email" name="email" placeholder="hello@example.com" data-i18n-attr="placeholder:commission.emailPh" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                <span data-i18n="commission.species">Preferred species</span>
+                <select name="species">
+                  <option data-i18n="materials.oak.name">Oak</option>
+                  <option data-i18n="materials.walnut.name">Walnut</option>
+                  <option data-i18n="materials.ash.name">Ash</option>
+                  <option data-i18n="materials.teak.name">Teak</option>
+                  <option data-i18n="commission.undecided">Undecided</option>
+                </select>
+              </label>
+              <label>
+                <span data-i18n="commission.kind">Kind of piece</span>
+                <select name="type">
+                  <option data-i18n="commission.stool">Stool / chair</option>
+                  <option data-i18n="commission.table">Table</option>
+                  <option data-i18n="commission.shelf">Shelf / cabinet</option>
+                  <option data-i18n="commission.wall">Wall object</option>
+                  <option data-i18n="commission.interior">Full interior</option>
+                </select>
+              </label>
+            </div>
+            <label class="full">
+              <span data-i18n="commission.message">What are you imagining?</span>
+              <textarea
+                name="message"
+                rows="4"
+                placeholder="A low walnut table for a reading corner. Something warm and quiet."
+                data-i18n-attr="placeholder:commission.messagePh"
+              ></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary btn-large">
+              <span data-i18n="commission.submit">Start the conversation</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </form>
+
+          <div class="commission-contact" data-reveal>
+            <p data-i18n-html="commission.reachHtml">
+              or reach us at
+              <a href="mailto:atelier@woodframe.studio">atelier@woodframe.studio</a>
+              · <a href="#">@woodframe.studio</a>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ━━━━━━━━━ FOOTER ━━━━━━━━━ -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-mark">
+          <p class="footer-wordmark">WOOD · FRAME</p>
+          <p class="footer-tag" data-i18n="footer.tag">
+            Hand-carved in Brazil · Shipped worldwide
+          </p>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h4 data-i18n="footer.col.studio">Studio</h4>
+            <ul>
+              <li><a href="#collection" data-i18n="nav.objects">Objects</a></li>
+              <li><a href="#craft" data-i18n="nav.process">Process</a></li>
+              <li><a href="#atelier" data-i18n="nav.atelier">Atelier</a></li>
+              <li><a href="#commission" data-i18n="nav.commission">Commission</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.visit">Visit</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.link.appointment">By appointment only</a></li>
+              <li><a href="#" data-i18n="footer.link.location">Minas Gerais, BR</a></li>
+              <li><a href="#" data-i18n="footer.link.directions">Directions</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 data-i18n="footer.col.follow">Follow</h4>
+            <ul>
+              <li><a href="#" data-i18n="footer.link.instagram">Instagram</a></li>
+              <li><a href="#" data-i18n="footer.link.journal">Journal</a></li>
+              <li><a href="#" data-i18n="footer.link.newsletter">Newsletter</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-base">
+        <p data-i18n="footer.copyright">© 2025 Wood Frame Studio · All pieces are one of a kind</p>
+        <p class="footer-colophon" data-i18n="footer.colophon">
+          Set in Clash Display, Instrument Serif, Inter
+        </p>
+      </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

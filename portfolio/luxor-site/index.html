@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxor — The Private Membership</title>
+    <meta
+      name="description"
+      content="An invitation-only private membership curating the world's most exclusive experiences. Not for everyone. That's the point."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90' fill='%23D4A853'%3EL%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Grain overlay -->
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Cursor spotlight -->
+    <div class="cursor-spot" aria-hidden="true"></div>
+
+    <!-- ━━━━━━━━━ NAV ━━━━━━━━━ -->
+    <nav class="nav">
+      <a href="#top" class="nav-wordmark">LUXOR</a>
+      <ul class="nav-links">
+        <li><a href="#experiences" data-i18n="nav.experiences">Experiences</a></li>
+        <li><a href="#membership" data-i18n="nav.membership">Membership</a></li>
+        <li><a href="#ateliers" data-i18n="nav.ateliers">Ateliers</a></li>
+        <li><a href="#apply" data-i18n="nav.apply">Apply</a></li>
+      </ul>
+      <div class="nav-lang" role="group" aria-label="Language">
+        <button type="button" class="nav-lang-btn" data-lang="en">EN</button>
+        <span class="nav-lang-sep" aria-hidden="true">/</span>
+        <button type="button" class="nav-lang-btn" data-lang="pt">PT</button>
+      </div>
+      <button class="nav-burger" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile menu overlay -->
+    <div class="nav-mobile" aria-hidden="true">
+      <button class="nav-mobile-close" type="button" aria-label="Close menu">
+        <span></span><span></span>
+      </button>
+      <ul>
+        <li><a href="#experiences" data-i18n="nav.experiences">Experiences</a></li>
+        <li><a href="#membership" data-i18n="nav.membership">Membership</a></li>
+        <li><a href="#ateliers" data-i18n="nav.ateliers">Ateliers</a></li>
+        <li><a href="#apply" data-i18n="nav.apply">Apply</a></li>
+      </ul>
+      <div class="nav-mobile-lang" role="group" aria-label="Language">
+        <button type="button" class="nav-lang-btn" data-lang="en">EN</button>
+        <span class="nav-lang-sep" aria-hidden="true">/</span>
+        <button type="button" class="nav-lang-btn" data-lang="pt">PT</button>
+      </div>
+    </div>
+
+    <!-- ━━━━━━━━━ 1. HERO ━━━━━━━━━ -->
+    <section class="hero" id="top">
+      <div class="hero-bg">
+        <img
+          src="images/hero.jpg"
+          alt=""
+          loading="eager"
+        />
+        <div class="hero-bg-veil"></div>
+      </div>
+
+      <div class="hero-meta hero-meta-left">
+        <div class="vertical-marquee" aria-hidden="true">
+          <span data-i18n="hero.marquee">EXCLUSIVITY&nbsp;·&nbsp;SOPHISTICATION&nbsp;·&nbsp;PRESTIGE&nbsp;·&nbsp;EXCLUSIVITY&nbsp;·&nbsp;SOPHISTICATION&nbsp;·&nbsp;PRESTIGE&nbsp;·&nbsp;</span>
+        </div>
+      </div>
+
+      <div class="hero-meta hero-meta-right">
+        <p class="hero-meta-label">Est. MMXXV</p>
+        <p class="hero-meta-cities">Monaco&nbsp;·&nbsp;Paris&nbsp;·&nbsp;NYC&nbsp;·&nbsp;Tokyo</p>
+      </div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow" data-i18n="hero.eyebrow">— A Private Membership</p>
+        <h1 class="hero-title" data-split data-i18n="hero.title">Not for everyone.</h1>
+        <p class="hero-sub" data-i18n="hero.sub">
+          For those who have already arrived.
+        </p>
+        <a href="#apply" class="hero-cta">
+          <span data-i18n="hero.cta">Request an invitation</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="hero-scroll-hint" aria-hidden="true">
+        <span data-i18n="hero.scroll">SCROLL</span>
+        <span class="line"></span>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 2. MANIFESTO ━━━━━━━━━ -->
+    <section class="manifesto" data-reveal>
+      <div class="manifesto-inner">
+        <div class="manifesto-rule"></div>
+
+        <div class="manifesto-grid">
+          <div class="manifesto-text">
+            <p class="section-eyebrow" data-i18n="manifesto.eyebrow">— Manifesto</p>
+            <p class="manifesto-quote" data-i18n-html="manifesto.quoteHtml">
+              We are not a brand.<br />
+              We are a <em>standard.</em>
+            </p>
+            <p class="manifesto-body" data-i18n="manifesto.body1">
+              A private world built for those who no longer need to prove
+              anything — only to live it. Every door, opened. Every detail,
+              curated. Every silence, respected.
+            </p>
+            <p class="manifesto-body" data-i18n="manifesto.body2">
+              We do not chase trends. We define the rooms in which trends are
+              born. And we do not announce ourselves. We are recognized by
+              those who already know.
+            </p>
+            <p class="manifesto-signature" data-i18n="manifesto.signature">— The House of Luxor</p>
+          </div>
+
+          <div class="manifesto-image">
+            <img
+              src="images/manifesto.jpg"
+              alt="Private library detail"
+              loading="lazy"
+            />
+            <div class="manifesto-image-caption" data-i18n="manifesto.caption">
+              Atelier II — Monaco, 2024
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 3. EXPERIENCES ━━━━━━━━━ -->
+    <section class="experiences" id="experiences">
+      <header class="experiences-header" data-reveal>
+        <p class="section-eyebrow" data-i18n="experiences.eyebrow">— The Six Worlds</p>
+        <h2 class="section-title" data-i18n-html="experiences.titleHtml">Six worlds.<br /><em>One key.</em></h2>
+        <p class="section-lede" data-i18n="experiences.lede">
+          A curated universe of experiences reserved exclusively for members.
+          Scroll to discover.
+        </p>
+      </header>
+
+      <div class="experiences-track" data-scroll-track>
+        <!-- I -->
+        <article class="exp-card">
+          <div class="exp-image">
+            <img
+              src="images/exp-aviation.jpg"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+          <div class="exp-content">
+            <span class="exp-numeral">I</span>
+            <h3 class="exp-title" data-i18n="experiences.aviation.title">Private Aviation</h3>
+            <p class="exp-lede" data-i18n="experiences.aviation.lede">
+              A fleet on call. Takeoff within ninety minutes, anywhere on
+              Earth.
+            </p>
+            <a href="#" class="exp-link"><span data-i18n="experiences.explore">Explore</span> <span>→</span></a>
+          </div>
+        </article>
+
+        <!-- II -->
+        <article class="exp-card">
+          <div class="exp-image">
+            <img
+              src="images/exp-yachts.jpg"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+          <div class="exp-content">
+            <span class="exp-numeral">II</span>
+            <h3 class="exp-title" data-i18n="experiences.yachts.title">Yacht Charters</h3>
+            <p class="exp-lede" data-i18n="experiences.yachts.lede">
+              Forty-seven vessels across the Mediterranean and Caribbean.
+              Crews trained in Luxor standards.
+            </p>
+            <a href="#" class="exp-link"><span data-i18n="experiences.explore">Explore</span> <span>→</span></a>
+          </div>
+        </article>
+
+        <!-- III -->
+        <article class="exp-card">
+          <div class="exp-image">
+            <img
+              src="images/exp-michelin.jpg"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+          <div class="exp-content">
+            <span class="exp-numeral">III</span>
+            <h3 class="exp-title" data-i18n="experiences.michelin.title">Michelin Access</h3>
+            <p class="exp-lede" data-i18n="experiences.michelin.lede">
+              A guaranteed seat at every three-star table in the world — on
+              any night, without notice.
+            </p>
+            <a href="#" class="exp-link"><span data-i18n="experiences.explore">Explore</span> <span>→</span></a>
+          </div>
+        </article>
+
+        <!-- IV -->
+        <article class="exp-card">
+          <div class="exp-image">
+            <img
+              src="images/exp-art.jpg"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+          <div class="exp-content">
+            <span class="exp-numeral">IV</span>
+            <h3 class="exp-title" data-i18n="experiences.art.title">Art Acquisitions</h3>
+            <p class="exp-lede" data-i18n="experiences.art.lede">
+              Preview auctions before the world sees them. Private curators
+              dispatched on request.
+            </p>
+            <a href="#" class="exp-link"><span data-i18n="experiences.explore">Explore</span> <span>→</span></a>
+          </div>
+        </article>
+
+        <!-- V -->
+        <article class="exp-card">
+          <div class="exp-image">
+            <img
+              src="images/exp-grandprix.jpg"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+          <div class="exp-content">
+            <span class="exp-numeral">V</span>
+            <h3 class="exp-title" data-i18n="experiences.grandPrix.title">Grand Prix Suites</h3>
+            <p class="exp-lede" data-i18n="experiences.grandPrix.lede">
+              Balcony access at Monaco, Silverstone, Spa, and Suzuka. Paddock
+              passes included.
+            </p>
+            <a href="#" class="exp-link"><span data-i18n="experiences.explore">Explore</span> <span>→</span></a>
+          </div>
+        </article>
+
+        <!-- VI -->
+        <article class="exp-card">
+          <div class="exp-image">
+            <img
+              src="images/exp-fashion.jpg"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+          <div class="exp-content">
+            <span class="exp-numeral">VI</span>
+            <h3 class="exp-title" data-i18n="experiences.fashion.title">Private Fashion</h3>
+            <p class="exp-lede" data-i18n="experiences.fashion.lede">
+              Front-row seating at every couture week. Ateliers opened for
+              members before the collections ship.
+            </p>
+            <a href="#" class="exp-link"><span data-i18n="experiences.explore">Explore</span> <span>→</span></a>
+          </div>
+        </article>
+      </div>
+
+      <p class="scroll-indicator" aria-hidden="true">
+        <span class="arrow-left">←</span> <span data-i18n="experiences.scrollHint">scroll</span> <span class="arrow-right">→</span>
+      </p>
+    </section>
+
+    <!-- ━━━━━━━━━ 4. ATELIERS ━━━━━━━━━ -->
+    <section class="ateliers" id="ateliers">
+      <div class="ateliers-inner">
+        <aside class="ateliers-aside" data-reveal>
+          <p class="section-eyebrow" data-i18n="ateliers.eyebrow">— Behind the Curtain</p>
+          <h2 class="section-title" data-i18n="ateliers.title">The Ateliers.</h2>
+          <p class="section-lede" data-i18n="ateliers.lede">
+            Every experience we deliver passes through four silent rooms.
+            These are ours.
+          </p>
+        </aside>
+
+        <div class="ateliers-list">
+          <article class="atelier-item" data-reveal>
+            <div class="atelier-num">01</div>
+            <div class="atelier-body">
+              <h3 data-i18n="ateliers.curation.title">Curation</h3>
+              <p data-i18n="ateliers.curation.body">
+                A committee of nine meets quarterly in Monaco. They decide
+                what enters the Luxor universe, and what is quietly refused.
+              </p>
+            </div>
+            <div class="atelier-image">
+              <img
+                src="images/atelier-curation.jpg"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+          </article>
+
+          <article class="atelier-item" data-reveal>
+            <div class="atelier-num">02</div>
+            <div class="atelier-body">
+              <h3 data-i18n="ateliers.sourcing.title">Sourcing</h3>
+              <p data-i18n="ateliers.sourcing.body">
+                Our sourcing team speaks thirteen languages and holds keys
+                to rooms no press release has ever mentioned.
+              </p>
+            </div>
+            <div class="atelier-image">
+              <img
+                src="images/atelier-sourcing.jpg"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+          </article>
+
+          <article class="atelier-item" data-reveal>
+            <div class="atelier-num">03</div>
+            <div class="atelier-body">
+              <h3 data-i18n="ateliers.experience.title">Experience Design</h3>
+              <p data-i18n="ateliers.experience.body">
+                Every journey is scripted by hand. From the temperature of
+                the car at arrival to the music in the suite — nothing is
+                accidental.
+              </p>
+            </div>
+            <div class="atelier-image">
+              <img
+                src="images/atelier-experience.jpg"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+          </article>
+
+          <article class="atelier-item" data-reveal>
+            <div class="atelier-num">04</div>
+            <div class="atelier-body">
+              <h3 data-i18n="ateliers.discretion.title">Discretion</h3>
+              <p data-i18n="ateliers.discretion.body">
+                The first principle of the house. No names, no photographs,
+                no records beyond what the member requires. Silence is our
+                signature.
+              </p>
+            </div>
+            <div class="atelier-image">
+              <img
+                src="images/atelier-discretion.jpg"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 5. MEMBERSHIP ━━━━━━━━━ -->
+    <section class="membership" id="membership">
+      <header class="membership-header" data-reveal>
+        <p class="section-eyebrow" data-i18n="membership.eyebrow">— Three Keys</p>
+        <h2 class="section-title" data-i18n-html="membership.titleHtml">Three doors.<br /><em>None public.</em></h2>
+        <p class="section-lede" data-i18n="membership.lede">
+          Every tier is capped. Every seat is reviewed individually. No
+          membership is purchased — only granted.
+        </p>
+      </header>
+
+      <div class="tiers">
+        <!-- Obsidian -->
+        <article class="tier" data-reveal>
+          <div class="tier-mark">
+            <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+              <path
+                d="M20 3 L35 20 L20 37 L5 20 Z"
+                stroke="currentColor"
+                stroke-width="1"
+              />
+            </svg>
+          </div>
+          <p class="tier-eyebrow">Tier I</p>
+          <h3 class="tier-name">Obsidian</h3>
+          <p class="tier-price">
+            <span class="tier-currency">$</span>24,000
+            <span class="tier-period" data-i18n="membership.period">/year</span>
+          </p>
+          <p class="tier-seats" data-i18n="membership.obsidian.seats">12 seats available</p>
+          <ul class="tier-list">
+            <li data-i18n="membership.obsidian.f1">Full access to Ateliers I–IV</li>
+            <li data-i18n="membership.obsidian.f2">One private concierge</li>
+            <li data-i18n="membership.obsidian.f3">48-hour request window</li>
+            <li data-i18n="membership.obsidian.f4">Quarterly events — global</li>
+          </ul>
+        </article>
+
+        <!-- Crown (featured) -->
+        <article class="tier tier-featured" data-reveal>
+          <div class="tier-glow" aria-hidden="true"></div>
+          <p class="tier-featured-label" data-i18n="membership.featured">Most Requested</p>
+          <div class="tier-mark">
+            <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+              <path
+                d="M5 30 L10 12 L20 22 L30 12 L35 30 Z"
+                stroke="currentColor"
+                stroke-width="1"
+              />
+              <circle cx="10" cy="10" r="1.5" fill="currentColor" />
+              <circle cx="20" cy="8" r="1.5" fill="currentColor" />
+              <circle cx="30" cy="10" r="1.5" fill="currentColor" />
+            </svg>
+          </div>
+          <p class="tier-eyebrow">Tier II</p>
+          <h3 class="tier-name">Crown</h3>
+          <p class="tier-price">
+            <span class="tier-currency">$</span>72,000
+            <span class="tier-period" data-i18n="membership.period">/year</span>
+          </p>
+          <p class="tier-seats" data-i18n="membership.crown.seats">6 seats available</p>
+          <ul class="tier-list">
+            <li data-i18n="membership.crown.f1">Everything in Obsidian</li>
+            <li data-i18n="membership.crown.f2">Team of three concierges</li>
+            <li data-i18n="membership.crown.f3">12-hour request window</li>
+            <li data-i18n="membership.crown.f4">Private aviation allowance</li>
+            <li data-i18n="membership.crown.f5">Invitations to founders&rsquo; events</li>
+          </ul>
+        </article>
+
+        <!-- Noir -->
+        <article class="tier" data-reveal>
+          <div class="tier-mark">
+            <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+              <circle cx="20" cy="20" r="14" fill="currentColor" />
+            </svg>
+          </div>
+          <p class="tier-eyebrow">Tier III</p>
+          <h3 class="tier-name">Noir</h3>
+          <p class="tier-price">
+            <span class="tier-currency">$</span>180,000
+            <span class="tier-period" data-i18n="membership.period">/year</span>
+          </p>
+          <p class="tier-seats" data-i18n="membership.noir.seats">3 seats — by invitation only</p>
+          <ul class="tier-list">
+            <li data-i18n="membership.noir.f1">Everything in Crown</li>
+            <li data-i18n="membership.noir.f2">A dedicated house director</li>
+            <li data-i18n="membership.noir.f3">Immediate request fulfillment</li>
+            <li data-i18n="membership.noir.f4">Private aviation — unlimited</li>
+            <li data-i18n="membership.noir.f5">A seat at the house committee</li>
+          </ul>
+        </article>
+      </div>
+
+      <p class="membership-note" data-reveal data-i18n="membership.note">
+        Applications are reviewed quarterly. Seats are never guaranteed.
+      </p>
+    </section>
+
+    <!-- ━━━━━━━━━ 6. VOICES ━━━━━━━━━ -->
+    <section class="voices">
+      <div class="voices-quote-mark" aria-hidden="true">&ldquo;</div>
+
+      <div class="voices-inner">
+        <header class="voices-header" data-reveal>
+          <p class="section-eyebrow" data-i18n="voices.eyebrow">— Voices</p>
+          <h2 class="section-title" data-i18n="voices.title">Spoken softly.</h2>
+        </header>
+
+        <div class="voices-grid">
+          <blockquote class="voice" data-reveal>
+            <p data-i18n="voices.q1.text">
+              I stopped planning trips. I simply tell Luxor what I want to
+              feel — and the feeling arrives on time.
+            </p>
+            <footer>
+              <span class="voice-initials">M.R.</span>
+              <span class="voice-meta" data-i18n="voices.q1.meta">Art Collector &middot; Paris</span>
+            </footer>
+          </blockquote>
+
+          <blockquote class="voice voice-center" data-reveal>
+            <p data-i18n="voices.q2.text">
+              There is a difference between being served and being
+              understood. Luxor understood on the first call.
+            </p>
+            <footer>
+              <span class="voice-initials">A.V.</span>
+              <span class="voice-meta" data-i18n="voices.q2.meta">Hotelier &middot; Monaco</span>
+            </footer>
+          </blockquote>
+
+          <blockquote class="voice" data-reveal>
+            <p data-i18n="voices.q3.text">
+              They do not ask who you are. They already know — and they act
+              as if they have known for years.
+            </p>
+            <footer>
+              <span class="voice-initials">K.T.</span>
+              <span class="voice-meta" data-i18n="voices.q3.meta">Industrialist &middot; Tokyo</span>
+            </footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 7. GALLERY ━━━━━━━━━ -->
+    <section class="gallery">
+      <div class="gallery-masonry">
+        <figure class="g-item g-tall">
+          <img
+            src="images/gallery-como.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.como">Villa IX &middot; Lake Como &middot; MMXXIV</figcaption>
+        </figure>
+        <figure class="g-item">
+          <img
+            src="images/gallery-milano.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.milano">Atelier &middot; Milano</figcaption>
+        </figure>
+        <figure class="g-item">
+          <img
+            src="images/gallery-kyoto.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.kyoto">Private Dinner &middot; Kyoto</figcaption>
+        </figure>
+        <figure class="g-item g-wide">
+          <img
+            src="images/gallery-saint-tropez.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.saintTropez">Regatta &middot; Saint-Tropez</figcaption>
+        </figure>
+        <figure class="g-item">
+          <img
+            src="images/gallery-bordeaux.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.bordeaux">Reserve &middot; Bordeaux</figcaption>
+        </figure>
+        <figure class="g-item g-tall">
+          <img
+            src="images/gallery-monaco.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.monaco">House Detail &middot; Monaco</figcaption>
+        </figure>
+        <figure class="g-item">
+          <img
+            src="images/gallery-paris.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.paris">Couture Week &middot; Paris</figcaption>
+        </figure>
+        <figure class="g-item">
+          <img
+            src="images/gallery-london.jpg"
+            alt=""
+            loading="lazy"
+          />
+          <figcaption data-i18n="gallery.london">Cognac Room &middot; London</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 8. APPLY ━━━━━━━━━ -->
+    <section class="apply" id="apply">
+      <div class="apply-inner">
+        <header class="apply-header" data-reveal>
+          <p class="section-eyebrow" data-i18n="apply.eyebrow">— Admission</p>
+          <h2 class="section-title" data-i18n-html="apply.titleHtml">Tell us<br /><em>who you are.</em></h2>
+          <p class="section-lede" data-i18n="apply.lede">
+            Every application is read personally. We reply within fourteen
+            days.
+          </p>
+        </header>
+
+        <form class="apply-form" data-reveal onsubmit="return false;">
+          <div class="field">
+            <label for="name" data-i18n="apply.name">Full Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="email" data-i18n="apply.email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+
+          <div class="field">
+            <label for="city" data-i18n="apply.city">City of Residence</label>
+            <input type="text" id="city" name="city" autocomplete="address-level2" />
+          </div>
+
+          <div class="field">
+            <label for="story" data-i18n="apply.story">Why Luxor</label>
+            <textarea id="story" name="story" rows="4"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="referred" data-i18n-html="apply.referredHtml">Referred by <span class="optional">(optional)</span></label>
+            <input type="text" id="referred" name="referred" />
+          </div>
+
+          <button type="submit" class="apply-submit" data-i18n="apply.submit">
+            Submit Application
+          </button>
+
+          <p class="apply-disclaimer" data-i18n="apply.disclaimer">
+            By submitting, you accept our discretion policy. All
+            correspondence is confidential.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━ 9. FOOTER ━━━━━━━━━ -->
+    <footer class="footer">
+      <div class="footer-wordmark">LUXOR</div>
+
+      <div class="footer-grid">
+        <div>
+          <h4 data-i18n="footer.col.experiences">Experiences</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer.link.aviation">Private Aviation</a></li>
+            <li><a href="#" data-i18n="footer.link.yachts">Yacht Charters</a></li>
+            <li><a href="#" data-i18n="footer.link.michelin">Michelin Access</a></li>
+            <li><a href="#" data-i18n="footer.link.art">Art Acquisitions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-i18n="footer.col.membership">Membership</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer.link.obsidian">Obsidian</a></li>
+            <li><a href="#" data-i18n="footer.link.crown">Crown</a></li>
+            <li><a href="#" data-i18n="footer.link.noir">Noir</a></li>
+            <li><a href="#" data-i18n="footer.link.apply">Apply</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-i18n="footer.col.ateliers">Ateliers</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer.link.monaco">Monaco</a></li>
+            <li><a href="#" data-i18n="footer.link.paris">Paris</a></li>
+            <li><a href="#" data-i18n="footer.link.newYork">New York</a></li>
+            <li><a href="#" data-i18n="footer.link.tokyo">Tokyo</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 data-i18n="footer.col.house">House</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer.link.contact">Contact</a></li>
+            <li><a href="#" data-i18n="footer.link.press">Press</a></li>
+            <li><a href="#" data-i18n="footer.link.legal">Legal</a></li>
+            <li><a href="#" data-i18n="footer.link.discretion">Discretion</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-base">
+        <p data-i18n="footer.copyright">© MMXXV Luxor Private Membership &middot; Discretion is our first principle.</p>
+        <div class="footer-lang">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="pt">PT</button>
+        </div>
+      </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
