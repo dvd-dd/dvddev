@@ -109,9 +109,11 @@ export function StarCursor() {
           y: event.clientY,
           // Inherit a fraction of cursor velocity + jitter so the
           // streak orientation follows the gesture but each star
-          // diverges slightly (sparkle, not laser).
+          // diverges slightly (sparkle, not laser). No downward bias
+          // — without gravity, anything we add to vy at spawn would
+          // become a constant unjustified drift.
           vx: dx * 0.2 + (Math.random() - 0.5) * 1.5,
-          vy: dy * 0.2 + (Math.random() - 0.5) * 1.5 + 0.3,
+          vy: dy * 0.2 + (Math.random() - 0.5) * 1.5,
           life: 1,
           size: 1 + Math.random() * 1.8,
           color: STAR_COLORS[(Math.random() * STAR_COLORS.length) | 0],
@@ -136,7 +138,9 @@ export function StarCursor() {
         const s = stars[i];
         s.x += s.vx;
         s.y += s.vy;
-        s.vy += 0.06; // gentle gravity → "shooting star falls" feel
+        // Zero gravity — particles drift in whatever direction their
+        // spawn velocity sent them and just fade. Reads less like a
+        // falling meteor, more like cosmic dust suspended in space.
         s.life -= 0.025;
 
         if (s.life <= 0) {

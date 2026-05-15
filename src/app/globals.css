@@ -50,19 +50,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle custom cursor: ringed dot that picks up the saturn-gold accent.
-   Pure CSS data-URI — no extra asset request. */
-* {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><circle cx='12' cy='12' r='3' fill='%23d4a574'/><circle cx='12' cy='12' r='9' fill='none' stroke='%23d4a574' stroke-opacity='0.4' stroke-width='1'/></svg>")
-    12 12, auto;
-}
-
-a,
-button,
-[role="button"] {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='14' r='5' fill='%23f5e6d3'/><circle cx='14' cy='14' r='11' fill='none' stroke='%23d4a574' stroke-width='1.5'/></svg>")
-    14 14, pointer;
-}
+/* Custom SVG cursors removed — the shooting-star trail is the
+   cursor expression now. Browser default arrow + pointer renders
+   crisp on every OS and stays out of the trail's way visually. */
 
 /* Selection */
 ::selection {
