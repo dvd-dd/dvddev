@@ -131,7 +131,10 @@ export function Hero() {
 
         <div className="flex flex-col items-center text-center">
           <div className="w-[70vw] max-w-[1100px] md:w-[55vw] lg:w-[50vw]">
-            <DvdLogo className="h-auto w-full" color="#f5e6d3" />
+            {/* No `color` prop → cosmic violet→magenta gradient with
+                purple aurora glow. Pops against the warm-gold Saturn
+                video underneath via complementary contrast. */}
+            <DvdLogo className="h-auto w-full" />
           </div>
 
           <motion.div

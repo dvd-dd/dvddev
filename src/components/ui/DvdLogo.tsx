@@ -82,9 +82,30 @@ const tickVariants: Variants = {
 
 export interface DvdLogoProps {
   className?: string;
-  /** CSS color string. Defaults to saturn-cream. */
+  /**
+   * Optional solid fill override. If omitted, the cosmic violet→
+   * magenta gradient is applied with a soft purple glow — that's
+   * the default brand look. Pass a color (e.g. for favicons or
+   * one-off contexts) to disable the gradient and skip the filter.
+   */
   color?: string;
 }
+
+// Cosmic gradient stops — violet (top-left) → magenta-fuchsia (middle)
+// → soft lavender (bottom-right). Picks up the deep-space + nebula
+// vibe the rest of the scene leans into, and pops hard against the
+// warm-gold Saturn video underneath (complementary colors on the
+// wheel = maximum contrast without fighting the brand palette).
+const COSMIC_STOPS = [
+  { offset: "0%", color: "#7c3aed" }, // violet-600
+  { offset: "45%", color: "#d946ef" }, // fuchsia-500
+  { offset: "100%", color: "#a78bfa" }, // violet-400 (lighter tail)
+] as const;
+
+// Stable id — only one DvdLogo renders on the page at a time, but
+// pulling it out as a constant makes the SSR ↔ client hydration
+// deterministic (no useId churn).
+const GRADIENT_ID = "dvd-cosmic-gradient";
 
 /**
  * Inline DVD logo with a "painted-on" reveal. The outer SVG <g>
@@ -95,19 +116,59 @@ export interface DvdLogoProps {
  * Each <g>'s `inset()` is interpolated against its OWN bounding box,
  * so each glyph is wiped left-to-right within its own footprint —
  * giving a real "graffiti per letter" feel instead of one global wipe.
+ *
+ * Fill: cosmic gradient by default. The `<linearGradient>` uses
+ * `gradientUnits="userSpaceOnUse"` so it spans the full viewBox
+ * once (across all 3 glyphs) instead of repeating per-path bbox.
  */
-export function DvdLogo({ className, color = "#f5e6d3" }: DvdLogoProps) {
+export function DvdLogo({ className, color }: DvdLogoProps) {
+  const useGradient = color === undefined;
+  const fill = useGradient ? `url(#${GRADIENT_ID})` : color;
+
   return (
     <motion.svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1407 704"
       className={className}
-      fill={color}
+      fill={fill}
       initial="hidden"
       animate="visible"
       role="img"
       aria-label="dvd"
+      style={
+        useGradient
+          ? {
+              // Purple aurora glow — sits behind the painted glyphs, so
+              // it expands with them rather than appearing pre-baked.
+              // Two soft drop-shadows layered: a tight inner that hugs
+              // the silhouette + a wider halo for the spatial feel.
+              filter:
+                "drop-shadow(0 0 12px rgba(168, 85, 247, 0.55)) drop-shadow(0 0 28px rgba(217, 70, 239, 0.35))",
+            }
+          : undefined
+      }
     >
+      {useGradient && (
+        <defs>
+          <linearGradient
+            id={GRADIENT_ID}
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="1407"
+            y2="704"
+          >
+            {COSMIC_STOPS.map((stop) => (
+              <stop
+                key={stop.offset}
+                offset={stop.offset}
+                stopColor={stop.color}
+              />
+            ))}
+          </linearGradient>
+        </defs>
+      )}
+
       <g transform="translate(0,731) scale(0.1,-0.1)">
         {mainGlyphs.map((d, i) => (
           // Each glyph gets its own motion.g so clip-path inset() is
