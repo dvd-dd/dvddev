@@ -1,4 +1,9 @@
+"use client";
+
+import { useTranslation } from "@/hooks/useTranslation";
+
 export function Projects() {
+  const { t } = useTranslation();
   return (
     <section
       id="projects"
@@ -6,13 +11,13 @@ export function Projects() {
     >
       <div className="max-w-3xl text-center">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
-          · Chapter 02 · Discovered Planets
+          {t.sections.projects.chapter}
         </p>
         <h2 className="mt-4 font-display text-5xl font-bold text-saturn-cream md:text-7xl">
-          Worlds shipped.
+          {t.sections.projects.heading}
         </h2>
         <p className="mt-6 font-mono text-saturn-cream/60">
-          Project catalog launching in the next deploy window.
+          {t.sections.projects.placeholder}
         </p>
       </div>
     </section>

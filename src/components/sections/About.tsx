@@ -1,23 +1,117 @@
-/**
- * Placeholder — full bio + portrait + journey timeline come next.
- * Kept as a structural anchor so the Hero CTA has somewhere to scroll.
+"use client";
+
+import { motion, type Variants } from "framer-motion";
+import { HelmetVisor } from "@/components/ui/HelmetVisor";
+import { RadioTimeline } from "@/components/ui/RadioTimeline";
+import { useTranslation } from "@/hooks/useTranslation";
+
+/*
+ * Per-block decoder reveal. Each bio paragraph wipes left→right via
+ * clip-path inset (same idiom we use for the logo paint), but here
+ * the wipe runs in 1.2s with a slightly longer ease tail so it reads
+ * as "signal resolving" rather than "stroke being painted".
  */
+const blockVariants: Variants = {
+  hidden: { opacity: 0, y: 24, clipPath: "inset(0% 100% 0% 0%)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    clipPath: "inset(0% 0% 0% 0%)",
+    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.2 } },
+};
+
 export function About() {
+  const { t } = useTranslation();
+  const acts = [
+    t.about.origin,
+    t.about.mission,
+    t.about.trajectory,
+  ] as const;
+
   return (
     <section
       id="about"
-      className="relative flex min-h-screen w-full items-center justify-center bg-deep-space px-6 py-32"
+      className="relative w-full overflow-hidden bg-gradient-to-b from-deep-space to-space-black px-6 py-32 md:px-12 md:py-40"
     >
-      <div className="max-w-3xl text-center">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
-          · Chapter 01 · About
-        </p>
-        <h2 className="mt-4 font-display text-5xl font-bold text-saturn-cream md:text-7xl">
-          Signal incoming.
-        </h2>
-        <p className="mt-6 font-mono text-saturn-cream/60">
-          Section under construction — coming online soon.
-        </p>
+      {/* Decorative CSS starfield — two layered radial-gradients of
+          tiny points at fixed pseudo-random positions. Cheap, no DOM. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-60"
+        style={{
+          backgroundImage: `
+            radial-gradient(1px 1px at 12% 18%, rgba(250,250,250,0.6), transparent 50%),
+            radial-gradient(1px 1px at 28% 72%, rgba(250,250,250,0.4), transparent 50%),
+            radial-gradient(1.5px 1.5px at 47% 33%, rgba(212,165,116,0.5), transparent 50%),
+            radial-gradient(1px 1px at 64% 84%, rgba(250,250,250,0.4), transparent 50%),
+            radial-gradient(1px 1px at 78% 22%, rgba(250,250,250,0.5), transparent 50%),
+            radial-gradient(1.5px 1.5px at 88% 56%, rgba(212,165,116,0.45), transparent 50%),
+            radial-gradient(1px 1px at 5% 88%, rgba(250,250,250,0.4), transparent 50%),
+            radial-gradient(1px 1px at 92% 9%, rgba(250,250,250,0.4), transparent 50%),
+            radial-gradient(1px 1px at 35% 7%, rgba(250,250,250,0.4), transparent 50%),
+            radial-gradient(1px 1px at 18% 48%, rgba(250,250,250,0.45), transparent 50%)
+          `,
+        }}
+      />
+
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 lg:gap-20">
+        {/* Left column: visual anchor + timeline. Stacks under the bio
+            on mobile, sits beside it on desktop. */}
+        <div className="flex flex-col gap-12">
+          <HelmetVisor />
+          <RadioTimeline
+            heading={t.about.timeline.heading}
+            events={t.about.timeline.events}
+          />
+        </div>
+
+        {/* Right column: bio in three acts. */}
+        <div className="flex flex-col">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold"
+          >
+            {t.about.chapter}
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 font-display text-6xl font-bold leading-[0.95] tracking-tight text-saturn-cream md:text-7xl"
+          >
+            {t.about.heading}
+          </motion.h2>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="mt-12 flex flex-col gap-12"
+          >
+            {acts.map((act) => (
+              <motion.article key={act.title} variants={blockVariants}>
+                <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
+                  {act.title}
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-saturn-cream/80 md:text-lg">
+                  {act.body}
+                </p>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );

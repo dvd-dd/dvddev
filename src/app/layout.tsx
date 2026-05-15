@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
@@ -95,7 +96,9 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <SmoothScrollProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
