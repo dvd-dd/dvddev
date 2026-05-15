@@ -40,7 +40,10 @@ const RING_OUTER_RADIUS = 4.8;
  */
 export function RingSystem() {
   const geomRef = useRef<BufferGeometry>(null);
-  const ringTexture = useTexture("/textures/8k_saturn_ring_alpha.png");
+  // 4K ring alpha — actually 2048x125. Cassini Division still
+  // resolves at this size since the ring texture is 1D-radial; we're
+  // not losing detail in any dimension that matters visually.
+  const ringTexture = useTexture("/textures/4k_saturn_ring_alpha.png");
   ringTexture.colorSpace = SRGBColorSpace;
   // 8 is the sweet spot — Cassini Division still resolves crisp at our
   // viewing angle, and we shave the per-fragment sampling cost in half

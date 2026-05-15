@@ -67,6 +67,31 @@ export function Scene() {
         toneMapping: ACESFilmicToneMapping,
         toneMappingExposure: 1.1,
       }}
+      // Surface WebGL context loss so we know when we hit it instead of
+      // failing silently (canvas just goes blank). preventDefault on the
+      // loss event tells the browser we'll try to recover; restoring
+      // means re-uploading textures & shaders, which R3F handles
+      // automatically as long as we don't blow the gl ref away.
+      onCreated={({ gl }) => {
+        const canvas = gl.domElement;
+        canvas.addEventListener(
+          "webglcontextlost",
+          (event) => {
+            event.preventDefault();
+            // eslint-disable-next-line no-console
+            console.warn("[Scene] WebGL context lost — attempting recover");
+          },
+          false
+        );
+        canvas.addEventListener(
+          "webglcontextrestored",
+          () => {
+            // eslint-disable-next-line no-console
+            console.info("[Scene] WebGL context restored");
+          },
+          false
+        );
+      }}
     >
       <ambientLight intensity={0.15} />
       <directionalLight

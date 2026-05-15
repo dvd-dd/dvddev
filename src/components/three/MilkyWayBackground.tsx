@@ -22,7 +22,11 @@ import {
  * mirrored). One-liner UV-equivalent at zero shader cost.
  */
 export function MilkyWayBackground() {
-  const milkyWayTexture = useTexture("/textures/8k_stars_milky_way.jpg");
+  // 2K Milky Way panorama (2048x1024). The 8K version (8192x4096)
+  // was the single biggest GPU memory hog — 33.5MP × 4 bytes × mipmaps
+  // ≈ 180MB just for this texture. The skybox sits at radius 500 and
+  // covers a fraction of any given screen, so 2K reads sharp.
+  const milkyWayTexture = useTexture("/textures/2k_stars_milky_way.jpg");
   milkyWayTexture.mapping = EquirectangularReflectionMapping;
   milkyWayTexture.colorSpace = SRGBColorSpace;
 

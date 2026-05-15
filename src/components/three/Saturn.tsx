@@ -24,7 +24,11 @@ const SATURN_AXIAL_TILT = 0.466;
 export function Saturn() {
   const planetRef = useRef<Mesh>(null);
 
-  const saturnTexture = useTexture("/textures/8k_saturn.jpg");
+  // 4K Saturn diffuse — actually 2048x1024. 8K version pushed total
+  // GPU texture memory past the threshold for integrated GPUs and
+  // triggered silent WebGL context loss (canvas flickered then went
+  // blank). 2048-wide reads identically at this camera distance.
+  const saturnTexture = useTexture("/textures/4k_saturn.jpg");
   // Inline texture conditioning. Assigning the same values on every
   // render is idempotent and cheaper than wrapping in useEffect; the
   // texture instance is stable across renders.
