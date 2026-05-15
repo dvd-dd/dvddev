@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HUDPanel } from "@/components/ui/HUDPanel";
@@ -52,24 +58,52 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // The dedicated rings video (hero-rings.mp4) was generated with the
-  // exact desired motion baked in (rings rotating, planet stationary,
-  // designed for seamless loop), so we play it at native 1x and don't
-  // need the previous 0.2x trick.
-  //
-  // Still gate playback until after the logo paint completes so the
-  // brand moment happens on a frozen poster. `currentTime = 0.5`
-  // aligns the first playback frame with the poster (which was
-  // extracted at t=0.5s) so the poster → video handoff is invisible.
+  // Pause the video when the hero scrolls out of view. Even at 720p
+  // h.264, a running decoder context burns ~5% CPU on a quiet thread
+  // and prevents the browser from going idle. IntersectionObserver
+  // via Framer's useInView is the cheapest viewport gate available.
+  // `margin: "0px"` = strict viewport intersection — no pre-warm
+  // needed for this one because the user has to scroll past it
+  // before pause is desirable.
+  const heroInView = useInView(sectionRef, { margin: "0px" });
+
+  /**
+   * Two responsibilities here, both keyed off `heroInView`:
+   *
+   *   1. First entry: gate the initial play() until after the DVD
+   *      logo paint completes (DVD_LOGO_TOTAL_DURATION + 0.2s) so
+   *      the brand moment happens on a frozen poster frame. We also
+   *      seek to 0.5s before playing to match the poster offset and
+   *      hide the poster→video handoff.
+   *
+   *   2. Subsequent entries / exits: pause when offscreen, resume
+   *      when back in view. Doesn't reset currentTime, so the loop
+   *      picks up where it left off — feels like the scene was
+   *      always running, but the decoder costs nothing while you're
+   *      reading About / Projects / etc.
+   */
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    if (!heroInView) {
+      video.pause();
+      return;
+    }
+
+    // In view: schedule (or immediately re-trigger) playback. The
+    // setTimeout handles the first-mount "wait for the logo paint"
+    // case; on subsequent re-entries the wait is already past so
+    // play() fires immediately.
+    const delay = video.currentTime === 0
+      ? (DVD_LOGO_TOTAL_DURATION + 0.2) * 1000
+      : 0;
     const start = window.setTimeout(() => {
-      video.currentTime = 0.5;
+      if (video.currentTime === 0) video.currentTime = 0.5;
       void video.play().catch(() => undefined);
-    }, (DVD_LOGO_TOTAL_DURATION + 0.2) * 1000);
+    }, delay);
     return () => window.clearTimeout(start);
-  }, []);
+  }, [heroInView]);
 
   // Scroll-driven cinematic. Offset maps "hero top at top of viewport"
   // → "hero bottom at top of viewport" to scrollYProgress 0 → 1 across
