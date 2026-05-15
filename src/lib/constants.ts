@@ -28,6 +28,15 @@ export const COLORS = {
   starWhite: "#fafafa",
 } as const;
 
+export const TEXTURE_CREDITS = {
+  planet: "Saturn & ring textures: Solar System Scope (CC BY 4.0)",
+  milkyWay:
+    "Milky Way panorama: Solar System Scope / NASA / ESO (CC BY 4.0)",
+  license: "https://creativecommons.org/licenses/by/4.0/",
+  /** Single-line copy used in the footer. */
+  short: "Textures by Solar System Scope (CC BY 4.0)",
+} as const;
+
 export const NAV_LINKS = [
   { label: "Mission", href: "#hero" },
   { label: "About", href: "#about" },
