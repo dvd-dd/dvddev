@@ -60,9 +60,15 @@ export function Projects() {
         </p>
       </motion.div>
 
-      {/* Stellar map */}
+      {/* Stellar map. activeProject is lifted here so the map and the
+          info panel share a single source of truth — closing the panel
+          (ESC / backdrop / X) also fires the planet's return-to-orbit
+          exit animation. */}
       <div className="mt-16 md:mt-20">
-        <StellarMap onActivate={(project) => setActiveProject(project)} />
+        <StellarMap
+          activeProject={activeProject}
+          onActivate={(project) => setActiveProject(project)}
+        />
       </div>
 
       {/* Slide-in info panel. CTA inside is a real <a target="_blank">

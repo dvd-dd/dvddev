@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   PROJECTS,
@@ -10,37 +10,50 @@ import {
 } from "@/lib/projects";
 
 /*
- * STELLAR MAP — SVG + CSS solar-system view of the portfolio.
+ * STELLAR MAP — SVG + CSS solar-system view of the portfolio with a
+ * cinematic "break orbit" zoom interaction on click.
  *
- * Layout strategy:
+ * Static layout:
  *   1. Outer container holds aspect-square space + CSS perspective.
- *   2. Inner "stage" tilts 25° on X — this is what turns the SVG
- *      circles (which are flat-on circles) into the elliptical-
- *      looking orbital rings in screen space. Pure CSS 3D, no math.
- *   3. SVG renders the orbital rings as dashed circles at radii
- *      120/200/280 (centered at viewBox origin). These get visually
- *      foreshortened by the parent's tilt.
- *   4. A central "sun" sits at the stage origin with a pulsing glow.
- *   5. Each project's planet lives in TWO nested wrappers:
- *        outer: rotate(startAngle)            ← initial position
- *        inner: animation: orbit-rotation     ← infinite spin
- *      The button inside translates by ring radius on X, then
- *      counter-tilts the planet (rotateX(-25deg)) so the planet body
- *      reads as facing camera, not lying on the orbital plane.
+ *   2. "Stage" tilts 25° on X — turns flat SVG circles into elliptical
+ *      orbits in screen space without any trigonometry.
+ *   3. SVG dashed concentric rings (driven from PROJECTS' max ring).
+ *   4. Central sun, pulsing.
+ *   5. Each planet sits in a two-layer wrapper (static startAngle +
+ *      infinite rotation animation) with its name label always
+ *      visible below the body.
  *
- * Scaling story: add a 7th project = push to PROJECTS with a ring +
- * startAngle. The map renders it. No 3D math, no manual positioning.
+ * Active-project interaction:
+ *   - On click, capture the planet's bounding rect via
+ *     `getBoundingClientRect()`. The parent gets notified via
+ *     `onActivate` and stores the active project; the rect lives in
+ *     local state.
+ *   - When active, all orbital rotations pause + the entire stage
+ *     fades to 0.15. The clicked planet's button goes opacity 0 so the
+ *     space is preserved for the return animation.
+ *   - A `<motion.div>` is rendered fixed-position via AnimatePresence:
+ *       initial = captured origin rect (small, where the planet was)
+ *       animate = 25vw / 50vh, scaled by 2.8
+ *       exit    = back to the captured rect
+ *   - Inside the FLIP container, ZoomedPlanetVisual paints a premium
+ *     version of the planet: intense glow, slow internal spin, idle
+ *     float, surface noise, three orbiting particles, optional ring.
+ *   - A HUD designation callout fades in after the FLIP settles.
+ *
+ * Scaling: add a 7th project = push to PROJECTS. The map renders it
+ * automatically. No 3D math, no manual repositioning.
  */
 
 const TILT_DEGREES = 25;
-const STAGE_SIZE = 800; // SVG viewBox is centered at origin: -400..400
+const STAGE_SIZE = 800; // SVG viewBox centered at origin: -400..400
+const ZOOM_SCALE = 2.8;
 
 /* ─── Deterministic ambient starfield ───────────────────────────── */
 
 interface BgStar {
-  x: number; // viewBox-relative x (-400..400)
+  x: number;
   y: number;
-  r: number; // px
+  r: number;
   opacity: number;
 }
 
@@ -63,7 +76,18 @@ function generateBgStars(count: number, seed = 42): BgStar[] {
   }));
 }
 
-/* ─── Single planet visual ──────────────────────────────────────── */
+/* ─── Single planet body (orbital + zoomed share gradient math) ──── */
+
+function planetGradient(color: string) {
+  // color-mix is supported in all evergreen browsers; the mixes give
+  // us automatic light/dark variants without pre-computed hex tables.
+  const lightStop = `color-mix(in srgb, ${color} 70%, white)`;
+  const darkStop = `color-mix(in srgb, ${color} 35%, black)`;
+  return {
+    background: `radial-gradient(circle at 30% 25%, ${lightStop} 0%, ${color} 45%, ${darkStop} 100%)`,
+    darkStop,
+  };
+}
 
 interface PlanetVisualProps {
   project: Project;
@@ -73,33 +97,19 @@ interface PlanetVisualProps {
 function PlanetVisual({ project, hovered }: PlanetVisualProps) {
   const { orbit } = project;
   const { color, size, hasRing, ringColor } = orbit;
-
-  // Pre-mix lighter/darker variants so the body radial gradient sells
-  // a sphere instead of a flat disc. The 30%/25% gradient origin
-  // simulates a key light coming from upper-left.
-  // We bias to the actual color in the middle stop to keep the planet
-  // recognizable; the darker stop at the rim provides shadow turn.
-  const lightStop = `color-mix(in srgb, ${color} 70%, white)`;
-  const darkStop = `color-mix(in srgb, ${color} 35%, black)`;
+  const { background, darkStop } = planetGradient(color);
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
-      {/* Planet body */}
       <div
         className="relative h-full w-full rounded-full transition-all duration-300"
         style={{
-          background: `radial-gradient(circle at 30% 25%, ${lightStop} 0%, ${color} 45%, ${darkStop} 100%)`,
-          // Outer glow + inner shadow stacked. Hover swells the outer
-          // glow without changing the body — keeps the silhouette
-          // anchored while signaling interactivity.
+          background,
           boxShadow: hovered
             ? `0 0 24px 6px ${color}aa, inset -4px -4px 8px ${darkStop}`
             : `0 0 12px 2px ${color}66, inset -4px -4px 8px ${darkStop}`,
         }}
       />
-
-      {/* Optional Saturn-style ring — pseudo via a child div tilted
-          steeply so it reads as an ellipse passing through the body. */}
       {hasRing && (
         <div
           aria-hidden
@@ -118,34 +128,147 @@ function PlanetVisual({ project, hovered }: PlanetVisualProps) {
   );
 }
 
+/* ─── Premium zoomed planet (active state) ──────────────────────── */
+
+// Inline SVG noise via data URI. baseFrequency tunes grain density.
+// Saturated to 0 so it's pure luminance noise that overlays cleanly.
+const NOISE_DATA_URI =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E";
+
+function ZoomedPlanetVisual({ project }: { project: Project }) {
+  const { orbit } = project;
+  const { color, hasRing, ringColor } = orbit;
+  const { background, darkStop } = planetGradient(color);
+
+  return (
+    // Outer wrapper handles the idle float — separate from the
+    // internal rotation so the two motions compose cleanly.
+    <motion.div
+      animate={{ y: [-6, 6, -6] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      className="relative h-full w-full"
+    >
+      {/* Body + slow surface rotation. Wrapping the gradient layer in
+          a rotating motion.div makes the noise overlay (mounted as
+          its child) rotate too — reads as a planet turning on its
+          axis at cosmic-time scale. */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+        className="relative h-full w-full overflow-hidden rounded-full"
+        style={{
+          background,
+          // Two-stop glow: tight halo at body color, wide bloom at
+          // 33% alpha so it reads as atmospheric scatter not just
+          // a drop-shadow. Inset shadow deepens the terminator.
+          boxShadow: `0 0 60px 12px ${color}88, 0 0 120px 24px ${color}33, inset -8px -8px 16px ${darkStop}`,
+        }}
+      >
+        {/* Surface noise — gives the body texture rather than flat */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url("${NOISE_DATA_URI}")`,
+            backgroundSize: "100% 100%",
+            opacity: 0.12,
+            mixBlendMode: "overlay",
+          }}
+        />
+      </motion.div>
+
+      {/* Saturn-style ring at zoom scale — wider + bolder than the
+          orbital version so it reads against the intense glow. */}
+      {hasRing && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2"
+          style={{
+            width: "180%",
+            height: "35%",
+            transform:
+              "translate(-50%, -50%) rotateX(70deg) rotateZ(15deg)",
+            border: `2px solid ${ringColor ?? color}aa`,
+            borderRadius: "50%",
+            boxShadow: `0 0 12px ${ringColor ?? color}66`,
+          }}
+        />
+      )}
+
+      {/* Three particle dots orbiting at different speeds. Each lives
+          in its own absolute inset-0 wrapper that rotates infinitely;
+          a static phase offset spreads them 120° apart so they don't
+          all sit on top of each other on first paint. */}
+      {[0, 120, 240].map((phase, i) => (
+        <motion.div
+          key={i}
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          initial={{ rotate: phase }}
+          animate={{ rotate: phase + 360 }}
+          transition={{
+            duration: 10 + i * 3,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          <div
+            className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-saturn-cream"
+            style={{
+              top: "50%",
+              // 115% of the wrapper width = 65% past the planet's
+              // right edge → dot orbits at ~1.3x the planet radius.
+              left: "115%",
+              opacity: 0.55,
+              boxShadow: `0 0 6px ${color}`,
+            }}
+          />
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
 /* ─── Main map ──────────────────────────────────────────────────── */
 
 interface StellarMapProps {
+  /** Lifted from the parent so the map and the panel share state. */
+  activeProject: Project | null;
   onActivate: (project: Project) => void;
 }
 
-export function StellarMap({ onActivate }: StellarMapProps) {
+export function StellarMap({ activeProject, onActivate }: StellarMapProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  // Per-project bounding rects captured at click time so the FLIP
+  // animation has the right origin even after multiple clicks. Stored
+  // in a ref because we never want to re-render on rect changes.
+  const originRectsRef = useRef<Map<string, DOMRect>>(new Map());
+  // Mirror-state for the rect of the CURRENTLY rendered zoom overlay —
+  // needed in render output, so it lives in state and we set it at the
+  // moment we activate.
+  const [activeRect, setActiveRect] = useState<DOMRect | null>(null);
 
-  // Determine ring count once from data — keeps SVG in sync if we add
-  // a future project on a deeper ring.
+  const isActive = activeProject !== null;
   const maxRing = useMemo(
     () => Math.max(...PROJECTS.map((p) => p.orbit.ring)),
     []
   );
-
-  // Background starfield: deterministic so it's stable across renders
-  // and SSR-safe (no Math.random() inside the JSX).
   const bgStars = useMemo(() => generateBgStars(60), []);
+
+  const handlePlanetClick = (project: Project, el: HTMLButtonElement) => {
+    const rect = el.getBoundingClientRect();
+    originRectsRef.current.set(project.id, rect);
+    setActiveRect(rect);
+    onActivate(project);
+  };
 
   return (
     <div
       className="relative mx-auto aspect-square w-full max-w-[700px]"
       style={{ perspective: "1400px" }}
     >
-      {/* Ambient starfield — sits FLAT inside the container (no tilt)
-          so the stars feel like fixed distant lights, not part of the
-          rotating orbital plane. */}
+      {/* Ambient starfield — flat (no tilt) so the stars feel like
+          fixed distant lights, not part of the orbital plane. */}
       <svg
         aria-hidden
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -163,16 +286,18 @@ export function StellarMap({ onActivate }: StellarMapProps) {
         ))}
       </svg>
 
-      {/* Tilted stage. Everything orbital lives inside this rotateX
-          frame — orbits become ellipses, sun stays centered. */}
-      <div
+      {/* Tilted stage. Dims to 0.15 when a project is active so the
+          spotlighted zoomed planet owns the visual focus. */}
+      <motion.div
+        animate={{ opacity: isActive ? 0.15 : 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className="absolute inset-0"
         style={{
           transform: `rotateX(${TILT_DEGREES}deg)`,
           transformStyle: "preserve-3d",
         }}
       >
-        {/* Orbital rings as dashed concentric circles */}
+        {/* Orbital rings */}
         <svg
           aria-hidden
           className="absolute inset-0 h-full w-full"
@@ -192,8 +317,7 @@ export function StellarMap({ onActivate }: StellarMapProps) {
           ))}
         </svg>
 
-        {/* Central sun — sits at the stage origin. Pulse animation is
-            a CSS keyframe defined in the <style> block below. */}
+        {/* Central pulsing sun */}
         <div
           className="absolute left-1/2 top-1/2"
           style={{
@@ -215,12 +339,12 @@ export function StellarMap({ onActivate }: StellarMapProps) {
           const radius = getRingRadius(ring);
           const speed = getRingSpeedSeconds(ring);
           const isHovered = hoveredId === project.id;
+          const isThisActive = activeProject?.id === project.id;
+          // Pause all orbits while ANY project is active so the focus
+          // is clean — not just the active one's orbit, all of them.
+          const pauseOrbit = isActive || isHovered;
 
           return (
-            // Outer wrapper sets the static initial angle. Inner
-            // wrapper carries the infinite-rotation animation. Without
-            // this two-layer split, the @keyframes wipes out the
-            // initial offset on the first frame.
             <div
               key={project.id}
               className="absolute left-1/2 top-1/2"
@@ -235,56 +359,118 @@ export function StellarMap({ onActivate }: StellarMapProps) {
                   width: 0,
                   height: 0,
                   animation: `orbit-rotation ${speed}s linear infinite`,
-                  animationPlayState: isHovered ? "paused" : "running",
+                  animationPlayState: pauseOrbit ? "paused" : "running",
                 }}
               >
-                <button
+                <motion.button
                   type="button"
                   aria-label={`${project.designation} — ${project.name}`}
-                  onClick={() => onActivate(project)}
+                  // Hide the original button when its project is
+                  // active — the zoom overlay is showing it instead.
+                  // Other buttons render normally (they'll inherit the
+                  // parent's 0.15 fade).
+                  animate={{ opacity: isThisActive ? 0 : 1 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={(e) => handlePlanetClick(project, e.currentTarget)}
                   onMouseEnter={() => setHoveredId(project.id)}
                   onMouseLeave={() => setHoveredId(null)}
                   onFocus={() => setHoveredId(project.id)}
                   onBlur={() => setHoveredId(null)}
-                  className="absolute flex cursor-pointer items-center justify-center border-0 bg-transparent p-0"
+                  className="group absolute flex cursor-pointer flex-col items-center justify-center border-0 bg-transparent p-0"
                   style={{
-                    // Move OUT along the orbital radius on X, then
-                    // counter-rotate the planet on X by -tilt so the
-                    // body reads as facing the camera (not lying in
-                    // the orbital plane).
                     transform: `translate(${radius}px, -50%) rotateX(-${TILT_DEGREES}deg)`,
                   }}
                 >
                   <PlanetVisual project={project} hovered={isHovered} />
 
-                  {/* Designation HUD label — fades in on hover, lives
-                      above the planet so it doesn't fight the body. */}
-                  <AnimatePresence>
-                    {isHovered && (
-                      <motion.span
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 4 }}
-                        transition={{ duration: 0.15 }}
-                        className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap border border-saturn-gold/40 bg-deep-space/85 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-saturn-cream backdrop-blur-sm"
-                        style={{
-                          bottom: "100%",
-                          marginBottom: 12,
-                        }}
-                      >
-                        {project.designation}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </button>
+                  {/* Static label — always visible below the planet.
+                      Tracking expands a hair on hover for tactile
+                      feedback without needing a true tooltip. */}
+                  <div
+                    className="pointer-events-none mt-2 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.22em] text-saturn-cream/55 transition-all duration-300 group-hover:tracking-[0.28em] group-hover:text-saturn-cream"
+                  >
+                    {project.name.toUpperCase()}
+                  </div>
+                </motion.button>
               </div>
             </div>
           );
         })}
-      </div>
+      </motion.div>
 
-      {/* Keyframes — scoped via <style> so they ship with the
-          component. orbit-rotation drives the infinite revolution;
+      {/* ZOOM OVERLAY — fixed positioning at viewport scale. The
+          motion.div FLIPs from the captured origin rect (where the
+          planet was on screen) to a fixed 25vw / 50vh spotlight. */}
+      <AnimatePresence onExitComplete={() => setActiveRect(null)}>
+        {activeProject && activeRect && (
+          <motion.div
+            // No key — when the user clicks a different planet
+            // mid-active, this same motion.div updates its inner
+            // ZoomedPlanetVisual props without remounting. Avoids
+            // an awkward "old planet exits + new planet enters"
+            // crossover at the same screen position.
+            initial={{
+              top: activeRect.top + activeRect.height / 2,
+              left: activeRect.left + activeRect.width / 2,
+              width: activeRect.width,
+              height: activeRect.height,
+              x: "-50%",
+              y: "-50%",
+              opacity: 1,
+            }}
+            animate={{
+              top: "50vh",
+              left: "25vw",
+              width: activeProject.orbit.size * ZOOM_SCALE,
+              height: activeProject.orbit.size * ZOOM_SCALE,
+              x: "-50%",
+              y: "-50%",
+              opacity: 1,
+            }}
+            exit={{
+              top: activeRect.top + activeRect.height / 2,
+              left: activeRect.left + activeRect.width / 2,
+              width: activeRect.width,
+              height: activeRect.height,
+              x: "-50%",
+              y: "-50%",
+              opacity: 0,
+            }}
+            transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              position: "fixed",
+              pointerEvents: "none",
+              zIndex: 25,
+            }}
+          >
+            <ZoomedPlanetVisual project={activeProject} />
+
+            {/* HUD designation callout — fades in after the FLIP has
+                landed (delay matches the FLIP duration). Positioned
+                to the upper-right of the zoomed planet so it doesn't
+                obscure the body. */}
+            <motion.div
+              key={`callout-${activeProject.id}`}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+              className="pointer-events-none absolute whitespace-nowrap"
+              style={{
+                top: "-12%",
+                left: "100%",
+                marginLeft: 16,
+              }}
+            >
+              <span className="border border-saturn-gold/40 bg-deep-space/80 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold backdrop-blur-sm">
+                {activeProject.designation}
+              </span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Keyframes — orbit rotation drives the orbital wrappers,
           sun-pulse breathes the central star. */}
       <style>{`
         @keyframes orbit-rotation {
