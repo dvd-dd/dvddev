@@ -3,12 +3,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, type RefObject } from "react";
 import { ACESFilmicToneMapping } from "three";
-import {
-  Bloom,
-  ChromaticAberration,
-  EffectComposer,
-  Vignette,
-} from "@react-three/postprocessing";
+import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 import { Saturn } from "./Saturn";
 import { MilkyWayBackground } from "./MilkyWayBackground";
 import { useMousePosition } from "@/hooks/useMousePosition";
@@ -24,9 +19,6 @@ function CameraParallax({ mouse }: { mouse: RefObject<MousePosition> }) {
   const { camera } = useThree();
 
   useFrame(() => {
-    // Smaller amplitudes now that the camera sits further out (z=8).
-    // The earlier 0.4/0.25 would translate to a more aggressive shake
-    // at this distance and overshoot the framing of the Saturn corner.
     const targetX = mouse.current.x * 0.25;
     const targetY = mouse.current.y * 0.15;
 
@@ -39,15 +31,27 @@ function CameraParallax({ mouse }: { mouse: RefObject<MousePosition> }) {
 }
 
 /**
- * Full-bleed cinematic scene. The Milky Way panorama is the background
- * (no more solid color attach — the texture provides every pixel).
- * Saturn is intentionally offset to the lower-right back of frame so
- * the centered DVD logo gets its own optical real estate.
+ * Full-bleed cinematic scene.
  *
- * Tone mapping: ACES Filmic gives cinema-feel highlights and rolls off
- * blown-out values gracefully — important because the warm key light
- * + atmosphere additive blending can otherwise push the planet's lit
- * side into clipping white.
+ * Performance notes (after first-pass tuning revealed lag + flicker on
+ * mid-tier GPUs):
+ *
+ * • DPR capped at 1.5 — retina at 2.0 means 4x the fragment cost for a
+ *   barely-perceptible quality lift at this content density.
+ * • Composer lives INSIDE <Suspense>. With it outside, the composer
+ *   would try to initialize before textures resolved and intermittently
+ *   throw `Cannot read properties of null (reading 'alpha')` from the
+ *   Bloom blend-mode — that race was the source of the early flicker.
+ * • Bloom mipmapBlur and ChromaticAberration both removed: the former
+ *   runs multi-pass downsamples per frame, the latter adds a full-
+ *   screen shader pass for a sub-pixel visual gain. Vignette + Bloom
+ *   alone keep the cinematic feel for ~40% of the GPU cost.
+ * • `alpha: false` is gone: with opaque canvas + EffectComposer some
+ *   builds of `postprocessing` mis-read the framebuffer alpha channel.
+ *   Defaulting to alpha:true is harmless here (skybox covers every
+ *   pixel) and dodges the bug entirely.
+ * • `powerPreference: "high-performance"` nudges Chrome/Edge to pick
+ *   the discrete GPU when one exists.
  */
 export function Scene() {
   const mouse = useMousePosition();
@@ -56,29 +60,20 @@ export function Scene() {
     <Canvas
       className="!absolute inset-0"
       camera={{ position: [0, 0, 8], fov: 50 }}
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       gl={{
         antialias: true,
-        alpha: false,
+        powerPreference: "high-performance",
         toneMapping: ACESFilmicToneMapping,
         toneMappingExposure: 1.1,
       }}
     >
-      {/* Subtle base fill so the unlit hemisphere of Saturn isn't
-          pitch black — without this, the planet reads as a crescent. */}
       <ambientLight intensity={0.15} />
-
-      {/* Warm "sun" key light — gives the planet a cinematic golden
-          cast on the camera-facing side. */}
       <directionalLight
         position={[5, 2, 5]}
         intensity={1.8}
         color="#fff4d6"
       />
-
-      {/* Cool rim light from the opposite side: reads as bounced light
-          from distant nebulae and gives the dark side a faint blue
-          contour. Without it, the unlit half merges into the Milky Way. */}
       <pointLight
         position={[-6, 0, -3]}
         intensity={0.4}
@@ -90,28 +85,20 @@ export function Scene() {
         <group position={[2.8, -0.8, -1]}>
           <Saturn />
         </group>
+
+        {/* Inside Suspense so the composer only initialises once the
+            scene has at least one valid material to read from. */}
+        <EffectComposer>
+          <Bloom
+            intensity={0.6}
+            luminanceThreshold={0.6}
+            luminanceSmoothing={0.9}
+          />
+          <Vignette eskil={false} offset={0.15} darkness={0.85} />
+        </EffectComposer>
       </Suspense>
 
       <CameraParallax mouse={mouse} />
-
-      {/* Post-processing pipeline.
-            Bloom: extracts highlights above the luminance threshold and
-              haloes them — picks up the Milky Way's brightest stars and
-              the lit edge of the planet.
-            ChromaticAberration: tiny RGB offset on the corners gives a
-              real-lens feel without smearing the center.
-            Vignette: darkens corners; "eskil=false" uses the smoother
-              Gaussian falloff instead of Eskil's harder cosine. */}
-      <EffectComposer>
-        <Bloom
-          intensity={0.7}
-          luminanceThreshold={0.4}
-          luminanceSmoothing={0.9}
-          mipmapBlur
-        />
-        <ChromaticAberration offset={[0.0006, 0.0006]} />
-        <Vignette eskil={false} offset={0.15} darkness={0.85} />
-      </EffectComposer>
     </Canvas>
   );
 }

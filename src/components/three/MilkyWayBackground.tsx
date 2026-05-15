@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { useTexture } from "@react-three/drei";
 import {
   BackSide,
@@ -10,30 +9,26 @@ import {
 
 /**
  * Massive inside-out sphere wearing the 8K Milky Way equirectangular
- * panorama as a skybox. Replaces drei's procedural <Stars> with a
- * real photographic background — the difference is the dust lanes,
- * the galactic core, and the soft cluster glow you can't fake with
- * particle dots.
+ * panorama as a skybox. The texture carries all the visual detail —
+ * the geometry just needs to be a sphere convincing enough that the
+ * eye reads it as infinitely distant.
  *
- * `scale={[-1, 1, 1]}` flips the geometry horizontally so the texture
- * reads correctly from the inside of the sphere instead of mirrored.
- * The alternative (negating the texture's UVs) is more invasive; this
- * one-liner achieves the same thing at zero shader cost.
+ * 32 segments (down from 64) is plenty for a skybox: the texture
+ * dominates every pixel and the polygonal edges sit at the screen
+ * silhouette where nothing else competes for resolution.
  *
- * Radius 500 is comfortably outside any plausible camera or Saturn
- * position — the skybox stays "at infinity" no matter the parallax.
+ * `scale={[-1, 1, 1]}` flips the X axis so the texture reads
+ * correctly from the INSIDE of the sphere (otherwise it would be
+ * mirrored). One-liner UV-equivalent at zero shader cost.
  */
 export function MilkyWayBackground() {
   const milkyWayTexture = useTexture("/textures/8k_stars_milky_way.jpg");
-
-  useMemo(() => {
-    milkyWayTexture.mapping = EquirectangularReflectionMapping;
-    milkyWayTexture.colorSpace = SRGBColorSpace;
-  }, [milkyWayTexture]);
+  milkyWayTexture.mapping = EquirectangularReflectionMapping;
+  milkyWayTexture.colorSpace = SRGBColorSpace;
 
   return (
     <mesh scale={[-1, 1, 1]}>
-      <sphereGeometry args={[500, 64, 64]} />
+      <sphereGeometry args={[500, 32, 32]} />
       <meshBasicMaterial map={milkyWayTexture} side={BackSide} />
     </mesh>
   );

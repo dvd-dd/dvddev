@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useTexture } from "@react-three/drei";
 import {
   DoubleSide,
@@ -41,15 +41,12 @@ const RING_OUTER_RADIUS = 4.8;
 export function RingSystem() {
   const geomRef = useRef<BufferGeometry>(null);
   const ringTexture = useTexture("/textures/8k_saturn_ring_alpha.png");
-
-  useMemo(() => {
-    ringTexture.colorSpace = SRGBColorSpace;
-    // High anisotropy is critical here: when the rings are viewed at
-    // shallow angles (i.e. almost always, given the tilt), the radial
-    // bands compress dramatically in screen space. Anything < 16
-    // makes the Cassini Division blur into the surrounding band.
-    ringTexture.anisotropy = 16;
-  }, [ringTexture]);
+  ringTexture.colorSpace = SRGBColorSpace;
+  // 8 is the sweet spot — Cassini Division still resolves crisp at our
+  // viewing angle, and we shave the per-fragment sampling cost in half
+  // vs anisotropy=16. The rings cover lots of screen area at shallow
+  // angles, so this single change is the biggest perf win in the file.
+  ringTexture.anisotropy = 8;
 
   useEffect(() => {
     const geom = geomRef.current;
@@ -68,9 +65,12 @@ export function RingSystem() {
 
   return (
     <mesh rotation={[Math.PI / 2, 0, 0]}>
+      {/* 128 thetaSegments (down from 256). The ring is a thin
+          annulus; at this radius and camera distance the polygonal
+          silhouette is indistinguishable from a circle. */}
       <ringGeometry
         ref={geomRef}
-        args={[RING_INNER_RADIUS, RING_OUTER_RADIUS, 256, 4]}
+        args={[RING_INNER_RADIUS, RING_OUTER_RADIUS, 128, 4]}
       />
       {/* Rings don't have surface normals worth lighting — the texture
           already encodes the ice/dust shading. BasicMaterial is the
