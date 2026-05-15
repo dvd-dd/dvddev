@@ -52,19 +52,19 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Slow-motion orbit: rings rotate so the scene feels alive, but at
-  // 0.2x (≈40s per loop) so the motion never competes with the logo
-  // for attention. Starts AFTER the paint reveal finishes; until then
-  // the poster JPG holds the frame statically.
+  // The dedicated rings video (hero-rings.mp4) was generated with the
+  // exact desired motion baked in (rings rotating, planet stationary,
+  // designed for seamless loop), so we play it at native 1x and don't
+  // need the previous 0.2x trick.
   //
-  // `currentTime = 0.5` aligns the first playback frame with the
-  // poster (which was extracted at t=0.5s), so the swap from poster
-  // → video has no visible jump.
+  // Still gate playback until after the logo paint completes so the
+  // brand moment happens on a frozen poster. `currentTime = 0.5`
+  // aligns the first playback frame with the poster (which was
+  // extracted at t=0.5s) so the poster → video handoff is invisible.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     const start = window.setTimeout(() => {
-      video.playbackRate = 0.2;
       video.currentTime = 0.5;
       void video.play().catch(() => undefined);
     }, (DVD_LOGO_TOTAL_DURATION + 0.2) * 1000);
@@ -108,19 +108,19 @@ export function Hero() {
         muted
         playsInline
         preload="auto"
-        poster="/hero-orbit-poster.jpg"
+        poster="/hero-rings-poster.jpg"
         className="absolute inset-0 h-full w-full object-cover"
-        // willChange + transform-driven motion keep the scroll zoom
-        // smooth. At 0.2x playback (set imperatively above), the
-        // per-frame decode cost is roughly 5fps of work — well within
-        // budget once the element is on its own GPU layer.
+        // willChange promotes to its own GPU layer up front so the
+        // first scroll event doesn't pay the layer-promotion hitch.
+        // useSpring (above) smooths the scroll values into continuous
+        // motion regardless of input cadence.
         style={{
           scale: videoScale,
           y: videoY,
           willChange: "transform",
         }}
       >
-        <source src="/hero-orbit.mp4" type="video/mp4" />
+        <source src="/hero-rings.mp4" type="video/mp4" />
       </motion.video>
 
       <div
