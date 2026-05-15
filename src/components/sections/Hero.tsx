@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -50,13 +50,26 @@ const copyItem = {
 export function Hero() {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
-  // Note: we use the poster JPG as a plain <img>, not the <video>
-  // element. The video was paused on frame 0 anyway (showing the
-  // poster image visually), but the <video> element keeps a decoder
-  // pipeline active and forces a separate compositing layer that's
-  // expensive to transform every frame — that's what was making the
-  // scroll zoom feel laggy. An <img> with the same poster renders
-  // pixel-identical and transforms straight on the GPU.
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Slow-motion orbit: rings rotate so the scene feels alive, but at
+  // 0.2x (≈40s per loop) so the motion never competes with the logo
+  // for attention. Starts AFTER the paint reveal finishes; until then
+  // the poster JPG holds the frame statically.
+  //
+  // `currentTime = 0.5` aligns the first playback frame with the
+  // poster (which was extracted at t=0.5s), so the swap from poster
+  // → video has no visible jump.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const start = window.setTimeout(() => {
+      video.playbackRate = 0.2;
+      video.currentTime = 0.5;
+      void video.play().catch(() => undefined);
+    }, (DVD_LOGO_TOTAL_DURATION + 0.2) * 1000);
+    return () => window.clearTimeout(start);
+  }, []);
 
   // Scroll-driven cinematic. Offset maps "hero top at top of viewport"
   // → "hero bottom at top of viewport" to scrollYProgress 0 → 1 across
@@ -89,22 +102,26 @@ export function Hero() {
       id="hero"
       className="relative h-screen w-full overflow-hidden bg-space-black"
     >
-      <motion.img
-        src="/hero-orbit-poster.jpg"
-        alt=""
-        aria-hidden
-        draggable={false}
-        className="absolute inset-0 h-full w-full select-none object-cover"
-        // `willChange: transform` promotes the element to its own
-        // GPU compositing layer up front, so the browser doesn't pay
-        // the promotion cost on the first scroll event (the kind of
-        // first-frame hitch that reads as "laggy start").
+      <motion.video
+        ref={videoRef}
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster="/hero-orbit-poster.jpg"
+        className="absolute inset-0 h-full w-full object-cover"
+        // willChange + transform-driven motion keep the scroll zoom
+        // smooth. At 0.2x playback (set imperatively above), the
+        // per-frame decode cost is roughly 5fps of work — well within
+        // budget once the element is on its own GPU layer.
         style={{
           scale: videoScale,
           y: videoY,
           willChange: "transform",
         }}
-      />
+      >
+        <source src="/hero-orbit.mp4" type="video/mp4" />
+      </motion.video>
 
       <div
         aria-hidden
