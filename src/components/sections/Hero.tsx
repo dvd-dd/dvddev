@@ -120,7 +120,7 @@ export function Hero() {
           willChange: "transform",
         }}
       >
-        <source src="/hero-rings.mp4" type="video/mp4" />
+        <source src="/hero-rings-loop.mp4" type="video/mp4" />
       </motion.video>
 
       <div
