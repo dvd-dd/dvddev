@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { StarCursor } from "@/components/ui/StarCursor";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
@@ -99,6 +100,10 @@ export default function RootLayout({
         <SmoothScrollProvider>
           <LanguageProvider>{children}</LanguageProvider>
         </SmoothScrollProvider>
+        {/* Fullscreen pointer-trail overlay. Lives outside the
+            providers since it doesn't need any context — just window
+            events. Self-disables on touch + reduced-motion. */}
+        <StarCursor />
       </body>
     </html>
   );
