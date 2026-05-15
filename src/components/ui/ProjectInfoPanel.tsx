@@ -10,8 +10,6 @@ import type { Project } from "@/lib/projects";
 interface ProjectInfoPanelProps {
   project: Project | null;
   onClose: () => void;
-  /** Open the case study modal for the active project. */
-  onInspect: () => void;
 }
 
 /**
@@ -19,11 +17,14 @@ interface ProjectInfoPanelProps {
  * planet is clicked. Uses AnimatePresence so the close animation
  * runs before unmount, and an ESC keydown listener + backdrop click
  * for dismissal (both are standard expectations for this UI).
+ *
+ * CTA is unified: every project (live or case-study) has a `url`
+ * field, so the button is always `<a target="_blank">`. The status
+ * badge still differentiates production sites from portfolio demos.
  */
 export function ProjectInfoPanel({
   project,
   onClose,
-  onInspect,
 }: ProjectInfoPanelProps) {
   const { t } = useTranslation();
 
@@ -149,10 +150,12 @@ export function ProjectInfoPanel({
               </p>
             </div>
 
-            {/* CTA — branches on status. Live opens a new tab, case
-                studies open the modal (which the parent provides). */}
+            {/* Unified CTA — both live projects and case studies now
+                resolve to a real URL (case studies point at the
+                bundled /portfolio/{id}-site/index.html demos). Opens
+                in a new tab so the user keeps their place on dvddev. */}
             <div className="mt-auto pt-4">
-              {project.status === "live" && project.url ? (
+              {project.url && (
                 <a
                   href={project.url}
                   target="_blank"
@@ -163,14 +166,6 @@ export function ProjectInfoPanel({
                     {t.sections.projects.ctaVisit}
                   </Button>
                 </a>
-              ) : (
-                <Button
-                  variant="outline"
-                  onClick={onInspect}
-                  className="w-full justify-center"
-                >
-                  {t.sections.projects.ctaInspect}
-                </Button>
               )}
             </div>
           </motion.aside>

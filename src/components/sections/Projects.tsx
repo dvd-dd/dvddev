@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { StellarMap } from "@/components/ui/StellarMap";
 import { ProjectInfoPanel } from "@/components/ui/ProjectInfoPanel";
-import { CaseStudyModal } from "@/components/ui/CaseStudyModal";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { Project } from "@/lib/projects";
 
@@ -18,17 +17,20 @@ import type { Project } from "@/lib/projects";
  *     mid-tier hardware (silent WebGL context loss).
  *   • The scroll-velocity star streak layer was visually noisy.
  *
- * Replacement is a flat-layout section: heading on top, StellarMap
- * below it. No sticky scroll, no Canvas, no dynamic imports — the
- * map renders inline with the rest of the page.
- *
  * When the info panel opens, the heading fades to ~0.15 opacity so it
  * doesn't compete with the project details visually.
+ *
+ * CTAs in the panel are unified — both live sites (Upward,
+ * Smartfloors) and case-study demos (Luxor, Phoenix, PeçaAí, Wood
+ * Frame) open their `url` in a new tab. The case-study demos live
+ * under /public/portfolio/{id}-site/index.html and ship as static
+ * assets, so clicking a case-study CTA loads the real interactive
+ * site (cursor spotlight, live counters, hover effects intact) —
+ * much higher signal than a screenshot modal.
  */
 export function Projects() {
   const { t } = useTranslation();
   const [activeProject, setActiveProject] = useState<Project | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
 
   const panelOpen = activeProject !== null;
 
@@ -63,17 +65,11 @@ export function Projects() {
         <StellarMap onActivate={(project) => setActiveProject(project)} />
       </div>
 
-      {/* Slide-in panel + case-study modal — unchanged from the 3D
-          version. Reused as-is. */}
+      {/* Slide-in info panel. CTA inside is a real <a target="_blank">
+          to the project's url — no modal involved. */}
       <ProjectInfoPanel
         project={activeProject}
         onClose={() => setActiveProject(null)}
-        onInspect={() => setModalOpen(true)}
-      />
-      <CaseStudyModal
-        project={activeProject}
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
       />
     </section>
   );
