@@ -28,10 +28,17 @@ const containerVariants: Variants = {
 
 export function About() {
   const { t } = useTranslation();
+  // Tag each act with a locale-invariant id so the React keys below
+  // stay stable across language toggles. If we keyed by `act.title`,
+  // switching EN→PT would change every key, unmounting/remounting the
+  // motion.article elements; the fresh mounts then start at
+  // initial="hidden" (clip-path fully clipped) and never re-trigger
+  // the parent's `whileInView once: true` reveal — leaving the bio
+  // bodies stuck invisible.
   const acts = [
-    t.about.origin,
-    t.about.mission,
-    t.about.trajectory,
+    { id: "origin", ...t.about.origin },
+    { id: "mission", ...t.about.mission },
+    { id: "trajectory", ...t.about.trajectory },
   ] as const;
 
   return (
@@ -101,7 +108,7 @@ export function About() {
             className="mt-12 flex flex-col gap-12"
           >
             {acts.map((act) => (
-              <motion.article key={act.title} variants={blockVariants}>
+              <motion.article key={act.id} variants={blockVariants}>
                 <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
                   {act.title}
                 </h3>
