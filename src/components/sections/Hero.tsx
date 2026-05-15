@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -50,24 +50,12 @@ const copyItem = {
 export function Hero() {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Hold the video on its poster frame while the DVD logo paints in.
-  // The logo's reveal is the brand moment — letting the orbital video
-  // animate underneath at the same time fought it for attention. We
-  // start playback once the paint reveal finishes (+ a 200ms beat).
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.pause();
-    const timer = window.setTimeout(() => {
-      // .play() returns a Promise that rejects if the browser refuses
-      // autoplay (e.g. battery-saver mode). Swallow it silently — the
-      // poster still gives a usable hero state.
-      void video.play().catch(() => undefined);
-    }, (DVD_LOGO_TOTAL_DURATION + 0.2) * 1000);
-    return () => window.clearTimeout(timer);
-  }, []);
+  // Note: the <video> element is intentionally NEVER played. With
+  // preload="auto" and no autoPlay/play() call, the browser loads
+  // the first frame and holds it as a static image — full H.264
+  // fidelity, no JPG compression artifacts the poster would have.
+  // The orbital animation was distracting under the logo's paint
+  // reveal; freezing on frame 0 lets the cosmic gradient shine.
 
   // Scroll-driven cinematic. Offset maps "hero top at top of viewport"
   // → "hero bottom at top of viewport" to scrollYProgress 0 → 1 across
@@ -93,8 +81,6 @@ export function Hero() {
       className="relative h-screen w-full overflow-hidden bg-space-black"
     >
       <motion.video
-        ref={videoRef}
-        loop
         muted
         playsInline
         preload="auto"

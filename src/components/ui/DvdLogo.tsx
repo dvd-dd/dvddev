@@ -91,15 +91,15 @@ export interface DvdLogoProps {
   color?: string;
 }
 
-// Cosmic gradient stops — violet (top-left) → magenta-fuchsia (middle)
-// → soft lavender (bottom-right). Picks up the deep-space + nebula
-// vibe the rest of the scene leans into, and pops hard against the
-// warm-gold Saturn video underneath (complementary colors on the
-// wheel = maximum contrast without fighting the brand palette).
+// Pink-galaxy gradient — leads with hot pink/rose so the read is
+// "Carina Nebula", not "generic violet brand". Magenta + fuchsia
+// stops bridge into a soft pink tail so the right glyph doesn't
+// dump back to the same hue as the left.
 const COSMIC_STOPS = [
-  { offset: "0%", color: "#7c3aed" }, // violet-600
-  { offset: "45%", color: "#d946ef" }, // fuchsia-500
-  { offset: "100%", color: "#a78bfa" }, // violet-400 (lighter tail)
+  { offset: "0%", color: "#f43f5e" }, // rose-500 (hot)
+  { offset: "35%", color: "#ec4899" }, // pink-500
+  { offset: "65%", color: "#d946ef" }, // fuchsia-500 (magenta bridge)
+  { offset: "100%", color: "#fbcfe8" }, // pink-200 (soft starlight tail)
 ] as const;
 
 // Stable id — only one DvdLogo renders on the page at a time, but
@@ -138,12 +138,16 @@ export function DvdLogo({ className, color }: DvdLogoProps) {
       style={
         useGradient
           ? {
-              // Purple aurora glow — sits behind the painted glyphs, so
-              // it expands with them rather than appearing pre-baked.
-              // Two soft drop-shadows layered: a tight inner that hugs
-              // the silhouette + a wider halo for the spatial feel.
+              // Pink-galaxy aura — three drop-shadows stacked for a
+              // depth-of-glow effect:
+              //   • 16px tight rose halo hugs the silhouette
+              //   • 40px mid fuchsia wash gives core radiance
+              //   • 80px wide pink bleed pushes the light into the
+              //     surrounding space, reads as nebula illumination
+              // Filter applies after the clip-path paint reveal so the
+              // glow expands with each glyph as it lands.
               filter:
-                "drop-shadow(0 0 12px rgba(168, 85, 247, 0.55)) drop-shadow(0 0 28px rgba(217, 70, 239, 0.35))",
+                "drop-shadow(0 0 16px rgba(244, 63, 94, 0.65)) drop-shadow(0 0 40px rgba(217, 70, 239, 0.5)) drop-shadow(0 0 80px rgba(236, 72, 153, 0.35))",
             }
           : undefined
       }
