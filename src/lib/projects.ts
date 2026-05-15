@@ -1,41 +1,40 @@
 /**
- * Portfolio project registry. Each entry binds project metadata
- * (id, name, status, optional URL, tech stack) to its planetary
- * representation (texture, 3D position, radius, atmosphere color).
+ * Portfolio project registry. Each entry binds project metadata to an
+ * orbital position on the StellarMap (SVG + CSS). Pivoted from 3D
+ * WebGL planets because (a) 6 textures = ~5MB GPU + flaky crashes on
+ * mid-tier hardware, (b) adding a project required manual 3D
+ * positioning, (c) browser GPU resource limits cap us at small N.
  *
- * Why split planet config inside Project (instead of a parallel
- * planets[] array): every project IS a planet, and the 1:1 binding
- * keeps the component code from juggling two indexed arrays.
+ * Adding a project now: push to PROJECTS with a `ring` + `startAngle`
+ * pair. Done — the StellarMap renders it on the correct orbit
+ * automatically and rotation speed comes from getRingSpeedSeconds().
  */
 
 export type ProjectStatus = "live" | "case-study";
 
-export interface PlanetConfig {
-  texture: string;
-  /** World position [x, y, z] inside the ProjectsScene group. */
-  position: [number, number, number];
-  /** Sphere radius. Bigger = visually more prominent in the layout. */
-  radius: number;
-  /** Hex color used by the Fresnel atmosphere shader's uColor. */
-  atmosphereColor: string;
-  /** Radians per frame on Y axis. */
-  rotationSpeed: number;
-  /** Optional Saturn-style ring. */
-  ringEnabled?: boolean;
+export interface OrbitConfig {
+  /** 1, 2, 3, ... — orbital ring (1 = innermost, closer to the sun). */
+  ring: number;
+  /** Initial angle on the ring in degrees, 0–360. */
+  startAngle: number;
+  /** Planet color hex — drives the radial-gradient body fill + glow. */
+  color: string;
+  /** Visual diameter in px (the orbit wrapper counter-tilts so this
+   *  reads as the rendered size on screen, not foreshortened). */
+  size: number;
+  /** Optional Saturn-style ring decoration (CSS pseudo-element). */
+  hasRing?: boolean;
   ringColor?: string;
 }
 
 export interface Project {
   id: string;
-  /** Displayed designation, e.g. "PROJ-001 // UPWARD". */
   designation: string;
-  /** Human name shown on the info panel. */
   name: string;
   status: ProjectStatus;
-  /** Live URL when status === "live". */
   url?: string;
   techStack: string[];
-  planet: PlanetConfig;
+  orbit: OrbitConfig;
 }
 
 export const PROJECTS: Project[] = [
@@ -46,14 +45,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://upwardbr.com",
     techStack: ["Next.js", "Tailwind", "i18n PT/EN", "Dynamic Routes"],
-    planet: {
-      // Jupiter — the "anchor world" at the center of the system.
-      texture: "/textures/8k_jupiter.jpg",
-      position: [0, 0, 0],
-      radius: 1.45,
-      atmosphereColor: "#d4a574", // saturn-gold echo
-      rotationSpeed: 0.0012,
-    },
+    orbit: { ring: 1, startAngle: 0, color: "#d4a574", size: 48 },
   },
   {
     id: "smartfloors",
@@ -62,13 +54,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://smartfloorservices.com",
     techStack: ["Next.js", "i18n EN/ES", "3D Configurator", "Image Optim"],
-    planet: {
-      texture: "/textures/8k_mars.jpg",
-      position: [-3.5, -0.4, -0.5],
-      radius: 1.05,
-      atmosphereColor: "#c4623a", // mars red-orange
-      rotationSpeed: 0.0008,
-    },
+    orbit: { ring: 1, startAngle: 180, color: "#c4623a", size: 44 },
   },
   {
     id: "phoenix",
@@ -76,14 +62,12 @@ export const PROJECTS: Project[] = [
     name: "Phoenix",
     status: "case-study",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Dual Theme"],
-    planet: {
-      // Uranus + a violet ring drives the security/cyberpunk read.
-      texture: "/textures/8k_uranus.jpg",
-      position: [3.5, 0.5, -0.5],
-      radius: 1.1,
-      atmosphereColor: "#7c3aed", // phoenix purple
-      rotationSpeed: 0.0010,
-      ringEnabled: true,
+    orbit: {
+      ring: 2,
+      startAngle: 60,
+      color: "#7c3aed",
+      size: 38,
+      hasRing: true,
       ringColor: "#7c3aed",
     },
   },
@@ -93,13 +77,7 @@ export const PROJECTS: Project[] = [
     name: "PeçaAí",
     status: "case-study",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
-    planet: {
-      texture: "/textures/8k_neptune.jpg",
-      position: [-2.4, 1.0, -2.2],
-      radius: 0.85,
-      atmosphereColor: "#1f6bff", // pecaai electric blue
-      rotationSpeed: 0.0009,
-    },
+    orbit: { ring: 2, startAngle: 240, color: "#1f6bff", size: 36 },
   },
   {
     id: "luxor",
@@ -107,15 +85,7 @@ export const PROJECTS: Project[] = [
     name: "Luxor",
     status: "case-study",
     techStack: ["HTML", "CSS", "Vanilla JS", "Custom i18n", "Cursor FX"],
-    planet: {
-      // Mercury — quiet, monastic, gold-lit. Matches Luxor's
-      // editorial-luxury palette without forcing a custom texture.
-      texture: "/textures/8k_mercury.jpg",
-      position: [2.5, -1.1, -2.0],
-      radius: 0.8,
-      atmosphereColor: "#d4a853", // luxor gold
-      rotationSpeed: 0.0006,
-    },
+    orbit: { ring: 3, startAngle: 30, color: "#d4a853", size: 30 },
   },
   {
     id: "woodframe",
@@ -123,20 +93,33 @@ export const PROJECTS: Project[] = [
     name: "Wood Frame",
     status: "case-study",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Light/Dark"],
-    planet: {
-      // Venus surface (no clouds) — warm rust/cream banding matches
-      // Wood Frame's natural-material palette better than a gas giant.
-      texture: "/textures/8k_venus_surface.jpg",
-      position: [0.4, 1.6, -3],
-      radius: 0.7,
-      atmosphereColor: "#b8956a", // wood-accent brown
-      rotationSpeed: 0.0005,
-    },
+    orbit: { ring: 3, startAngle: 210, color: "#b8956a", size: 28 },
   },
 ];
 
-/** Lookup helper used by the slide-in panel + case study modal. */
+/** Lookup helper used by the info panel + case study modal. */
 export function getProjectById(id: string | null): Project | null {
   if (!id) return null;
   return PROJECTS.find((p) => p.id === id) ?? null;
+}
+
+/**
+ * Radius of a ring in CSS pixels (SVG userspace units too — SVG
+ * viewBox matches 1:1). Ring 1 = 140px, 2 = 220px, 3 = 300px, etc.
+ * Linear spacing keeps adjacent rings readable as concentric circles
+ * rather than collapsing into each other.
+ */
+export function getRingRadius(ring: number): number {
+  return 60 + ring * 80;
+}
+
+/**
+ * Orbital period in seconds for a given ring. Inner rings rotate
+ * faster (real orbital mechanics — Kepler's third law in spirit).
+ * Range: ring 1 = 70s, ring 2 = 100s, ring 3 = 130s. Each step adds
+ * 30s, so motion stays perceptible across the layout without anything
+ * spinning fast enough to feel chaotic.
+ */
+export function getRingSpeedSeconds(ring: number): number {
+  return 40 + ring * 30;
 }

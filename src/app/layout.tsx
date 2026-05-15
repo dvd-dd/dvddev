@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { HyperspaceStreaks } from "@/components/ui/HyperspaceStreaks";
 import { StarCursor } from "@/components/ui/StarCursor";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
@@ -99,13 +98,7 @@ export default function RootLayout({
     >
       <body>
         <SmoothScrollProvider>
-          <LanguageProvider>
-            {/* Global hyperspace layer — reads Lenis scroll velocity
-                and stretches its dots into streaks during fast scroll.
-                Sits behind all content at z-5. */}
-            <HyperspaceStreaks />
-            {children}
-          </LanguageProvider>
+          <LanguageProvider>{children}</LanguageProvider>
         </SmoothScrollProvider>
         {/* Fullscreen pointer-trail overlay. Lives outside the
             providers since it doesn't need any context — just window
