@@ -214,17 +214,24 @@ function StaticPlanet({
   // synced kickoff on mount.
   const floatDuration = 5.5 + ring * 0.8;
 
-  // Hit zone diameter: 1.6× the planet visual. Gives the user a
-  // comfortable click target around the visible body without
-  // catching neighbouring planets. (Previous version sized the
-  // button to fit planet + label via flex column — that pulled the
-  // hit area sideways to the label's width, making the click feel
-  // imprecise.)
-  const hitSize = Math.round(size * 1.6);
+  // Hit zone diameter: 1.9× the planet visual. Comfortable click
+  // target around the visible body without catching neighbouring
+  // planets. (Previous 1.6× was tight on the smaller outer-ring
+  // planets — Luxor 36px → 58px hit area was harder to land on
+  // than expected, especially with the perspective + float.)
+  const hitSize = Math.round(size * 1.9);
 
   return (
     <div
-      className="absolute left-1/2 top-1/2"
+      // Each planet wrapper sits in its own stacking context with a
+      // bumped z-index so hit-testing always finds the planet button
+      // even when adjacent elements share the 3D scene. Without this,
+      // preserve-3d on the parent stage occasionally lets a
+      // back-of-plane element intercept clicks meant for a front-of-
+      // plane planet (Phoenix and Luxor were the casualties — both
+      // at positive-Y in the orbital plane, behind the depth-sorted
+      // siblings in the 3D scene).
+      className="absolute left-1/2 top-1/2 z-10"
       style={{ width: 0, height: 0 }}
     >
       {/* Outer position: static polar coords. */}
@@ -296,18 +303,25 @@ function StaticPlanet({
             </motion.button>
           </div>
 
-          {/* Label — separate sibling, OUTSIDE the click target so
-              its width doesn't pull the hit area sideways. Anchored
-              just below the hit zone (size/2 down from button centre,
-              then size/2 + 8px more for breathing room). Counter-tilted
-              the same as the button so it sits in screen space upright. */}
+          {/* Label — sibling of the hit-zone wrapper (so it doesn't
+              expand the click target sideways) but a CHILD of the
+              counter-tilted div (so it inherits the upright screen
+              orientation, no double tilt needed).
+              `left-1/2 top: 100%` puts the anchor at the bottom-
+              centre of the hit-zone; translate(-50%) of the label's
+              own width then centres the label horizontally on that
+              anchor. Previous version had left:0 which anchored
+              the label on the hit-zone's LEFT EDGE — labels were
+              rendered halfway under the planet shifted left by
+              hitSize/2, which made the planet's body look offset
+              from its label and made the click feel like the
+              planet wasn't where it appeared. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute"
+            className="pointer-events-none absolute left-1/2"
             style={{
-              top: 0,
-              left: 0,
-              transform: `translate(-50%, ${hitSize / 2 + 6}px) rotateX(-${TILT_DEGREES}deg)`,
+              top: "100%",
+              transform: `translate(-50%, 6px)`,
             }}
           >
             <div
