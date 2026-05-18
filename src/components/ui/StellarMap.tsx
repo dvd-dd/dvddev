@@ -516,7 +516,15 @@ export function StellarMap({ activeProject, onActivate }: StellarMapProps) {
           className="pointer-events-none absolute left-1/2 top-1/2"
           style={{ width: 0, height: 0 }}
         >
-          {/* Corona rays */}
+          {/* Corona rays. NOTE the .toFixed(4) on each coordinate:
+              Math.sin / Math.cos are NOT bit-exact between V8-on-Node
+              (SSR) and V8-on-Chromium (client) for irrational arg
+              values like (4/12)·2π — ECMAScript leaves transcendental
+              precision implementation-defined. Without rounding,
+              React hydration sees y2="-34.64101615137754" from the
+              server vs -34.641016151377535 from the client and flags
+              a mismatch. 4 decimals = sub-pixel accuracy, plenty for
+              SVG, and identical string serialization on both sides. */}
           <svg
             aria-hidden
             className="absolute"
@@ -534,13 +542,15 @@ export function StellarMap({ activeProject, onActivate }: StellarMapProps) {
                 const a = (i / 12) * Math.PI * 2;
                 const r1 = 22;
                 const r2 = i % 2 === 0 ? 40 : 32;
+                const cosA = Math.cos(a);
+                const sinA = Math.sin(a);
                 return (
                   <line
                     key={i}
-                    x1={Math.cos(a) * r1}
-                    y1={Math.sin(a) * r1}
-                    x2={Math.cos(a) * r2}
-                    y2={Math.sin(a) * r2}
+                    x1={(cosA * r1).toFixed(4)}
+                    y1={(sinA * r1).toFixed(4)}
+                    x2={(cosA * r2).toFixed(4)}
+                    y2={(sinA * r2).toFixed(4)}
                     strokeWidth={i % 2 === 0 ? 1.4 : 0.8}
                   />
                 );
