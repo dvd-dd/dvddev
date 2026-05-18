@@ -7,7 +7,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative flex min-h-screen w-full items-center justify-center bg-space-black px-6 py-32"
+      className="relative flex min-h-screen w-full items-center justify-center px-6 py-32"
     >
       <div className="max-w-3xl text-center">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">

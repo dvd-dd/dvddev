@@ -6,7 +6,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 export function Footer() {
   const { t } = useTranslation();
   return (
-    <footer className="relative w-full border-t border-saturn-gold/20 bg-space-black px-6 py-12">
+    <footer className="relative w-full border-t border-saturn-gold/20 px-6 py-12">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3">
         <div className="flex w-full flex-col items-center justify-between gap-6 font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/50 md:flex-row">
           <span>

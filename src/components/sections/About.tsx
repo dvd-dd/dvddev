@@ -44,28 +44,11 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative w-full overflow-hidden bg-gradient-to-b from-deep-space to-space-black px-6 py-32 md:px-12 md:py-40"
+      className="relative w-full overflow-hidden px-6 py-32 md:px-12 md:py-40"
     >
-      {/* Decorative CSS starfield — two layered radial-gradients of
-          tiny points at fixed pseudo-random positions. Cheap, no DOM. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-60"
-        style={{
-          backgroundImage: `
-            radial-gradient(1px 1px at 12% 18%, rgba(250,250,250,0.6), transparent 50%),
-            radial-gradient(1px 1px at 28% 72%, rgba(250,250,250,0.4), transparent 50%),
-            radial-gradient(1.5px 1.5px at 47% 33%, rgba(212,165,116,0.5), transparent 50%),
-            radial-gradient(1px 1px at 64% 84%, rgba(250,250,250,0.4), transparent 50%),
-            radial-gradient(1px 1px at 78% 22%, rgba(250,250,250,0.5), transparent 50%),
-            radial-gradient(1.5px 1.5px at 88% 56%, rgba(212,165,116,0.45), transparent 50%),
-            radial-gradient(1px 1px at 5% 88%, rgba(250,250,250,0.4), transparent 50%),
-            radial-gradient(1px 1px at 92% 9%, rgba(250,250,250,0.4), transparent 50%),
-            radial-gradient(1px 1px at 35% 7%, rgba(250,250,250,0.4), transparent 50%),
-            radial-gradient(1px 1px at 18% 48%, rgba(250,250,250,0.45), transparent 50%)
-          `,
-        }}
-      />
+      {/* (Decorative CSS starfield removed — SiteStarfield now
+          provides ambient stars across the whole site, so this
+          local layer was double-rendering. */}
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 lg:gap-20">
         {/* Left column: visual anchor + timeline. Stacks under the bio

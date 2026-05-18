@@ -45,7 +45,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://upwardbr.com",
     techStack: ["Next.js", "Tailwind", "i18n PT/EN", "Dynamic Routes"],
-    orbit: { ring: 1, startAngle: 0, color: "#d4a574", size: 72 },
+    orbit: { ring: 1, startAngle: 0, color: "#d4a574", size: 56 },
   },
   {
     id: "smartfloors",
@@ -54,7 +54,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://smartfloorservices.com",
     techStack: ["Next.js", "i18n EN/ES", "3D Configurator", "Image Optim"],
-    orbit: { ring: 1, startAngle: 180, color: "#c4623a", size: 66 },
+    orbit: { ring: 1, startAngle: 180, color: "#c4623a", size: 52 },
   },
   {
     id: "phoenix",
@@ -67,7 +67,7 @@ export const PROJECTS: Project[] = [
       ring: 2,
       startAngle: 60,
       color: "#7c3aed",
-      size: 57,
+      size: 46,
       hasRing: true,
       ringColor: "#7c3aed",
     },
@@ -79,7 +79,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/pecaai-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
-    orbit: { ring: 2, startAngle: 240, color: "#1f6bff", size: 54 },
+    orbit: { ring: 2, startAngle: 240, color: "#1f6bff", size: 44 },
   },
   {
     id: "luxor",
@@ -88,7 +88,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/luxor-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "Custom i18n", "Cursor FX"],
-    orbit: { ring: 3, startAngle: 30, color: "#d4a853", size: 45 },
+    orbit: { ring: 3, startAngle: 30, color: "#d4a853", size: 36 },
   },
   {
     id: "woodframe",
@@ -97,7 +97,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/woodframe-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Light/Dark"],
-    orbit: { ring: 3, startAngle: 210, color: "#b8956a", size: 42 },
+    orbit: { ring: 3, startAngle: 210, color: "#b8956a", size: 34 },
   },
 ];
 
@@ -109,14 +109,14 @@ export function getProjectById(id: string | null): Project | null {
 
 /**
  * Radius of a ring in CSS pixels (SVG userspace units too — SVG
- * viewBox matches 1:1). Ring 1 = 230, 2 = 350, 3 = 470. Bumped from
- * the original 140/220/300 set because the stellar map now lives in
- * a 1200-unit viewBox at up to 1100px max-width — the wider canvas
- * was making the old tight orbits look like a clustered solar
- * system instead of breathing cinematic space.
+ * viewBox matches 1:1). Ring 1 = 165, 2 = 250, 3 = 335. Sized for
+ * the 800px-max container that the user dialed back to after the
+ * previous 1100px version felt too dominant. With planets at
+ * ~34-56px, this keeps the rings visually distinct without
+ * crowding the planet bodies against the container edge.
  */
 export function getRingRadius(ring: number): number {
-  return 110 + ring * 120;
+  return 80 + ring * 85;
 }
 
 /**

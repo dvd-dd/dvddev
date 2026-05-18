@@ -37,7 +37,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-deep-space via-space-black to-deep-space px-6 py-24 md:py-32"
+      className="relative min-h-screen w-full overflow-hidden px-6 py-24 md:py-32"
     >
       {/* Heading — dims when the info panel is open so the panel's
           copy doesn't have to fight it for attention. */}
