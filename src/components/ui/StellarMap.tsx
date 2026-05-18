@@ -206,23 +206,37 @@ function StaticPlanet({
   const { ring, startAngle, size } = project.orbit;
   const radius = getRingRadius(ring);
 
-  // Static screen-space position from polar coords.
-  // (cos for X, sin for Y — flat math, no per-frame work.)
+  // Static screen-space position from polar coords. .toFixed(3)
+  // rounding here matters: SSR (Node V8) and client (Chromium V8)
+  // can differ by 1 ULP on Math.cos/sin for irrational args, which
+  // React hydration would flag as an attribute mismatch on the
+  // translate() string. 3 decimals = sub-pixel and identical
+  // string serialization on both sides.
   const rad = (startAngle * Math.PI) / 180;
-  const x0 = Math.cos(rad) * radius;
-  const y0 = Math.sin(rad) * radius;
+  const x0 = (Math.cos(rad) * radius).toFixed(3);
+  const y0 = (Math.sin(rad) * radius).toFixed(3);
 
-  // Depth-aware mouse parallax. Outer rings (higher ring number)
-  // shift more, inner less — sells the depth-layered feel without
-  // any real 3D.
+  // Depth-aware mouse parallax. Pulled the magnitudes way down
+  // (was 22/14, now 6/4) because the larger shift was moving
+  // planets out from under the cursor faster than the user could
+  // click — the depth illusion still works at this scale, and the
+  // hit area below sits steady enough that clicks land reliably.
   const depthFactor = ring * 0.5;
-  const parX = useTransform(parallaxX, (v) => v * 22 * depthFactor);
-  const parY = useTransform(parallaxY, (v) => v * 14 * depthFactor);
+  const parX = useTransform(parallaxX, (v) => v * 6 * depthFactor);
+  const parY = useTransform(parallaxY, (v) => v * 4 * depthFactor);
 
   // Per-planet float — varied duration so adjacent planets don't
   // bob in sync. Phase offset via animationDelay (negative so the
   // animation starts mid-cycle, avoiding a synced kickoff on mount).
   const floatDuration = 5.5 + ring * 0.8;
+
+  // Hit zone diameter: 1.6× the planet visual. Gives the user a
+  // comfortable click target around the visible body without
+  // catching neighbouring planets. (Previous version sized the
+  // button to fit planet + label via flex column — that pulled the
+  // hit area sideways to the label's width, making the click feel
+  // imprecise.)
+  const hitSize = Math.round(size * 1.6);
 
   return (
     <motion.div
@@ -250,31 +264,75 @@ function StaticPlanet({
             animationPlayState: active ? "paused" : "running",
           }}
         >
-          {/* Button: counter-tilts the X-rotation of the parent stage
-              so the planet body reads as facing the camera. */}
-          <motion.button
-            type="button"
-            aria-label={`${project.designation} — ${project.name}`}
-            animate={{ opacity: isThisActive ? 0 : 1 }}
-            transition={{ duration: 0.2 }}
-            onClick={(e) => onClick(e.currentTarget)}
-            onMouseEnter={onPointerOver}
-            onMouseLeave={onPointerOut}
-            onFocus={onPointerFocus}
-            onBlur={onPointerBlur}
-            className="group absolute flex cursor-pointer flex-col items-center justify-center border-0 bg-transparent p-0"
+          {/* Counter-tilts the X-rotation of the parent stage so the
+              planet body reads as facing the camera. Wraps both the
+              button (hit zone + visible body) and the static label
+              sibling so they tilt together. */}
+          <div
             style={{
-              // Centre the button on its (x0, y0) anchor.
               transform: `translate(-50%, -50%) rotateX(-${TILT_DEGREES}deg)`,
+              width: hitSize,
+              height: hitSize,
+              position: "relative",
             }}
           >
-            <PlanetVisual project={project} hovered={hovered} />
+            {/* Click target — fills the hit zone. Transparent except
+                for a faint hover ring that gives the user feedback on
+                what's clickable. Sized to the hit zone, not the planet
+                visual, so clicks near the planet edge still register. */}
+            <motion.button
+              type="button"
+              aria-label={`${project.designation} — ${project.name}`}
+              animate={{ opacity: isThisActive ? 0 : 1 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => onClick(e.currentTarget)}
+              onMouseEnter={onPointerOver}
+              onMouseLeave={onPointerOut}
+              onFocus={onPointerFocus}
+              onBlur={onPointerBlur}
+              className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0"
+            >
+              {/* Hover ripple — a soft expanding ring outward from the
+                  planet on hover. Pure visual feedback. */}
+              {hovered && (
+                <motion.span
+                  key="ripple"
+                  aria-hidden
+                  initial={{ scale: 1, opacity: 0.45 }}
+                  animate={{ scale: 1.55, opacity: 0 }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
+                  className="absolute rounded-full border border-saturn-cream"
+                  style={{ width: size, height: size }}
+                />
+              )}
 
-            {/* Label — always visible below the body. No counter-
-                rotation needed since the planet itself doesn't
-                rotate around the sun anymore. */}
+              {/* Planet body with a subtle scale-up on hover for
+                  tactile feedback. */}
+              <motion.div
+                animate={{ scale: hovered ? 1.12 : 1 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+              >
+                <PlanetVisual project={project} hovered={hovered} />
+              </motion.div>
+            </motion.button>
+          </div>
+
+          {/* Label — separate sibling, OUTSIDE the click target so
+              its width doesn't pull the hit area sideways. Anchored
+              just below the hit zone (size/2 down from button centre,
+              then size/2 + 8px more for breathing room). Counter-tilted
+              the same as the button so it sits in screen space upright. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute"
+            style={{
+              top: 0,
+              left: 0,
+              transform: `translate(-50%, ${hitSize / 2 + 6}px) rotateX(-${TILT_DEGREES}deg)`,
+            }}
+          >
             <div
-              className={`pointer-events-none mt-3 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.25em] transition-all duration-300 ${
+              className={`whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.25em] transition-all duration-300 ${
                 hovered
                   ? "tracking-[0.32em] text-saturn-cream"
                   : "text-saturn-cream/55"
@@ -282,7 +340,7 @@ function StaticPlanet({
             >
               {project.name.toUpperCase()}
             </div>
-          </motion.button>
+          </div>
         </div>
       </div>
     </motion.div>
