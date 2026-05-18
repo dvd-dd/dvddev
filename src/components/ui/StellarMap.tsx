@@ -1,13 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   PROJECTS,
   getRingRadius,
@@ -178,8 +172,6 @@ interface StaticPlanetProps {
   hovered: boolean;
   active: boolean;
   isThisActive: boolean;
-  parallaxX: MotionValue<number>;
-  parallaxY: MotionValue<number>;
   onPointerOver: () => void;
   onPointerOut: () => void;
   onPointerFocus: () => void;
@@ -194,8 +186,6 @@ function StaticPlanet({
   hovered,
   active,
   isThisActive,
-  parallaxX,
-  parallaxY,
   onPointerOver,
   onPointerOut,
   onPointerFocus,
@@ -216,18 +206,12 @@ function StaticPlanet({
   const x0 = (Math.cos(rad) * radius).toFixed(3);
   const y0 = (Math.sin(rad) * radius).toFixed(3);
 
-  // Depth-aware mouse parallax. Pulled the magnitudes way down
-  // (was 22/14, now 6/4) because the larger shift was moving
-  // planets out from under the cursor faster than the user could
-  // click — the depth illusion still works at this scale, and the
-  // hit area below sits steady enough that clicks land reliably.
-  const depthFactor = ring * 0.5;
-  const parX = useTransform(parallaxX, (v) => v * 6 * depthFactor);
-  const parY = useTransform(parallaxY, (v) => v * 4 * depthFactor);
-
   // Per-planet float — varied duration so adjacent planets don't
-  // bob in sync. Phase offset via animationDelay (negative so the
-  // animation starts mid-cycle, avoiding a synced kickoff on mount).
+  // bob in sync. ±5px Y at 5.5-7.9s per cycle is slow enough that
+  // click targeting isn't affected (max ~1.5px drift per frame at
+  // 60fps vs a 50-90px hit area). Phase offset via negative
+  // animationDelay so the animation starts mid-cycle, avoiding a
+  // synced kickoff on mount.
   const floatDuration = 5.5 + ring * 0.8;
 
   // Hit zone diameter: 1.6× the planet visual. Gives the user a
@@ -239,14 +223,9 @@ function StaticPlanet({
   const hitSize = Math.round(size * 1.6);
 
   return (
-    <motion.div
+    <div
       className="absolute left-1/2 top-1/2"
-      style={{
-        width: 0,
-        height: 0,
-        x: parX,
-        y: parY,
-      }}
+      style={{ width: 0, height: 0 }}
     >
       {/* Outer position: static polar coords. */}
       <div
@@ -343,7 +322,7 @@ function StaticPlanet({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -365,20 +344,11 @@ export function StellarMap({ activeProject, onActivate }: StellarMapProps) {
     []
   );
 
-  // Mouse parallax. Normalised to -1..1 across the viewport so the
-  // values can be scaled per-planet by depth. MotionValues skip the
-  // re-render entirely; per-planet useTransforms compute final px.
-  const parallaxX = useMotionValue(0);
-  const parallaxY = useMotionValue(0);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      parallaxX.set((e.clientX / window.innerWidth) * 2 - 1);
-      parallaxY.set((e.clientY / window.innerHeight) * 2 - 1);
-    };
-    window.addEventListener("mousemove", handler, { passive: true });
-    return () => window.removeEventListener("mousemove", handler);
-  }, [parallaxX, parallaxY]);
+  // Mouse parallax removed — even at small magnitudes, planets
+  // drifting under the cursor was breaking click precision. Planets
+  // now stay put; only the per-planet float (independent of cursor)
+  // gives the scene gentle motion. Depth still reads via the 25°
+  // stage tilt and the per-ring radial spacing.
 
   // Random-but-stable float phases. Deterministic from project.id
   // length so SSR matches client. Spread across 0..floatDuration
@@ -492,7 +462,7 @@ export function StellarMap({ activeProject, onActivate }: StellarMapProps) {
           />
         </div>
 
-        {/* Planets — static positions with mouse parallax + float */}
+        {/* Planets — fully static positions + gentle per-planet float */}
         {PROJECTS.map((project) => (
           <StaticPlanet
             key={project.id}
@@ -500,8 +470,6 @@ export function StellarMap({ activeProject, onActivate }: StellarMapProps) {
             hovered={hoveredId === project.id}
             active={isActive}
             isThisActive={activeProject?.id === project.id}
-            parallaxX={parallaxX}
-            parallaxY={parallaxY}
             floatPhase={floatPhases.get(project.id) ?? 0}
             onPointerOver={() => setHoveredId(project.id)}
             onPointerOut={() => setHoveredId(null)}
