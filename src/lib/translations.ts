@@ -69,11 +69,11 @@ export const translations = {
               "Multi-route portfolio with dynamic case studies + native bilingual i18n",
           },
           smartfloors: {
-            tagline: "Premium floor installation in Connecticut",
+            tagline: "Family-run hardwood flooring services in Connecticut",
             description:
-              "First real client of Upward Media. Marketing site with EN/ES, trust signals (15+ years, 300+ projects), and an interactive 3D floor configurator.",
+              "Production marketing site for a family-run Connecticut flooring business — installation, sanding, and refinishing across hardwood, epoxy, vinyl, tile, and carpet. EN/ES bilingual, built around a single-team promise: the crew that estimates the job is the crew that does the work.",
             highlight:
-              "Interactive 3D Floor Studio — pick material + color, see it rendered in a sunlit room",
+              "Project gallery carousel walking through real completed jobs across material types — the social proof that does the closing for a regional home-services brand.",
           },
           phoenix: {
             tagline: "AI-native cybersecurity platform",
@@ -184,11 +184,11 @@ export const translations = {
               "Portfólio multi-rota com cases dinâmicos + i18n bilíngue nativo",
           },
           smartfloors: {
-            tagline: "Instalação de pisos premium em Connecticut",
+            tagline: "Empresa familiar de pisos em Connecticut",
             description:
-              "Primeiro cliente real da Upward Media. Site institucional bilíngue EN/ES, com trust signals (15+ anos, 300+ projetos) e configurador 3D de pisos interativo.",
+              "Site institucional em produção pra empresa familiar de pisos em Connecticut — instalação, lixamento e acabamento em madeira, epoxy, vinil, cerâmica e carpete. Bilíngue EN/ES, construído em torno da promessa one-team: a mesma equipe que orça é a que executa.",
             highlight:
-              "3D Floor Studio interativo — escolhe material + cor e vê renderizado num quarto iluminado",
+              "Carrossel de galeria percorrendo projetos reais entregues em vários tipos de material — a prova social que fecha a venda em marca de serviços residenciais.",
           },
           phoenix: {
             tagline: "Plataforma de cibersegurança AI-native",

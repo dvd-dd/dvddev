@@ -53,7 +53,7 @@ export const PROJECTS: Project[] = [
     name: "Smart Floors Services",
     status: "live",
     url: "https://smartfloorservices.com",
-    techStack: ["Next.js", "i18n EN/ES", "3D Configurator", "Image Optim"],
+    techStack: ["Next.js", "i18n EN/ES", "Image Optim"],
     orbit: { ring: 1, startAngle: 180, color: "#c4623a", size: 52 },
   },
   {
