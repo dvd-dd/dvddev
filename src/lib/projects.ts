@@ -17,12 +17,16 @@ export interface OrbitConfig {
   ring: number;
   /** Initial angle on the ring in degrees, 0–360. */
   startAngle: number;
-  /** Planet color hex — drives the radial-gradient body fill + glow. */
+  /** Planet color hex — drives the atmosphere glow + accent. */
   color: string;
-  /** Visual diameter in px (the orbit wrapper counter-tilts so this
-   *  reads as the rendered size on screen, not foreshortened). */
+  /** Visual diameter in px. */
   size: number;
-  /** Optional Saturn-style ring decoration (CSS pseudo-element). */
+  /** Path to the planet texture (equirectangular projection from
+   *  Solar System Scope, resized to 512px max for mobile-friendly
+   *  payload). Rendered as background-image with a sphere-shading
+   *  gradient overlay on top to fake the 3D look. */
+  texture: string;
+  /** Optional Saturn-style ring decoration. */
   hasRing?: boolean;
   ringColor?: string;
 }
@@ -45,7 +49,13 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://upwardbr.com",
     techStack: ["Next.js", "Tailwind", "i18n PT/EN", "Dynamic Routes"],
-    orbit: { ring: 1, startAngle: 0, color: "#d4a574", size: 56 },
+    orbit: {
+      ring: 1,
+      startAngle: 0,
+      color: "#d4a574",
+      size: 56,
+      texture: "/textures/planet_jupiter.jpg",
+    },
   },
   {
     id: "smartfloors",
@@ -54,7 +64,13 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://smartfloorservices.com",
     techStack: ["Next.js", "i18n EN/ES", "Image Optim"],
-    orbit: { ring: 1, startAngle: 180, color: "#c4623a", size: 52 },
+    orbit: {
+      ring: 1,
+      startAngle: 180,
+      color: "#c4623a",
+      size: 52,
+      texture: "/textures/planet_mars.jpg",
+    },
   },
   {
     id: "phoenix",
@@ -68,6 +84,7 @@ export const PROJECTS: Project[] = [
       startAngle: 60,
       color: "#7c3aed",
       size: 46,
+      texture: "/textures/planet_uranus.jpg",
       hasRing: true,
       ringColor: "#7c3aed",
     },
@@ -79,7 +96,13 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/pecaai-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
-    orbit: { ring: 2, startAngle: 240, color: "#1f6bff", size: 44 },
+    orbit: {
+      ring: 2,
+      startAngle: 240,
+      color: "#1f6bff",
+      size: 44,
+      texture: "/textures/planet_neptune.jpg",
+    },
   },
   {
     id: "luxor",
@@ -88,7 +111,13 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/luxor-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "Custom i18n", "Cursor FX"],
-    orbit: { ring: 3, startAngle: 30, color: "#d4a853", size: 36 },
+    orbit: {
+      ring: 3,
+      startAngle: 30,
+      color: "#d4a853",
+      size: 36,
+      texture: "/textures/planet_mercury.jpg",
+    },
   },
   {
     id: "woodframe",
@@ -97,7 +126,13 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/woodframe-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Light/Dark"],
-    orbit: { ring: 3, startAngle: 210, color: "#b8956a", size: 34 },
+    orbit: {
+      ring: 3,
+      startAngle: 210,
+      color: "#b8956a",
+      size: 34,
+      texture: "/textures/planet_venus_surface.jpg",
+    },
   },
 ];
 

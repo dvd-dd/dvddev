@@ -32,10 +32,6 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 const CONSOLE_PLANET_SIZE = 280;
 
-/** Tiny inline noise SVG — gives the planet body surface texture. */
-const NOISE_DATA_URI =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E";
-
 /* ─── Per-project display-only metadata ────────────────────────── */
 
 /** Category badge shown in roster + telemetry. Hardcoded by id so we
@@ -92,10 +88,10 @@ function RosterItem({ project, active, index, onSelect }: RosterItemProps) {
     <button
       type="button"
       onClick={onSelect}
-      className={`group relative w-full overflow-hidden border text-left transition-all duration-200 ${
+      className={`group relative w-full overflow-hidden border text-left backdrop-blur-md transition-all duration-200 ${
         active
-          ? "border-saturn-gold/60 bg-saturn-gold/10"
-          : "border-saturn-gold/15 hover:border-saturn-gold/30 hover:bg-saturn-gold/[0.04]"
+          ? "border-saturn-gold/60 bg-deep-space/75"
+          : "border-saturn-gold/15 bg-deep-space/55 hover:border-saturn-gold/30 hover:bg-deep-space/70"
       }`}
     >
       {/* Corner ticks — show on active OR hover for the HUD feel. */}
@@ -167,9 +163,7 @@ function RosterItem({ project, active, index, onSelect }: RosterItemProps) {
 /* ─── Center planet ─────────────────────────────────────────────── */
 
 function ConsolePlanet({ project }: { project: Project }) {
-  const { color, hasRing, ringColor } = project.orbit;
-  const lightStop = `color-mix(in srgb, ${color} 70%, white)`;
-  const darkStop = `color-mix(in srgb, ${color} 35%, black)`;
+  const { color, hasRing, ringColor, texture } = project.orbit;
 
   return (
     <div
@@ -233,28 +227,32 @@ function ConsolePlanet({ project }: { project: Project }) {
         animate={{ y: [-4, 4, -4] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* Body + slow internal rotation. Same gradient + noise
-            recipe as the prior ZoomedPlanetVisual. */}
-        <motion.div
+        {/* Planet body — real NASA-derived texture as background
+            (no rotation: the equirectangular projection would visibly
+            stretch if spun in 2D). Three layered backgrounds:
+              1. Upper-left highlight  — fakes the lit hemisphere
+              2. Lower-right shadow    — fakes the terminator
+              3. Actual planet texture — Jupiter bands, Mars red, etc.
+            The inset box-shadows reinforce the sphere illusion by
+            darkening the rim and bleeding atmosphere color inward. */}
+        <div
           className="relative h-full w-full overflow-hidden rounded-full"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
           style={{
-            background: `radial-gradient(circle at 30% 25%, ${lightStop} 0%, ${color} 45%, ${darkStop} 100%)`,
-            boxShadow: `0 0 60px 12px ${color}88, 0 0 120px 24px ${color}33, inset -10px -10px 20px ${darkStop}`,
+            backgroundImage: `
+              radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.22) 0%, transparent 38%),
+              radial-gradient(circle at 70% 75%, rgba(0, 0, 0, 0.55) 50%, transparent 82%),
+              url("${texture}")
+            `,
+            backgroundSize: "cover, cover, cover",
+            backgroundPosition: "center, center, center",
+            boxShadow: `
+              0 0 60px 12px ${color}88,
+              0 0 120px 24px ${color}33,
+              inset -14px -14px 28px rgba(0, 0, 0, 0.6),
+              inset 10px 10px 24px ${color}22
+            `,
           }}
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage: `url("${NOISE_DATA_URI}")`,
-              backgroundSize: "100% 100%",
-              opacity: 0.14,
-              mixBlendMode: "overlay",
-            }}
-          />
-        </motion.div>
+        />
       </motion.div>
 
       {/* Optional Saturn-style ring (Phoenix). */}
@@ -295,7 +293,7 @@ function TelemetryPanel({ project }: { project: Project }) {
   return (
     <div className="flex flex-col gap-5">
       {/* HUD readout block */}
-      <div className="relative border border-saturn-gold/30 px-4 py-3">
+      <div className="relative border border-saturn-gold/30 bg-deep-space/65 px-4 py-3 backdrop-blur-md">
         <span className="pointer-events-none absolute -left-px -top-px h-2 w-2 border-l border-t border-saturn-gold" />
         <span className="pointer-events-none absolute -right-px -top-px h-2 w-2 border-r border-t border-saturn-gold" />
         <span className="pointer-events-none absolute -bottom-px -left-px h-2 w-2 border-b border-l border-saturn-gold" />
@@ -322,22 +320,23 @@ function TelemetryPanel({ project }: { project: Project }) {
         </dl>
       </div>
 
-      {/* Tagline */}
-      <p className="font-mono text-sm italic leading-relaxed text-saturn-cream/70">
-        {copy.tagline}
-      </p>
-
-      {/* Description */}
-      <p className="text-[15px] leading-relaxed text-saturn-cream/85">
-        {copy.description}
-      </p>
+      {/* Tagline + description grouped on a single dark scrim so the
+          body text reads cleanly over the starfield. */}
+      <div className="space-y-3 border border-saturn-cream/[0.08] bg-deep-space/60 px-4 py-4 backdrop-blur-md">
+        <p className="font-mono text-sm italic leading-relaxed text-saturn-cream/75">
+          {copy.tagline}
+        </p>
+        <p className="text-[15px] leading-relaxed text-saturn-cream/90">
+          {copy.description}
+        </p>
+      </div>
 
       {/* Diferencial highlight */}
-      <div className="border border-saturn-gold/40 bg-saturn-gold/5 p-4">
+      <div className="border border-saturn-gold/40 bg-deep-space/70 p-4 backdrop-blur-md">
         <div className="mb-1.5 font-mono text-[9px] uppercase tracking-[0.3em] text-saturn-gold">
           {t.sections.projects.signatureFeature}
         </div>
-        <p className="text-sm leading-relaxed text-saturn-cream/90">
+        <p className="text-sm leading-relaxed text-saturn-cream/95">
           {copy.highlight}
         </p>
       </div>
@@ -356,7 +355,7 @@ function CommandBar({ project }: { project: Project }) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block overflow-hidden border border-saturn-gold/40 bg-gradient-to-r from-saturn-gold/[0.03] via-saturn-gold/10 to-saturn-gold/[0.03] transition-all duration-300 hover:border-saturn-gold/80 hover:from-saturn-gold/[0.08] hover:via-saturn-gold/20 hover:to-saturn-gold/[0.08]"
+      className="group relative block overflow-hidden border border-saturn-gold/40 bg-deep-space/70 backdrop-blur-md transition-all duration-300 hover:border-saturn-gold/80 hover:bg-deep-space/85"
     >
       {/* Corner ticks for HUD chrome */}
       <span className="pointer-events-none absolute -left-px -top-px h-2.5 w-2.5 border-l border-t border-saturn-gold" />
@@ -449,15 +448,17 @@ export function StellarConsole() {
 
   return (
     <div ref={sectionRef} className="relative mx-auto w-full max-w-7xl">
-      {/* Header strip: instruction (left) + fleet status (right) */}
-      <div className="mb-6 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/50">
+      {/* Header strip: instruction (left) + fleet status (right).
+          Wrapped in a subtle scrim so the small mono labels read
+          clearly against the global starfield. */}
+      <div className="mb-6 flex flex-col items-start justify-between gap-2 rounded-sm border border-saturn-cream/[0.06] bg-deep-space/55 px-4 py-2.5 backdrop-blur-md sm:flex-row sm:items-center">
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/75">
           {t.sections.projects.instruction}
         </p>
-        <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/60">
+        <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/80">
           ▸ FLEET STATUS:{" "}
           <span className="text-emerald-400">{PROJECTS.length}</span>
-          <span className="text-saturn-cream/40"> / </span>
+          <span className="text-saturn-cream/50"> / </span>
           <span>{PROJECTS.length}</span> ACTIVE
         </div>
       </div>
@@ -466,7 +467,7 @@ export function StellarConsole() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr_360px] lg:gap-8">
         {/* Mission roster */}
         <aside>
-          <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold/80">
+          <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
             ▸ MISSION ROSTER
           </div>
           <div className="flex flex-col gap-2">
