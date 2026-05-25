@@ -113,7 +113,28 @@ export const translations = {
       contact: {
         chapter: "· Chapter 04 · Establish Comms",
         heading: "Open a channel.",
-        placeholder: "Contact form deploying soon.",
+        subheading:
+          "Available for new freelance projects worldwide. Pick a frequency below — fastest path is WhatsApp.",
+        statusLabel: "AVAILABLE FOR NEW PROJECTS · MAY 2026",
+        channels: {
+          whatsapp: {
+            label: "WhatsApp",
+            handle: "+55 35 98823-4633",
+            action: "Send message",
+            prefill:
+              "Hi David, I saw your portfolio at dvddev.com and would like to talk about a project.",
+          },
+          linkedin: {
+            label: "LinkedIn",
+            handle: "david-romualdo",
+            action: "Connect",
+          },
+          instagram: {
+            label: "Instagram",
+            handle: "@dvd_dd",
+            action: "Follow",
+          },
+        },
       },
     },
     footer: {
@@ -230,7 +251,28 @@ export const translations = {
       contact: {
         chapter: "· Capítulo 04 · Estabelecer Comunicação",
         heading: "Abrir um canal.",
-        placeholder: "Formulário de contato em breve.",
+        subheading:
+          "Disponível pra novos projetos freelancer. Escolha uma frequência abaixo — o caminho mais rápido é o WhatsApp.",
+        statusLabel: "DISPONÍVEL PARA NOVOS PROJETOS · MAIO 2026",
+        channels: {
+          whatsapp: {
+            label: "WhatsApp",
+            handle: "+55 35 98823-4633",
+            action: "Enviar mensagem",
+            prefill:
+              "Olá David, vi seu portfólio em dvddev.com e gostaria de conversar sobre um projeto.",
+          },
+          linkedin: {
+            label: "LinkedIn",
+            handle: "david-romualdo",
+            action: "Conectar",
+          },
+          instagram: {
+            label: "Instagram",
+            handle: "@dvd_dd",
+            action: "Seguir",
+          },
+        },
       },
     },
     footer: {

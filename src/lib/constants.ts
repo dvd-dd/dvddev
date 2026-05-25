@@ -44,3 +44,14 @@ export const NAV_LINKS = [
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
 ] as const;
+
+/**
+ * Where the Contact "open a channel" cards point to.
+ * Phone is stored in E.164-without-plus form for wa.me; the pretty
+ * display string lives in translations so it can be localized.
+ */
+export const SOCIAL_CHANNELS = {
+  whatsappPhone: "5535988234633",
+  instagramUrl: "https://www.instagram.com/dvd_dd/",
+  linkedinUrl: "https://www.linkedin.com/in/david-romualdo-a50b1231a/",
+} as const;
