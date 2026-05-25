@@ -35,6 +35,12 @@ export const translations = {
         title: "Trajectory",
         body: "I'm looking for partnerships with founders, startups, and agencies who understand that great design and clean code are a competitive edge. Every project I ship is another planet on the map.",
       },
+      studio: {
+        title: "Studio",
+        body: "Beyond freelance, I'm co-founder of Upward — a digital studio handling branding, rebranding, marketing and web development for partner brands. The Upward site itself is one of mine.",
+        linkLabel: "Visit Upward",
+        linkUrl: "https://upwardbr.com",
+      },
       timeline: {
         heading: "Transmission log",
         events: [
@@ -62,9 +68,9 @@ export const translations = {
         items: {
           upward: {
             tagline:
-              "Full-service digital agency engineered for performance",
+              "Digital studio I co-founded — built end-to-end",
             description:
-              "Full-stack site I built for my own digital studio. Multi-route Next.js architecture with dynamic case study pages, native EN/PT i18n, and a content layer tuned for rapid client onboarding.",
+              "Full-stack site for the digital studio I co-founded. Multi-route Next.js architecture with dynamic case study pages, native EN/PT i18n, and a content layer tuned for rapid client onboarding.",
             highlight:
               "Multi-route portfolio with dynamic case studies + native bilingual i18n",
           },
@@ -172,6 +178,12 @@ export const translations = {
         title: "Trajetória",
         body: "Busco parcerias com fundadores, startups e agências que entendem que design e código bem feitos são vantagem competitiva. Cada projeto que entrego é mais um planeta no mapa.",
       },
+      studio: {
+        title: "Estúdio",
+        body: "Além do trabalho freelancer, sou co-fundador da Upward — estúdio digital que cuida de branding, rebranding, marketing e desenvolvimento web pra marcas parceiras. O próprio site da Upward é meu também.",
+        linkLabel: "Visitar Upward",
+        linkUrl: "https://upwardbr.com",
+      },
       timeline: {
         heading: "Log de transmissão",
         events: [
@@ -198,9 +210,9 @@ export const translations = {
         screenshotPending: "Screenshot em breve",
         items: {
           upward: {
-            tagline: "Agência digital full-service focada em performance",
+            tagline: "Estúdio digital que co-fundei — construído ponta a ponta",
             description:
-              "Site full-stack que construí pra minha própria agência digital. Arquitetura Next.js multi-rota com páginas de case dinâmicas, i18n bilíngue EN/PT nativo, e camada de conteúdo afinada pra onboarding rápido de clientes.",
+              "Site full-stack pro estúdio digital que co-fundei. Arquitetura Next.js multi-rota com páginas de case dinâmicas, i18n bilíngue EN/PT nativo, e camada de conteúdo afinada pra onboarding rápido de clientes.",
             highlight:
               "Portfólio multi-rota com cases dinâmicos + i18n bilíngue nativo",
           },

@@ -35,11 +35,25 @@ export function About() {
   // initial="hidden" (clip-path fully clipped) and never re-trigger
   // the parent's `whileInView once: true` reveal — leaving the bio
   // bodies stuck invisible.
-  const acts = [
+  const acts: ReadonlyArray<{
+    id: string;
+    title: string;
+    body: string;
+    link?: { label: string; url: string };
+  }> = [
     { id: "origin", ...t.about.origin },
     { id: "mission", ...t.about.mission },
     { id: "trajectory", ...t.about.trajectory },
-  ] as const;
+    {
+      id: "studio",
+      title: t.about.studio.title,
+      body: t.about.studio.body,
+      link: {
+        label: t.about.studio.linkLabel,
+        url: t.about.studio.linkUrl,
+      },
+    },
+  ];
 
   return (
     <section
@@ -98,6 +112,19 @@ export function About() {
                 <p className="mt-3 text-base leading-relaxed text-saturn-cream/80 md:text-lg">
                   {act.body}
                 </p>
+                {act.link && (
+                  <a
+                    href={act.link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-saturn-gold transition-colors hover:text-saturn-cream"
+                  >
+                    {act.link.label}
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </a>
+                )}
               </motion.article>
             ))}
           </motion.div>
