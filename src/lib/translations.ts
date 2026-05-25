@@ -17,7 +17,7 @@ export const translations = {
       version: "v0.1 · COSMIC EDITION",
     },
     hero: {
-      tagline: "Junior Software Developer crafting universes from code",
+      tagline: "Front-end Developer crafting universes from code",
       cta: "Initiate Mission",
     },
     about: {

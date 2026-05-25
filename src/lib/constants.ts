@@ -9,10 +9,10 @@ export const SITE = {
   brand: "DVD",
   domain: "dvddev.com",
   url: "https://dvddev.com",
-  title: "dvddev — Junior Software Developer | Landing Pages",
+  title: "dvddev — Front-end Developer | Landing Pages",
   description:
     "Crafting universes from code. Conversion-driven landing pages with React, Next.js and Tailwind CSS.",
-  tagline: "Junior Software Developer crafting universes from code",
+  tagline: "Front-end Developer crafting universes from code",
   ogImage: "/og.png",
   themeColor: "#0a0a1a",
   locale: "en_US",

@@ -22,7 +22,7 @@ const STRUCTURED_DATA = {
       alternateName: "dvddev",
       url: SITE.url,
       image: `${SITE.url}${SITE.ogImage}`,
-      jobTitle: "Junior Software Developer",
+      jobTitle: "Front-end Developer",
       description: SITE.description,
       sameAs: [
         SOCIAL_CHANNELS.linkedinUrl,
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     "Next.js",
     "React",
     "Tailwind CSS",
-    "junior developer",
+    "front-end developer",
     "freelance developer",
     "Upwork",
     "conversion-driven design",
