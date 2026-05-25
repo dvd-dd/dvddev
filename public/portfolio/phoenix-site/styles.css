@@ -626,6 +626,35 @@ svg {
   }
 }
 
+/* Status pill is "● All systems operational · v4.12 — released today"
+   on desktop — at narrow viewports the version blurb tips the pill
+   past the viewport edge. Hide the separator + version below 540px
+   so the pill becomes just the dot + status text. Also stack the
+   hero CTA buttons (Request Access + View live dashboard) since
+   side-by-side they don't fit and the second button gets cropped. */
+@media (max-width: 540px) {
+  .status-pill .status-sep,
+  .status-pill .status-version {
+    display: none !important;
+  }
+  .status-pill {
+    max-width: calc(100vw - 40px);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero-cta-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100%;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-cta-row .btn {
+    justify-content: center;
+  }
+}
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    FEED — global map + ticker
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

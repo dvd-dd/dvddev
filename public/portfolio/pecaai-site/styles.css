@@ -1520,3 +1520,12 @@ main, .nav, .footer { position: relative; z-index: 1; }
   .chip-2 { top: 40%; right: 0; }
   .chip-3 { bottom: 4%; left: 6%; }
 }
+
+/* Hide the floating "$47.00", "Delivery 45min", "4.9 ★" orbit chips
+   on phone-sized viewports. The desktop "floating outside the phone"
+   placement relies on horizontal slack a 390px screen does not have,
+   and they tip past the viewport edge or clip the phone. Decorative,
+   not load-bearing — better to drop them than to crowd the mockup. */
+@media (max-width: 540px) {
+  .orbit-chip { display: none !important; }
+}
