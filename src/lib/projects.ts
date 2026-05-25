@@ -53,6 +53,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://upwardbr.com",
     techStack: ["Next.js", "Tailwind", "i18n PT/EN", "Dynamic Routes"],
+    screenshot: "/screenshots/upward.webp",
     orbit: {
       ring: 1,
       startAngle: 0,
