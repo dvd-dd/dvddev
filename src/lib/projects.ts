@@ -49,8 +49,8 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "smartfloors",
-    designation: "PROJ-002 // SMARTFLOORS",
-    name: "Smart Floors Services",
+    designation: "PROJ-002 // SMART HARDWOOD FLOORS",
+    name: "Smart Hardwood Floors",
     status: "live",
     url: "https://smartfloorservices.com",
     techStack: ["Next.js", "i18n EN/ES", "Image Optim"],
