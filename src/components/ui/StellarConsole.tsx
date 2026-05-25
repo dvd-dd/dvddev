@@ -125,13 +125,13 @@ function RosterItem({ project, active, index, onSelect }: RosterItemProps) {
         />
       )}
 
-      <div className="flex flex-col gap-1 px-4 py-3">
+      <div className="flex flex-col gap-1.5 px-4 py-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-saturn-gold/75">
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-saturn-gold/90">
             {project.designation}
           </span>
           <span
-            className={`font-mono text-[10px] leading-none ${
+            className={`font-mono text-[11px] leading-none ${
               isLive ? "text-emerald-400" : "text-saturn-gold"
             }`}
           >
@@ -141,8 +141,15 @@ function RosterItem({ project, active, index, onSelect }: RosterItemProps) {
         <div className="font-display text-base font-semibold leading-tight text-saturn-cream">
           {project.name}
         </div>
-        <div className="font-mono text-[9px] uppercase tracking-[0.25em] text-saturn-cream/55">
-          ▶ {category} · {statusText}
+        <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em]">
+          <span className="text-saturn-cream/55">▶</span>
+          <span className="text-saturn-cream/85">{category}</span>
+          <span className="text-saturn-cream/30">·</span>
+          <span
+            className={isLive ? "text-emerald-400/90" : "text-saturn-gold/90"}
+          >
+            {statusText}
+          </span>
         </div>
       </div>
 
@@ -151,7 +158,7 @@ function RosterItem({ project, active, index, onSelect }: RosterItemProps) {
       {active && (
         <span
           aria-hidden
-          className="absolute right-2 bottom-2 font-mono text-[8px] uppercase tracking-[0.2em] text-saturn-gold/60"
+          className="absolute right-2.5 bottom-2 font-mono text-[10px] uppercase tracking-[0.18em] text-saturn-gold/80"
         >
           {index + 1}
         </span>
@@ -299,24 +306,28 @@ function TelemetryPanel({ project }: { project: Project }) {
         <span className="pointer-events-none absolute -bottom-px -left-px h-2 w-2 border-b border-l border-saturn-gold" />
         <span className="pointer-events-none absolute -bottom-px -right-px h-2 w-2 border-b border-r border-saturn-gold" />
 
-        <div className="mb-2 font-mono text-[9px] uppercase tracking-[0.3em] text-saturn-gold/80">
+        <div className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-saturn-gold">
           ▸ TELEMETRY
         </div>
-        <dl className="grid grid-cols-[88px_1fr] gap-y-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-saturn-cream/85">
-          <dt className="text-saturn-cream/45">CLASS</dt>
-          <dd>{category}</dd>
-          <dt className="text-saturn-cream/45">STATUS</dt>
+        <dl className="grid grid-cols-[88px_1fr] gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em] text-saturn-cream">
+          <dt className="text-saturn-cream/55">CLASS</dt>
+          <dd className="text-saturn-cream/95">{category}</dd>
+          <dt className="text-saturn-cream/55">STATUS</dt>
           <dd
-            className={isLive ? "text-emerald-400" : "text-saturn-gold"}
+            className={
+              isLive
+                ? "text-emerald-400"
+                : "text-saturn-gold"
+            }
           >
             {isLive ? "● LIVE" : "○ DEMO"}
           </dd>
-          <dt className="text-saturn-cream/45">STACK</dt>
-          <dd className="text-saturn-cream/80">
+          <dt className="text-saturn-cream/55">STACK</dt>
+          <dd className="text-saturn-cream/90">
             {project.techStack.join(" · ")}
           </dd>
-          <dt className="text-saturn-cream/45">DISTANCE</dt>
-          <dd>{distance}</dd>
+          <dt className="text-saturn-cream/55">DISTANCE</dt>
+          <dd className="text-saturn-cream/95">{distance}</dd>
         </dl>
       </div>
 
@@ -333,7 +344,7 @@ function TelemetryPanel({ project }: { project: Project }) {
 
       {/* Diferencial highlight */}
       <div className="border border-saturn-gold/40 bg-deep-space/70 p-4 backdrop-blur-md">
-        <div className="mb-1.5 font-mono text-[9px] uppercase tracking-[0.3em] text-saturn-gold">
+        <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-gold">
           {t.sections.projects.signatureFeature}
         </div>
         <p className="text-sm leading-relaxed text-saturn-cream/95">
@@ -365,22 +376,22 @@ function CommandBar({ project }: { project: Project }) {
 
       <div className="flex items-center justify-between gap-4 px-5 py-4">
         {/* Left: hotkey hint */}
-        <div className="hidden font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold/60 sm:block">
+        <div className="hidden font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-gold/80 sm:block">
           [ENTER] ▶▶▶
         </div>
 
         {/* Center: deploy text + URL */}
         <div className="flex flex-1 flex-col items-center text-center sm:flex-row sm:justify-center sm:gap-3">
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-saturn-cream group-hover:text-white sm:text-sm">
+          <span className="font-mono text-xs uppercase tracking-[0.22em] text-saturn-cream group-hover:text-white sm:text-sm">
             DEPLOY TO SURFACE
           </span>
           <span
             aria-hidden
-            className="hidden text-saturn-cream/40 sm:inline"
+            className="hidden text-saturn-cream/50 sm:inline"
           >
             —
           </span>
-          <span className="font-mono text-[11px] lowercase tracking-[0.15em] text-saturn-cream/70 group-hover:text-saturn-cream sm:text-sm">
+          <span className="font-mono text-[12px] lowercase tracking-[0.1em] text-saturn-cream/85 group-hover:text-saturn-cream sm:text-sm">
             {displayUrl(url)}
           </span>
         </div>
@@ -452,13 +463,13 @@ export function StellarConsole() {
           Wrapped in a subtle scrim so the small mono labels read
           clearly against the global starfield. */}
       <div className="mb-6 flex flex-col items-start justify-between gap-2 rounded-sm border border-saturn-cream/[0.06] bg-deep-space/55 px-4 py-2.5 backdrop-blur-md sm:flex-row sm:items-center">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/75">
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-cream/85">
           {t.sections.projects.instruction}
         </p>
-        <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/80">
+        <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-cream/90">
           ▸ FLEET STATUS:{" "}
           <span className="text-emerald-400">{PROJECTS.length}</span>
-          <span className="text-saturn-cream/50"> / </span>
+          <span className="text-saturn-cream/55"> / </span>
           <span>{PROJECTS.length}</span> ACTIVE
         </div>
       </div>
@@ -467,7 +478,7 @@ export function StellarConsole() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr_360px] lg:gap-8">
         {/* Mission roster */}
         <aside>
-          <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
+          <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-gold">
             ▸ MISSION ROSTER
           </div>
           <div className="flex flex-col gap-2">
