@@ -366,38 +366,55 @@ function CommandBar({ project }: { project: Project }) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block overflow-hidden border border-saturn-gold/40 bg-deep-space/70 backdrop-blur-md transition-all duration-300 hover:border-saturn-gold/80 hover:bg-deep-space/85"
+      className="group relative block overflow-hidden border border-saturn-gold/55 bg-gradient-to-r from-saturn-gold/[0.06] via-saturn-gold/[0.14] to-saturn-gold/[0.06] backdrop-blur-md transition-all duration-300 hover:scale-[1.005] hover:border-saturn-gold hover:from-saturn-gold/[0.16] hover:via-saturn-gold/[0.28] hover:to-saturn-gold/[0.16] hover:shadow-[0_0_44px_-4px_rgba(212,165,116,0.55)]"
+      style={{ animation: "cta-pulse 3.2s ease-in-out infinite" }}
     >
-      {/* Corner ticks for HUD chrome */}
-      <span className="pointer-events-none absolute -left-px -top-px h-2.5 w-2.5 border-l border-t border-saturn-gold" />
-      <span className="pointer-events-none absolute -right-px -top-px h-2.5 w-2.5 border-r border-t border-saturn-gold" />
-      <span className="pointer-events-none absolute -bottom-px -left-px h-2.5 w-2.5 border-b border-l border-saturn-gold" />
-      <span className="pointer-events-none absolute -bottom-px -right-px h-2.5 w-2.5 border-b border-r border-saturn-gold" />
+      {/* Corner ticks — slightly larger + bolder for CTA hierarchy */}
+      <span className="pointer-events-none absolute -left-px -top-px h-3 w-3 border-l-2 border-t-2 border-saturn-gold" />
+      <span className="pointer-events-none absolute -right-px -top-px h-3 w-3 border-r-2 border-t-2 border-saturn-gold" />
+      <span className="pointer-events-none absolute -bottom-px -left-px h-3 w-3 border-b-2 border-l-2 border-saturn-gold" />
+      <span className="pointer-events-none absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-saturn-gold" />
 
-      <div className="flex items-center justify-between gap-4 px-5 py-4">
+      {/* Shimmer sweep — a translucent gold band that diagonally
+          scans across the button every 5s. Holds off-screen for the
+          rest of the cycle so the effect feels like a "ping" rather
+          than continuous motion. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 w-[18%] -skew-x-12 bg-gradient-to-r from-transparent via-saturn-cream/30 to-transparent"
+        style={{
+          left: "-25%",
+          animation: "cta-shimmer 5s ease-in-out infinite",
+        }}
+      />
+
+      <div className="relative flex items-center justify-between gap-4 px-6 py-5">
         {/* Left: hotkey hint */}
-        <div className="hidden font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-gold/80 sm:block">
+        <div className="hidden font-mono text-[11px] uppercase tracking-[0.22em] text-saturn-gold sm:block">
           [ENTER] ▶▶▶
         </div>
 
         {/* Center: deploy text + URL */}
         <div className="flex flex-1 flex-col items-center text-center sm:flex-row sm:justify-center sm:gap-3">
-          <span className="font-mono text-xs uppercase tracking-[0.22em] text-saturn-cream group-hover:text-white sm:text-sm">
+          <span className="font-mono text-sm font-semibold uppercase tracking-[0.22em] text-saturn-gold transition-colors group-hover:text-saturn-cream md:text-base">
             DEPLOY TO SURFACE
           </span>
           <span
             aria-hidden
-            className="hidden text-saturn-cream/50 sm:inline"
+            className="hidden text-saturn-gold/40 sm:inline"
           >
             —
           </span>
-          <span className="font-mono text-[12px] lowercase tracking-[0.1em] text-saturn-cream/85 group-hover:text-saturn-cream sm:text-sm">
+          <span className="font-mono text-[12px] lowercase tracking-[0.1em] text-saturn-cream/85 transition-colors group-hover:text-saturn-cream sm:text-sm">
             {displayUrl(url)}
           </span>
         </div>
 
-        {/* Right: external link icon */}
-        <ExternalLink className="h-4 w-4 shrink-0 text-saturn-cream/70 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-saturn-cream" />
+        {/* Right: external link icon — bigger + bolder + slides on hover */}
+        <ExternalLink
+          className="h-5 w-5 shrink-0 text-saturn-gold transition-all duration-200 group-hover:translate-x-1.5 group-hover:text-saturn-cream"
+          strokeWidth={2.25}
+        />
       </div>
     </a>
   );
