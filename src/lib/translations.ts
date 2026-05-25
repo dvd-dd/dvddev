@@ -44,9 +44,9 @@ export const translations = {
       timeline: {
         heading: "Transmission log",
         events: [
-          { year: "20XX", label: "First contact with code" },
-          { year: "20XX", label: "First production project" },
-          { year: "20XX", label: "Front-end focus" },
+          { year: "2025", label: "First contact with code" },
+          { year: "2026", label: "First production project" },
+          { year: "2026", label: "Front-end focus" },
           { year: "2026", label: "dvddev launched" },
         ],
       },
@@ -187,9 +187,9 @@ export const translations = {
       timeline: {
         heading: "Log de transmissão",
         events: [
-          { year: "20XX", label: "Primeiro contato com código" },
-          { year: "20XX", label: "Primeiro projeto em produção" },
-          { year: "20XX", label: "Foco em Front-end" },
+          { year: "2025", label: "Primeiro contato com código" },
+          { year: "2026", label: "Primeiro projeto em produção" },
+          { year: "2026", label: "Foco em Front-end" },
           { year: "2026", label: "dvddev no ar" },
         ],
       },

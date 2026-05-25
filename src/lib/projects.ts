@@ -39,6 +39,10 @@ export interface Project {
   url?: string;
   techStack: string[];
   orbit: OrbitConfig;
+  /** Path to a web-optimized screenshot rendered in the telemetry
+   *  panel. Optional — projects without a screenshot just show the
+   *  planet + telemetry without the preview tile. */
+  screenshot?: string;
 }
 
 export const PROJECTS: Project[] = [
@@ -79,6 +83,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/phoenix-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Dual Theme"],
+    screenshot: "/screenshots/phoenix.webp",
     orbit: {
       ring: 2,
       startAngle: 60,
@@ -96,6 +101,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/pecaai-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
+    screenshot: "/screenshots/pecaai.webp",
     orbit: {
       ring: 2,
       startAngle: 240,
@@ -111,6 +117,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/luxor-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "Custom i18n", "Cursor FX"],
+    screenshot: "/screenshots/luxor.webp",
     orbit: {
       ring: 3,
       startAngle: 30,
@@ -126,6 +133,7 @@ export const PROJECTS: Project[] = [
     status: "case-study",
     url: "/portfolio/woodframe-site/index.html",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Light/Dark"],
+    screenshot: "/screenshots/woodframe.webp",
     orbit: {
       ring: 3,
       startAngle: 210,

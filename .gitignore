@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Hi-res screenshots staged for Upwork upload — not bundled with the
+# site (web-optimized copies live in public/screenshots/).
+upwork-portfolio/

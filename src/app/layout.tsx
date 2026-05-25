@@ -3,8 +3,49 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SiteStarfield } from "@/components/ui/SiteStarfield";
-import { SITE } from "@/lib/constants";
+import { SITE, SOCIAL_CHANNELS } from "@/lib/constants";
 import "./globals.css";
+
+/**
+ * Person + WebSite schema injected as JSON-LD. Helps Google understand
+ * who runs the site → richer SERP snippet (knowledge panel for the
+ * person, sitelinks search box for the site). The shape follows
+ * schema.org/Person and schema.org/WebSite verbatim.
+ */
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE.url}/#person`,
+      name: "David Romualdo",
+      alternateName: "dvddev",
+      url: SITE.url,
+      image: `${SITE.url}${SITE.ogImage}`,
+      jobTitle: "Junior Software Developer",
+      description: SITE.description,
+      sameAs: [
+        SOCIAL_CHANNELS.linkedinUrl,
+        SOCIAL_CHANNELS.instagramUrl,
+        "https://upwardbr.com",
+      ],
+      worksFor: {
+        "@type": "Organization",
+        name: "Upward",
+        url: "https://upwardbr.com",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE.url}/#website`,
+      url: SITE.url,
+      name: SITE.name,
+      description: SITE.description,
+      publisher: { "@id": `${SITE.url}/#person` },
+      inLanguage: ["en", "pt-BR"],
+    },
+  ],
+};
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -96,6 +137,15 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
+      <head>
+        {/* JSON-LD structured data — see STRUCTURED_DATA above. Inline
+            script with no children-array hack works in App Router
+            because the HTML is rendered server-side. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+        />
+      </head>
       <body>
         <SmoothScrollProvider>
           <LanguageProvider>

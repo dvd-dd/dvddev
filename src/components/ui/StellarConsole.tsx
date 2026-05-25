@@ -299,6 +299,37 @@ function TelemetryPanel({ project }: { project: Project }) {
 
   return (
     <div className="flex flex-col gap-5">
+      {/* Surface preview thumbnail — only when the project has one.
+          Wraps the live URL so clicking the thumbnail does the same
+          thing as the DEPLOY TO SURFACE bar below. */}
+      {project.screenshot && (
+        <a
+          href={project.url ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative block overflow-hidden border border-saturn-cream/15 transition-colors duration-300 hover:border-saturn-gold/60"
+        >
+          <span className="pointer-events-none absolute -left-px -top-px z-10 h-2 w-2 border-l border-t border-saturn-gold/70" />
+          <span className="pointer-events-none absolute -right-px -top-px z-10 h-2 w-2 border-r border-t border-saturn-gold/70" />
+          <span className="pointer-events-none absolute -bottom-px -left-px z-10 h-2 w-2 border-b border-l border-saturn-gold/70" />
+          <span className="pointer-events-none absolute -bottom-px -right-px z-10 h-2 w-2 border-b border-r border-saturn-gold/70" />
+
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={project.screenshot}
+            alt={`${project.name} screenshot`}
+            loading="lazy"
+            decoding="async"
+            className="block h-auto w-full transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+
+          {/* Label strip overlay — bottom-left mono caption. */}
+          <span className="pointer-events-none absolute bottom-1.5 left-2 font-mono text-[9px] uppercase tracking-[0.22em] text-saturn-cream/85 [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">
+            ▸ SURFACE PREVIEW
+          </span>
+        </a>
+      )}
+
       {/* HUD readout block */}
       <div className="relative border border-saturn-gold/30 bg-deep-space/65 px-4 py-3 backdrop-blur-md">
         <span className="pointer-events-none absolute -left-px -top-px h-2 w-2 border-l border-t border-saturn-gold" />
