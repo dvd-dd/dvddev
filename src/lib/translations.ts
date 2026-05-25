@@ -115,7 +115,7 @@ export const translations = {
         heading: "Open a channel.",
         subheading:
           "Available for new freelance projects worldwide. Pick a frequency below — fastest path is WhatsApp.",
-        statusLabel: "AVAILABLE FOR NEW PROJECTS · MAY 2026",
+        statusLabel: "AVAILABLE FOR NEW PROJECTS",
         channels: {
           whatsapp: {
             label: "WhatsApp",
@@ -253,7 +253,7 @@ export const translations = {
         heading: "Abrir um canal.",
         subheading:
           "Disponível pra novos projetos freelancer. Escolha uma frequência abaixo — o caminho mais rápido é o WhatsApp.",
-        statusLabel: "DISPONÍVEL PARA NOVOS PROJETOS · MAIO 2026",
+        statusLabel: "DISPONÍVEL PARA NOVOS PROJETOS",
         channels: {
           whatsapp: {
             label: "WhatsApp",

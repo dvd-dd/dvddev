@@ -7,18 +7,9 @@ import { useTranslation } from "@/hooks/useTranslation";
 /**
  * Discovered Worlds — cockpit-style portfolio console.
  *
- * Replaces the prior StellarMap (top-down solar system w/ slide-in
- * info panel) with StellarConsole (3-column cockpit: mission roster
- * + center planet + telemetry HUD + command bar). Same data layer
- * (projects.ts + translations.ts items.*), entirely different UX.
- *
- * The console is a permanent layout — there's no modal state for
- * the heading to react to anymore, so the heading just renders
- * normally without the previous opacity/fade dance.
- *
- * StellarMap.tsx is intentionally left in the tree (unimported)
- * for a couple of commits as a rollback path. If the console
- * direction holds, it's a one-line revert + delete to clean up.
+ * Heading on top, 3-column StellarConsole below (mission roster +
+ * center planet + telemetry HUD + command bar). Console pulls its
+ * data from projects.ts and translations.ts items.*.
  */
 export function Projects() {
   const { t } = useTranslation();

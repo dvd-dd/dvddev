@@ -66,7 +66,7 @@ export function HelmetVisor({ className }: HelmetVisorProps) {
         className="relative aspect-[16/9] w-full"
       >
         <Image
-          src="/helmet-visor.png"
+          src="/helmet-visor.webp"
           alt=""
           fill
           priority={false}

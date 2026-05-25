@@ -14,6 +14,7 @@ import { HUDPanel } from "@/components/ui/HUDPanel";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { DvdLogo, DVD_LOGO_TOTAL_DURATION } from "@/components/ui/DvdLogo";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useLightMode } from "@/hooks/useLightMode";
 import { SITE } from "@/lib/constants";
 
 const hudContainer = {
@@ -58,6 +59,11 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // On mobile / reduce-motion: skip the 2.5 MB video entirely and show
+  // the poster JPG as a static backdrop. Saves the MP4 download, the
+  // decoder context, AND the scroll-driven zoom spring chain below.
+  const lightMode = useLightMode();
+
   // Pause the video when the hero scrolls out of view. Even at 720p
   // h.264, a running decoder context burns ~5% CPU on a quiet thread
   // and prevents the browser from going idle. IntersectionObserver
@@ -84,7 +90,8 @@ export function Hero() {
    */
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    // Light mode renders no <video> — bail before touching anything.
+    if (!video || lightMode) return;
 
     if (!heroInView) {
       video.pause();
@@ -103,7 +110,7 @@ export function Hero() {
       void video.play().catch(() => undefined);
     }, delay);
     return () => window.clearTimeout(start);
-  }, [heroInView]);
+  }, [heroInView, lightMode]);
 
   // Scroll-driven cinematic. Offset maps "hero top at top of viewport"
   // → "hero bottom at top of viewport" to scrollYProgress 0 → 1 across
@@ -136,26 +143,35 @@ export function Hero() {
       id="hero"
       className="relative h-screen w-full overflow-hidden bg-space-black"
     >
-      <motion.video
-        ref={videoRef}
-        loop
-        muted
-        playsInline
-        preload="auto"
-        poster="/hero-rings-poster.jpg"
-        className="absolute inset-0 h-full w-full object-cover"
-        // willChange promotes to its own GPU layer up front so the
-        // first scroll event doesn't pay the layer-promotion hitch.
-        // useSpring (above) smooths the scroll values into continuous
-        // motion regardless of input cadence.
-        style={{
-          scale: videoScale,
-          y: videoY,
-          willChange: "transform",
-        }}
-      >
-        <source src="/hero-rings-loop.mp4" type="video/mp4" />
-      </motion.video>
+      {lightMode ? (
+        // Light path: just the poster JPG as a static background. No
+        // MP4 download, no decoder, no scroll-driven spring chain.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src="/hero-rings-poster.jpg"
+          alt=""
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          fetchPriority="high"
+          decoding="async"
+        />
+      ) : (
+        <motion.video
+          ref={videoRef}
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/hero-rings-poster.jpg"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{
+            scale: videoScale,
+            y: videoY,
+            willChange: "transform",
+          }}
+        >
+          <source src="/hero-rings-loop.mp4" type="video/mp4" />
+        </motion.video>
+      )}
 
       <div
         aria-hidden

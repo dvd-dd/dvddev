@@ -28,6 +28,7 @@ import {
 import { HiServer } from "react-icons/hi2";
 import { CONSTELLATIONS, SKILLS, type Skill } from "@/lib/skills";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useLightMode } from "@/hooks/useLightMode";
 
 /*
  * SKILLS CONSTELLATION — premium star-chart of the stack + workflow.
@@ -131,6 +132,8 @@ interface SkillStarProps {
   /** Stagger index for the entry animation. */
   index: number;
   inView: boolean;
+  /** Drop pulse + float + drop-shadow for cheap rendering. */
+  lightMode: boolean;
   onPointerOver: () => void;
   onPointerOut: () => void;
 }
@@ -141,6 +144,7 @@ function SkillStar({
   siblingHovered,
   index,
   inView,
+  lightMode,
   onPointerOver,
   onPointerOut,
 }: SkillStarProps) {
@@ -171,28 +175,39 @@ function SkillStar({
       }}
     >
       {/* Idle float bob — applied via a nested <g> so it composes
-          with the entry scale animation above without fighting. */}
+          with the entry scale animation above without fighting.
+          Skipped entirely in light mode (mobile / reduce-motion). */}
       <g
-        style={{
-          animation: `skill-float 3.5s ease-in-out infinite`,
-          animationDelay: `-${floatDelay}s`,
-          transformOrigin: `${skill.x}px ${skill.y}px`,
-        }}
+        style={
+          lightMode
+            ? undefined
+            : {
+                animation: `skill-float 3.5s ease-in-out infinite`,
+                animationDelay: `-${floatDelay}s`,
+                transformOrigin: `${skill.x}px ${skill.y}px`,
+              }
+        }
       >
-        {/* Outer pulse halo — brand-colored breathing glow. */}
+        {/* Outer pulse halo — brand-colored breathing glow. Light mode
+            keeps the static colored halo but drops the keyframe loop
+            AND the 8px CSS blur (both are GPU-heavy on mobile). */}
         <circle
           cx={skill.x}
           cy={skill.y}
           r={size * 0.95}
           fill={brandColor}
-          fillOpacity={active ? 0.28 : 0.12}
-          style={{
-            filter: "blur(8px)",
-            transition: "fill-opacity 0.25s",
-            animation: `skill-pulse 3.2s ease-in-out infinite`,
-            animationDelay: `-${floatDelay * 0.7}s`,
-            transformOrigin: `${skill.x}px ${skill.y}px`,
-          }}
+          fillOpacity={active ? 0.28 : lightMode ? 0.18 : 0.12}
+          style={
+            lightMode
+              ? { transition: "fill-opacity 0.25s" }
+              : {
+                  filter: "blur(8px)",
+                  transition: "fill-opacity 0.25s",
+                  animation: `skill-pulse 3.2s ease-in-out infinite`,
+                  animationDelay: `-${floatDelay * 0.7}s`,
+                  transformOrigin: `${skill.x}px ${skill.y}px`,
+                }
+          }
         />
 
         {/* Hover ring — only when actively hovered (not sibling). */}
@@ -240,7 +255,13 @@ function SkillStar({
               justifyContent: "center",
               transform: hovered ? "scale(1.18)" : "scale(1)",
               transition: "transform 0.25s ease-out",
-              filter: `drop-shadow(0 0 6px ${brandColor}${active ? "99" : "55"})`,
+              // Drop-shadow filter is the heaviest per-icon cost. Light
+              // mode keeps it only on the actively-hovered icon (which
+              // exists only on devices with hover anyway).
+              filter:
+                lightMode && !hovered
+                  ? undefined
+                  : `drop-shadow(0 0 6px ${brandColor}${active ? "99" : "55"})`,
             }}
           >
             <Icon size="100%" />
@@ -274,6 +295,7 @@ function SkillStar({
 
 export function SkillsConstellation() {
   const { locale } = useTranslation();
+  const lightMode = useLightMode();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15%" });
@@ -416,6 +438,7 @@ export function SkillsConstellation() {
               skill={skill}
               index={i}
               inView={inView}
+              lightMode={lightMode}
               hovered={hoveredId === skill.id}
               siblingHovered={
                 hoveredConstellation === skill.constellation &&

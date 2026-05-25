@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useLightMode } from "@/hooks/useLightMode";
 
 /*
  * SITE-WIDE STARFIELD — fixed full-bleed cosmic backdrop.
@@ -102,38 +103,52 @@ function generateConstellations(
 /* ─── Component ───────────────────────────────────────────────── */
 
 export function SiteStarfield() {
+  // Mobile / reduce-motion: drop ~half the star count and skip the SVG
+  // Gaussian blur filter on the near layer. The blur is the single most
+  // expensive thing in the field on weak Androids — SVG filters force
+  // a software rasterization pass for the filtered region.
+  const lightMode = useLightMode();
+
+  const farCount = lightMode ? 90 : 180;
+  const midCount = lightMode ? 55 : 110;
+  const nearCount = lightMode ? 22 : 45;
+  const constellationCount = lightMode ? 5 : 8;
+
   const farStars = useMemo(
     () =>
-      generateStars(180, 11, {
+      generateStars(farCount, 11, {
         rMin: 0.6,
         rMax: 1.2,
         opacityMin: 0.15,
         opacityMax: 0.4,
       }),
-    []
+    [farCount]
   );
   const midStars = useMemo(
     () =>
-      generateStars(110, 23, {
+      generateStars(midCount, 23, {
         rMin: 0.9,
         rMax: 1.7,
         opacityMin: 0.3,
         opacityMax: 0.6,
       }),
-    []
+    [midCount]
   );
   const nearStars = useMemo(
     () =>
-      generateStars(45, 37, {
+      generateStars(nearCount, 37, {
         rMin: 1.5,
         rMax: 2.6,
         opacityMin: 0.65,
         opacityMax: 0.95,
-        twinkle: true,
+        twinkle: !lightMode,
       }),
-    []
+    [nearCount, lightMode]
   );
-  const constellations = useMemo(() => generateConstellations(8, 5, 51), []);
+  const constellations = useMemo(
+    () => generateConstellations(constellationCount, 5, 51),
+    [constellationCount]
+  );
 
   return (
     <div
@@ -162,19 +177,21 @@ export function SiteStarfield() {
             <stop offset="0%" stopColor="rgba(217,70,239,0.08)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
-          <filter
-            id="site-star-glow"
-            x="-50%"
-            y="-50%"
-            width="200%"
-            height="200%"
-          >
-            <feGaussianBlur stdDeviation="1.4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
+          {!lightMode && (
+            <filter
+              id="site-star-glow"
+              x="-50%"
+              y="-50%"
+              width="200%"
+              height="200%"
+            >
+              <feGaussianBlur stdDeviation="1.4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          )}
         </defs>
 
         {/* Galaxy — 3 overlapping rotated ellipses, screen-blended
@@ -251,11 +268,10 @@ export function SiteStarfield() {
           ))}
         </g>
 
-        {/* Near stars — brightest, glow filter + subtle twinkle. The
-            twinkle is the only running animation in this layer; it's
-            cheap (opacity-only) and the staggered delays keep the
-            field looking alive without a synchronized blink. */}
-        <g filter="url(#site-star-glow)">
+        {/* Near stars — brightest. On the heavy path, a SVG Gaussian
+            blur filter gives them a halo + a subtle opacity twinkle
+            runs on each. On the light path neither effect renders. */}
+        <g filter={lightMode ? undefined : "url(#site-star-glow)"}>
           {nearStars.map((s, i) => (
             <circle
               key={i}
@@ -264,9 +280,13 @@ export function SiteStarfield() {
               r={s.r}
               fill="#fffefb"
               opacity={s.opacity}
-              style={{
-                animation: `star-twinkle 6s ease-in-out ${s.twinkleDelay ?? 0}s infinite`,
-              }}
+              style={
+                lightMode
+                  ? undefined
+                  : {
+                      animation: `star-twinkle 6s ease-in-out ${s.twinkleDelay ?? 0}s infinite`,
+                    }
+              }
             />
           ))}
         </g>
