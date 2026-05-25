@@ -301,7 +301,10 @@ function TelemetryPanel({ project }: { project: Project }) {
     <div className="flex flex-col gap-5">
       {/* Surface preview thumbnail — only when the project has one.
           Wraps the live URL so clicking the thumbnail does the same
-          thing as the DEPLOY TO SURFACE bar below. */}
+          thing as the DEPLOY TO SURFACE bar below.
+          The aspect-ratio wrapper reserves the box space BEFORE the
+          image decodes — otherwise the img height is 0 until load
+          and the panel below shifts down when the screenshot pops in. */}
       {project.screenshot && (
         <a
           href={project.url ?? "#"}
@@ -314,17 +317,19 @@ function TelemetryPanel({ project }: { project: Project }) {
           <span className="pointer-events-none absolute -bottom-px -left-px z-10 h-2 w-2 border-b border-l border-saturn-gold/70" />
           <span className="pointer-events-none absolute -bottom-px -right-px z-10 h-2 w-2 border-b border-r border-saturn-gold/70" />
 
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={project.screenshot}
-            alt={`${project.name} screenshot`}
-            loading="lazy"
-            decoding="async"
-            className="block h-auto w-full transition-transform duration-500 group-hover:scale-[1.03]"
-          />
+          <div className="relative aspect-[16/10] w-full overflow-hidden bg-deep-space/40">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={project.screenshot}
+              alt={`${project.name} screenshot`}
+              loading="eager"
+              decoding="async"
+              className="absolute inset-0 block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          </div>
 
           {/* Label strip overlay — bottom-left mono caption. */}
-          <span className="pointer-events-none absolute bottom-1.5 left-2 font-mono text-[9px] uppercase tracking-[0.22em] text-saturn-cream/85 [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">
+          <span className="pointer-events-none absolute bottom-1.5 left-2 z-10 font-mono text-[9px] uppercase tracking-[0.22em] text-saturn-cream/85 [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">
             ▸ SURFACE PREVIEW
           </span>
         </a>
