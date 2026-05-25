@@ -47,9 +47,9 @@ export const translations = {
     },
     sections: {
       projects: {
-        chapter: "· Chapter 02 · Discovered Worlds",
+        chapter: "· Chapter 02 · Portfolio",
         heading: "Six worlds. One trajectory.",
-        instruction: "Click a planet to investigate",
+        instruction: "Each planet is a real site I built — click to investigate.",
         statusLive: "◉ LIVE",
         statusCase: "◌ CASE STUDY",
         ctaVisit: "Visit Surface →",
@@ -163,9 +163,9 @@ export const translations = {
     },
     sections: {
       projects: {
-        chapter: "· Capítulo 02 · Mundos Descobertos",
+        chapter: "· Capítulo 02 · Portfólio",
         heading: "Seis mundos. Uma trajetória.",
-        instruction: "Clique num planeta para investigar",
+        instruction: "Cada planeta é um site real que construí — clique para investigar.",
         statusLive: "◉ NO AR",
         statusCase: "◌ ESTUDO DE CASO",
         ctaVisit: "Visitar Superfície →",
