@@ -68,6 +68,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     url: "https://smartfloorservices.com",
     techStack: ["Next.js", "i18n EN/ES", "Image Optim"],
+    screenshot: "/screenshots/smartfloors.webp",
     orbit: {
       ring: 1,
       startAngle: 180,
