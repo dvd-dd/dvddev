@@ -3,6 +3,30 @@
 import { useEffect, useState } from "react";
 
 /**
+ * Strict mobile viewport check (≤ 767px wide). Use this when the
+ * decision is STRUCTURAL — swap whole UIs out for a mobile-tailored
+ * one — rather than just "lighten the effects." For animation/effect
+ * gating use [[useLightMode]] which ALSO honors prefers-reduced-motion.
+ *
+ * Defaults to `true` during SSR + first client paint, same rationale
+ * as useLightMode: never serve the heavy desktop layout to a phone
+ * even for one frame.
+ */
+export function useIsMobile(): boolean {
+  const [mobile, setMobile] = useState(true);
+
+  useEffect(() => {
+    const m = window.matchMedia("(max-width: 767px)");
+    const update = () => setMobile(m.matches);
+    update();
+    m.addEventListener("change", update);
+    return () => m.removeEventListener("change", update);
+  }, []);
+
+  return mobile;
+}
+
+/**
  * Returns true when the site should ship the LIGHT path:
  *   - viewport ≤ 767px (mobile), OR
  *   - user has `prefers-reduced-motion: reduce` enabled.

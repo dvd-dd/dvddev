@@ -28,7 +28,7 @@ import {
 import { HiServer } from "react-icons/hi2";
 import { CONSTELLATIONS, SKILLS, type Skill } from "@/lib/skills";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useLightMode } from "@/hooks/useLightMode";
+import { useIsMobile, useLightMode } from "@/hooks/useLightMode";
 
 /*
  * SKILLS CONSTELLATION — premium star-chart of the stack + workflow.
@@ -469,8 +469,73 @@ export function SkillsConstellation() {
   );
 }
 
-/* ─── Animation wrapper (kept for backwards compatibility) ─── */
+/* ─── Mobile grid (replaces the SVG constellation on phones) ──── */
 
+/**
+ * Six cards (one per constellation), each holding a 3-column grid of
+ * brand-color icons + names. Drops everything that the SVG version
+ * uses for visual interest (positioning, dashed lines, nebulae,
+ * pulse halos) because on a 375px-wide phone the SVG's 1200×700
+ * viewBox shrinks the icons + labels to the point of unreadability.
+ */
+function SkillsGrid() {
+  const { locale } = useTranslation();
+
+  return (
+    <div className="mx-auto w-full max-w-2xl space-y-4 px-1">
+      {CONSTELLATIONS.map((c) => {
+        const skills = SKILLS.filter((s) => s.constellation === c.id);
+        return (
+          <section
+            key={c.id}
+            className="relative border border-saturn-cream/10 bg-deep-space/50 px-4 pb-4 pt-3 backdrop-blur-md"
+          >
+            {/* Cluster label — same mono-caps + color as the desktop
+                constellation labels, just left-aligned. */}
+            <h3
+              className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em]"
+              style={{ color: c.color }}
+            >
+              ▸ {locale === "pt" ? c.labelPt : c.label}
+            </h3>
+
+            <div className="grid grid-cols-3 gap-2.5">
+              {skills.map((skill) => {
+                const Icon = ICON_MAP[skill.id] ?? HiServer;
+                const brandColor = BRAND_COLORS[skill.id] ?? "#f5e6d3";
+                return (
+                  <div
+                    key={skill.id}
+                    className="flex flex-col items-center justify-center gap-1.5 rounded-sm border border-saturn-cream/[0.06] bg-saturn-cream/[0.025] px-1 py-3"
+                  >
+                    <span
+                      className="flex h-6 w-6 items-center justify-center"
+                      style={{ color: brandColor }}
+                    >
+                      <Icon size={22} />
+                    </span>
+                    <span className="text-center font-mono text-[9px] uppercase leading-tight tracking-[0.12em] text-saturn-cream/80">
+                      {skill.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── Dispatcher ─────────────────────────────────────────────── */
+
+/**
+ * Picks the right layout for the viewport:
+ *   - Mobile (≤ 767px) → SkillsGrid (cards stacked, 3-col icon grid).
+ *   - Desktop          → SkillsConstellation (the SVG starchart).
+ */
 export function AnimatedSkillsConstellation() {
-  return <SkillsConstellation />;
+  const isMobile = useIsMobile();
+  return isMobile ? <SkillsGrid /> : <SkillsConstellation />;
 }

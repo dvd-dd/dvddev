@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import { StellarConsole } from "@/components/ui/StellarConsole";
+import { ProjectsList } from "@/components/ui/ProjectsList";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useIsMobile } from "@/hooks/useLightMode";
 
 /**
  * Discovered Worlds — cockpit-style portfolio console.
@@ -13,11 +15,12 @@ import { useTranslation } from "@/hooks/useTranslation";
  */
 export function Projects() {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
 
   return (
     <section
       id="projects"
-      className="relative min-h-screen w-full overflow-hidden px-6 py-24 md:py-32"
+      className="relative w-full overflow-hidden px-6 py-24 md:min-h-screen md:py-32"
     >
       {/* Heading */}
       <motion.div
@@ -25,7 +28,7 @@ export function Projects() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 mx-auto mb-12 max-w-3xl text-center md:mb-16"
+        className="relative z-10 mx-auto mb-10 max-w-3xl text-center md:mb-16"
       >
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
           {t.sections.projects.chapter}
@@ -35,8 +38,8 @@ export function Projects() {
         </h2>
       </motion.div>
 
-      {/* Console */}
-      <StellarConsole />
+      {/* Desktop: full cockpit. Mobile: lightweight accordion list. */}
+      {isMobile ? <ProjectsList /> : <StellarConsole />}
     </section>
   );
 }
