@@ -1,22 +1,25 @@
 /**
  * Screenshot the live portfolio demos for Upwork uploads.
  *
- * Per site, captures three images into upwork-portfolio/<slug>/:
- *   1. <slug>-desktop-hero.png   — 1440×900 viewport, top of page only
- *   2. <slug>-desktop-full.png   — 1440 wide, full-page scroll
- *   3. <slug>-mobile-full.png    — 390×844 viewport (iPhone-class),
- *                                  full-page scroll, mobile UA + touch
+ * Pipeline per URL, per orientation (desktop 1440×900, mobile 390×844):
  *
- * Pulls from the production URLs so the captures reflect what an
- * Upwork client actually sees. Waits for networkidle + 3s settle
- * before snapping so reveal animations / counters have finished.
+ *   1. Navigate, wait for `load` + `networkidle` + a settle delay.
+ *   2. WARMUP — scroll from top to bottom one viewport at a time,
+ *      pausing ~1s on each stop. This fires every scroll-triggered
+ *      animation (IntersectionObserver reveals, parallax, live
+ *      counters, marquees, etc.) so they're in their final state by
+ *      the time we start snapping. Without this, mid-page sections
+ *      came out blank because their entry animations hadn't run.
+ *   3. CAPTURE — back to top, then take viewport-sized snapshots at
+ *      evenly distributed scroll positions (max 10 per pass). First
+ *      shot is named "<slug>-<orientation>-hero.png", the rest
+ *      "<slug>-<orientation>-section-NN.png".
  *
- * Usage:
- *   node scripts/screenshot-portfolio.mjs
+ * Run with:  node scripts/screenshot-portfolio.mjs
  */
 
 import { chromium, devices } from "playwright";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readdir, unlink, rm } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -26,11 +29,11 @@ const OUT_ROOT = path.join(REPO_ROOT, "upwork-portfolio");
 
 /**
  * The four in-house demos live under /portfolio/<name>-site/ on
- * dvddev.com. Vercel redirects the trailing-slash form to no-slash
- * (308), which then breaks the demos' relative stylesheet href
- * ("styles.css" → /portfolio/styles.css, 404 silent). Hitting
- * /index.html explicitly keeps /portfolio/<name>-site/ as the base
- * URL so relative assets resolve correctly.
+ * dvddev.com. Vercel 308-redirects the trailing-slash form to the
+ * no-slash form, which then breaks the demos' relative `styles.css`
+ * href. Hitting /index.html explicitly keeps the directory as base.
+ *
+ * Upward + Smart Hardwood Floors are external production sites.
  */
 const SITES = [
   { slug: "phoenix", url: "https://dvddev.com/portfolio/phoenix-site/index.html" },
@@ -38,81 +41,155 @@ const SITES = [
   { slug: "luxor", url: "https://dvddev.com/portfolio/luxor-site/index.html" },
   { slug: "woodframe", url: "https://dvddev.com/portfolio/woodframe-site/index.html" },
   { slug: "smartfloors", url: "https://smartfloorservices.com" },
+  { slug: "upward", url: "https://upwardbr.com/" },
 ];
 
-const SETTLE_MS = 3000;
-const NAV_TIMEOUT_MS = 45000;
-
 const DESKTOP_VIEWPORT = { width: 1440, height: 900 };
-// iPhone 13 dimensions; deviceScaleFactor 3 → retina-quality output.
-const MOBILE_DEVICE = devices["iPhone 13"];
+const MOBILE_DEVICE = devices["iPhone 13"]; // viewport: 390×844, DPR 3
 
-async function settle(page) {
-  // networkidle covers "no requests for 500ms"; the extra wait covers
-  // CSS animations / IntersectionObserver-triggered reveals / counters
-  // that may still be in motion after the network has gone quiet.
-  await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(SETTLE_MS);
+const POST_LOAD_SETTLE_MS = 2000;
+const WARMUP_STEP_DELAY_MS = 1000;
+const PRE_SHOT_SETTLE_MS = 500;
+const MAX_SECTION_SHOTS = 10;
+
+async function getDocHeight(page) {
+  return page.evaluate(() =>
+    Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    )
+  );
+}
+
+/**
+ * Scroll from top to bottom one viewport at a time so every
+ * scroll-triggered animation gets a chance to fire. Pauses
+ * WARMUP_STEP_DELAY_MS on each stop. Document height is re-measured
+ * after the warmup because lazy-loaded content (hero videos, deferred
+ * images, etc.) often expands the page once on screen.
+ */
+async function scrollWarmup(page, viewportH) {
+  let totalHeight = await getDocHeight(page);
+  let y = 0;
+  while (y < totalHeight) {
+    await page.evaluate((sy) => window.scrollTo(0, sy), y);
+    await page.waitForTimeout(WARMUP_STEP_DELAY_MS);
+    y += viewportH;
+    // Page may have grown — capture the new bottom.
+    totalHeight = await getDocHeight(page);
+  }
+  // Final stop at the actual bottom in case the last step undershot.
+  await page.evaluate(() =>
+    window.scrollTo(0, document.documentElement.scrollHeight)
+  );
+  await page.waitForTimeout(WARMUP_STEP_DELAY_MS);
+}
+
+/**
+ * Snap up to MAX_SECTION_SHOTS viewport-sized images, evenly spaced
+ * from top to bottom of the page. Always includes scrollY = 0 (hero)
+ * and scrollY = maxScroll (bottom) when there are ≥ 2 shots.
+ */
+async function captureSections(page, viewport, outDir, slug, label) {
+  const totalHeight = await getDocHeight(page);
+  const maxScroll = Math.max(0, totalHeight - viewport.height);
+  const naturalStops = Math.max(1, Math.ceil(totalHeight / viewport.height));
+  const numShots = Math.min(naturalStops, MAX_SECTION_SHOTS);
+  const step = numShots <= 1 ? 0 : maxScroll / (numShots - 1);
+
+  // Back to top before snapping so the first shot is the real hero.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(PRE_SHOT_SETTLE_MS * 2);
+
+  for (let i = 0; i < numShots; i++) {
+    const y = Math.round(i * step);
+    await page.evaluate((sy) => window.scrollTo(0, sy), y);
+    await page.waitForTimeout(PRE_SHOT_SETTLE_MS);
+    const suffix =
+      i === 0 ? "hero" : `section-${String(i + 1).padStart(2, "0")}`;
+    await page.screenshot({
+      path: path.join(outDir, `${slug}-${label}-${suffix}.png`),
+      clip: { x: 0, y: 0, width: viewport.width, height: viewport.height },
+    });
+  }
+  return numShots;
 }
 
 async function captureSite(browser, { slug, url }) {
   const outDir = path.join(OUT_ROOT, slug);
+  // Wipe + recreate so re-runs don't accumulate stale files.
+  await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
 
-  // ── Desktop pass ──────────────────────────────────────────────
+  // ── Desktop pass ────────────────────────────────────────────
+  console.log(`  → desktop`);
   const desktopCtx = await browser.newContext({
     viewport: DESKTOP_VIEWPORT,
     deviceScaleFactor: 2,
   });
   const desktopPage = await desktopCtx.newPage();
-  desktopPage.setDefaultNavigationTimeout(NAV_TIMEOUT_MS);
+  desktopPage.setDefaultNavigationTimeout(60_000);
   await desktopPage.goto(url, { waitUntil: "load" });
-  await settle(desktopPage);
-
-  const heroPath = path.join(outDir, `${slug}-desktop-hero.png`);
-  await desktopPage.screenshot({
-    path: heroPath,
-    clip: { x: 0, y: 0, ...DESKTOP_VIEWPORT },
-  });
-
-  const fullDesktopPath = path.join(outDir, `${slug}-desktop-full.png`);
-  await desktopPage.screenshot({
-    path: fullDesktopPath,
-    fullPage: true,
-  });
-
+  await desktopPage.waitForLoadState("networkidle").catch(() => {});
+  await desktopPage.waitForTimeout(POST_LOAD_SETTLE_MS);
+  await scrollWarmup(desktopPage, DESKTOP_VIEWPORT.height);
+  const desktopCount = await captureSections(
+    desktopPage,
+    DESKTOP_VIEWPORT,
+    outDir,
+    slug,
+    "desktop"
+  );
   await desktopCtx.close();
 
-  // ── Mobile pass ───────────────────────────────────────────────
+  // ── Mobile pass ─────────────────────────────────────────────
+  console.log(`  → mobile`);
   const mobileCtx = await browser.newContext({
     ...MOBILE_DEVICE,
-    // Override default deviceScaleFactor (3) explicitly so screenshots
-    // are crisp on retina viewers without bloating the file 9×.
     deviceScaleFactor: 3,
   });
   const mobilePage = await mobileCtx.newPage();
-  mobilePage.setDefaultNavigationTimeout(NAV_TIMEOUT_MS);
+  mobilePage.setDefaultNavigationTimeout(60_000);
   await mobilePage.goto(url, { waitUntil: "load" });
-  await settle(mobilePage);
-
-  const fullMobilePath = path.join(outDir, `${slug}-mobile-full.png`);
-  await mobilePage.screenshot({
-    path: fullMobilePath,
-    fullPage: true,
-  });
-
+  await mobilePage.waitForLoadState("networkidle").catch(() => {});
+  await mobilePage.waitForTimeout(POST_LOAD_SETTLE_MS);
+  await scrollWarmup(mobilePage, MOBILE_DEVICE.viewport.height);
+  const mobileCount = await captureSections(
+    mobilePage,
+    MOBILE_DEVICE.viewport,
+    outDir,
+    slug,
+    "mobile"
+  );
   await mobileCtx.close();
 
-  console.log(`  ✓ ${slug}`);
+  console.log(`  ✓ ${slug} — ${desktopCount} desktop · ${mobileCount} mobile`);
+}
+
+/**
+ * Remove flat duplicate PNGs at the root of upwork-portfolio/. These
+ * were leftovers from an earlier single-shot capture pass before the
+ * per-project folder structure existed.
+ */
+async function cleanRootDuplicates() {
+  for (const entry of await readdir(OUT_ROOT, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.toLowerCase().endsWith(".png")) {
+      await unlink(path.join(OUT_ROOT, entry.name));
+      console.log(`  removed root duplicate: ${entry.name}`);
+    }
+  }
 }
 
 async function main() {
-  console.log(`Output dir: ${OUT_ROOT}\n`);
+  await mkdir(OUT_ROOT, { recursive: true });
+  console.log(`Output: ${OUT_ROOT}\n`);
+  console.log("Cleaning root duplicates...");
+  await cleanRootDuplicates();
 
   const browser = await chromium.launch();
   try {
     for (const site of SITES) {
-      console.log(`→ ${site.slug}  (${site.url})`);
+      console.log(`\n→ ${site.slug}  (${site.url})`);
       try {
         await captureSite(browser, site);
       } catch (err) {
@@ -123,7 +200,7 @@ async function main() {
     await browser.close();
   }
 
-  console.log(`\nDone. Each project has its own folder under upwork-portfolio/.`);
+  console.log("\nDone. Per-project shots in upwork-portfolio/<slug>/.");
 }
 
 await main();
