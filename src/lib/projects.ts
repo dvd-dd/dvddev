@@ -83,7 +83,7 @@ export const PROJECTS: Project[] = [
     designation: "PROJ-003 // PHOENIX",
     name: "Phoenix",
     status: "live",
-    url: "/portfolio/phoenix-site/index.html",
+    url: "/phoenix",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Dual Theme"],
     screenshot: "/screenshots/phoenix.webp",
     orbit: {
@@ -101,7 +101,7 @@ export const PROJECTS: Project[] = [
     designation: "PROJ-004 // PEÇAÍ",
     name: "PeçaAí",
     status: "live",
-    url: "/portfolio/pecaai-site/index.html",
+    url: "/pecaai",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
     screenshot: "/screenshots/pecaai.webp",
     orbit: {
@@ -117,7 +117,7 @@ export const PROJECTS: Project[] = [
     designation: "PROJ-005 // LUXOR",
     name: "Luxor",
     status: "live",
-    url: "/portfolio/luxor-site/index.html",
+    url: "/luxor",
     techStack: ["HTML", "CSS", "Vanilla JS", "Custom i18n", "Cursor FX"],
     screenshot: "/screenshots/luxor.webp",
     orbit: {
@@ -133,7 +133,7 @@ export const PROJECTS: Project[] = [
     designation: "PROJ-006 // WOODFRAME",
     name: "Wood Frame",
     status: "live",
-    url: "/portfolio/woodframe-site/index.html",
+    url: "/woodframe",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Light/Dark"],
     screenshot: "/screenshots/woodframe.webp",
     orbit: {
