@@ -3,7 +3,6 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { ThemeProvider } from "@/contexts/ThemeContext";
 import { SiteStarfield } from "@/components/ui/SiteStarfield";
 import { AnnouncementBar } from "@/components/ui/AnnouncementBar";
 import { NavBar } from "@/components/ui/NavBar";
@@ -146,19 +145,15 @@ export default function RootLayout({
       <body>
         <SmoothScrollProvider>
           <LanguageProvider>
-            <ThemeProvider>
-              {/* Site chrome — announcement strip above the sticky nav.
-                  Both live above the scrolling content; the Hero pulls
-                  itself to 100dvh − announcement-bar internally. */}
-              <AnnouncementBar />
-              <NavBar />
+            {/* Site chrome — announcement strip above the sticky nav.
+                Both live above the scrolling content; the Hero pulls
+                itself to 100dvh − announcement-bar internally. */}
+            <AnnouncementBar />
+            <NavBar />
 
-              {/* Site-wide cosmic backdrop. Lives behind every section
-                  (Hero's video covers it; everything else is now
-                  transparent so the starfield shows through). */}
-              <SiteStarfield />
-              {children}
-            </ThemeProvider>
+            {/* Site-wide cosmic backdrop sits behind every section. */}
+            <SiteStarfield />
+            {children}
           </LanguageProvider>
         </SmoothScrollProvider>
       </body>
