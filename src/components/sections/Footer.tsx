@@ -4,7 +4,6 @@ import { ArrowUpRight, Rss } from "lucide-react";
 import { SiGithub, SiInstagram, SiWhatsapp } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
 import { DvdWordmark } from "@/components/ui/DvdWordmark";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useTranslation } from "@/hooks/useTranslation";
 import { SOCIAL_CHANNELS } from "@/lib/constants";
@@ -134,7 +133,7 @@ export function Footer() {
         </div>
 
         {/* ─── BLOCK 2: GIANT wordmark + 256px breathing ───── */}
-        <div className="flex items-center justify-center py-12 md:py-24 lg:pb-64">
+        <div className="flex items-center justify-center py-12 md:py-24 lg:pt-24 lg:pb-[256px]">
           <DvdWordmark
             ariaLabel="dvddev"
             className="h-9 w-auto text-fg-base md:h-16 lg:h-[120px]"
@@ -192,9 +191,6 @@ export function Footer() {
 
             {/* Status pill */}
             <StatusPill href="#contact" />
-
-            {/* Theme toggle */}
-            <ThemeToggle />
           </div>
         </div>
 
