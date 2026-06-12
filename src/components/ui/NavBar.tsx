@@ -83,7 +83,7 @@ export function NavBar() {
             initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0 }}
             animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
             transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-            className="block origin-center -translate-x-[16px] translate-y-[14px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(255,86,10,0.65))_drop-shadow(0_0_16px_rgba(255,86,10,0.35))]"
+            className="block origin-center -translate-x-[16px] translate-y-[14px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(168,85,247,0.65))_drop-shadow(0_0_16px_rgba(168,85,247,0.35))]"
           >
             <DvdWordmark
               className="h-[64px] w-auto"
@@ -171,7 +171,7 @@ export function NavBar() {
               className="flex items-center text-fg-base"
             >
               <DvdWordmark
-                className="h-[64px] w-auto origin-center -translate-x-[16px] translate-y-[14px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))]"
+                className="h-[64px] w-auto origin-center -translate-x-[16px] translate-y-[14px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))]"
                 thicken
               />
             </a>

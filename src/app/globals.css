@@ -6,8 +6,10 @@
  *
  * --- C1 of the literal Sanity clone --------------------------------
  *
- * Palette now matches sanity.io exactly: electric traffic-cone orange
- * `#ff560a` as the brand, warm near-black `#0b0b0b` as the ink, 7-step
+ * Palette: electric violet `#a855f7` as the brand (swapped from the
+ * earlier sanity-orange after the hero became a cosmic montage —
+ * purple ties into the nebula / big bang / Chongqing neon palette),
+ * warm near-black `#0b0b0b` as the ink, 7-step
  * gray ramp + 4 accent ramps with P3 wide-gamut companions, cool-blue
  * shadow tokens. Theme is dark-only (the 3-way Light/System/Dark
  * toggle was dropped this turn — see plan §C4/C8).
@@ -17,10 +19,10 @@
  * dead-code pile was `src/app/not-found.tsx`, swept in the same commit.
  */
 @theme {
-  /* ─── Brand (electric traffic-cone orange) ──────────────────── */
-  --color-brand: #ff560a;
-  --color-brand-dim: #d94800;          /* hover state on brand fills */
-  --color-brand-p3: color(display-p3 1 0.3333 0);
+  /* ─── Brand (electric violet) ───────────────────────────────── */
+  --color-brand: #a855f7;
+  --color-brand-dim: #7c3aed;          /* hover state on brand fills */
+  --color-brand-p3: color(display-p3 0.6588 0.3333 0.9686);
 
   /* ─── Inks (warm near-black, deliberately not pure) ─────────── */
   --color-ink-base: #0b0b0b;
@@ -153,13 +155,13 @@ html {
   }
 }
 
-/* CTA attention pulse — retinted to brand orange. */
+/* CTA attention pulse — retinted to brand violet. */
 @keyframes cta-pulse {
   0%, 100% {
-    box-shadow: 0 0 16px -2px rgba(255, 86, 10, 0.2);
+    box-shadow: 0 0 16px -2px rgba(168, 85, 247, 0.2);
   }
   50% {
-    box-shadow: 0 0 36px -2px rgba(255, 86, 10, 0.45);
+    box-shadow: 0 0 36px -2px rgba(168, 85, 247, 0.45);
   }
 }
 
@@ -177,7 +179,7 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
   @keyframes cta-pulse {
-    0%, 100% { box-shadow: 0 0 16px -2px rgba(255, 86, 10, 0.25); }
+    0%, 100% { box-shadow: 0 0 16px -2px rgba(168, 85, 247, 0.25); }
   }
   @keyframes cta-shimmer {
     0%, 100% { transform: translateX(0) skewX(-12deg); opacity: 0; }
