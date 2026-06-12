@@ -15,7 +15,7 @@ export function AnnouncementBar() {
   return (
     <a
       href="#contact"
-      className="group relative z-[60] flex w-full items-center justify-center gap-2.5 bg-gray-100 px-6 py-2.5 text-center font-sans text-[14px] font-medium tracking-[-0.005em] text-ink-base transition-colors hover:bg-gray-200"
+      className="group relative z-[60] flex w-full items-center justify-center gap-2.5 bg-gray-100 px-6 py-2.5 text-center font-sans text-[15px] font-normal tracking-[-0.005em] text-ink-base transition-colors hover:bg-gray-200"
     >
       <span className="text-ink-faint">{a.prefix}</span>
       <span aria-hidden className="text-[13px] leading-none">
