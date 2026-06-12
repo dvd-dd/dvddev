@@ -120,6 +120,12 @@ export const translations = {
             highlight:
               "Triple typography stack — Clash Display + Inter + Instrument Serif italic — for editorial-magazine personality",
           },
+          corvin: {
+            tagline: "Bespoke brand site for a UK close-protection firm",
+            description:
+              "Editorial brand site for a UK close-protection firm. Sanity-CMS backed, with a quietly animated contact section that contrasts the composed feel of the rest of the site.",
+            highlight: "Animated contact backdrop",
+          },
         },
       },
       useCases: {
@@ -390,6 +396,13 @@ export const translations = {
               "Site institucional pra boutique fictícia de design — móveis entalhados à mão e interiores sob encomenda de Minas Gerais, Brasil. Território Kinfolk magazine.",
             highlight:
               "Stack tipográfico tripla — Clash Display + Inter + Instrument Serif itálico — pra personalidade editorial-revista",
+          },
+          corvin: {
+            tagline:
+              "Site de marca sob medida para empresa britânica de close protection",
+            description:
+              "Site editorial para uma firma britânica de close protection. Backend em Sanity CMS e seção de contato com fundo em movimento leve, contrastando com o tom composto do resto.",
+            highlight: "Contato com fundo em movimento",
           },
         },
       },

@@ -42,6 +42,7 @@ const SITES = [
   { slug: "woodframe", url: "https://dvddev.com/portfolio/woodframe-site/index.html" },
   { slug: "smartfloors", url: "https://smartfloorservices.com" },
   { slug: "upward", url: "https://upwardbr.com/" },
+  { slug: "corvin", url: "https://www.corvinprotection.com/" },
 ];
 
 const DESKTOP_VIEWPORT = { width: 1440, height: 900 };
@@ -188,7 +189,16 @@ async function main() {
 
   const browser = await chromium.launch();
   try {
-    for (const site of SITES) {
+    // Optional slug filter: `SLUGS=corvin,upward node scripts/screenshot-portfolio.mjs`
+    // runs just those two; unset means all SITES.
+    const slugFilter = (process.env.SLUGS || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const targets = slugFilter.length
+      ? SITES.filter((s) => slugFilter.includes(s.slug))
+      : SITES;
+    for (const site of targets) {
       console.log(`\n→ ${site.slug}  (${site.url})`);
       try {
         await captureSite(browser, site);

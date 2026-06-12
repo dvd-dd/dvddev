@@ -144,6 +144,22 @@ export const PROJECTS: Project[] = [
       texture: "/textures/planet_venus_surface.jpg",
     },
   },
+  {
+    id: "corvin",
+    designation: "PROJ-007 // CORVIN",
+    name: "Corvin Protection",
+    status: "live",
+    url: "https://www.corvinprotection.com/",
+    techStack: ["Web design", "Next.js", "Sanity CMS", "Animated contact"],
+    screenshot: "/screenshots/corvin.webp",
+    orbit: {
+      ring: 2,
+      startAngle: 120,
+      color: "#5b7c99",
+      size: 48,
+      texture: "/textures/planet_uranus.jpg",
+    },
+  },
 ];
 
 /** Lookup helper used by the info panel + case study modal. */

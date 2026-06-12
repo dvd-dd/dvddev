@@ -55,6 +55,7 @@ const CLIENTS = [
   "PeçaAí",
   "Luxor",
   "Wood Frame",
+  "Corvin Protection",
 ];
 
 const FLAGS = ["🇺🇸 Connecticut", "🇧🇷 São Paulo", "🇬🇧 Birmingham"];
