@@ -17,6 +17,17 @@ export const translations = {
       version: "v0.1 · COSMIC EDITION",
     },
     hero: {
+      eyebrow: "DVDDEV — Front-end Developer",
+      headline: "Code shapes form.",
+      subhead:
+        "Engineer building landing pages that ship in the first 3 seconds. Available for product teams.",
+      ctaPrimary: "Start a project",
+      ctaSecondary: "See selected work",
+      ctaCommand: "npx hire-david",
+      ctaCopyHint: "Click to copy",
+      ctaCopied: "Copied",
+      // Legacy fields kept for any consumers still reading them — to be
+      // deleted in Phase 5 once the Hero rewrite ships.
       tagline: "Front-end Developer crafting universes from code",
       cta: "Initiate Mission",
     },
@@ -243,6 +254,15 @@ export const translations = {
       version: "v0.1 · EDIÇÃO CÓSMICA",
     },
     hero: {
+      eyebrow: "DVDDEV — Desenvolvedor Front-end",
+      headline: "Código molda forma.",
+      subhead:
+        "Engenheiro construindo landing pages que entregam nos primeiros 3 segundos. Disponível para times de produto.",
+      ctaPrimary: "Iniciar projeto",
+      ctaSecondary: "Ver trabalho selecionado",
+      ctaCommand: "npx hire-david",
+      ctaCopyHint: "Clique para copiar",
+      ctaCopied: "Copiado",
       tagline:
         "Desenvolvedor Front-end criando universos a partir do código",
       cta: "Iniciar Missão",

@@ -1,208 +1,194 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import {
-  motion,
-  useInView,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import { ArrowDown } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-// HUDPanel + LanguageToggle moved into the new NavBar (Phase 2 redesign).
-// Hero now starts with the DVD logo + tagline + CTA only, since the
-// announcement strip + nav live above it in the root layout.
-import { DvdLogo, DVD_LOGO_TOTAL_DURATION } from "@/components/ui/DvdLogo";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { Check, Copy } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLightMode } from "@/hooks/useLightMode";
 
-const copyContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.18,
-      delayChildren: DVD_LOGO_TOTAL_DURATION - 0.15,
-    },
-  },
-};
+/**
+ * Phase 3 hero — sanity-inspired typographic statement on top of a
+ * dimmed full-bleed loop. Replaces the saturn-rings cinematic and
+ * its scroll-spring chain with a much quieter brand moment:
+ *
+ *   eyebrow (mono caps)
+ *   ─────────────────────────────
+ *   Code shapes
+ *   form.            ← H1 left-aligned, weight 400, max-w-[12ch]
+ *
+ *   subhead (40ch)
+ *
+ *   [ Start a project ] [ See selected work ] [ npx hire-david ]
+ *
+ * Background:
+ *   The new direction is an "abstract glitch" WebM at 35% opacity on
+ *   bg-ink-base. Until the new asset is dropped at /hero-glitch.webm,
+ *   the existing /hero-rings-loop.mp4 fills in via the second <source>.
+ *   The browser picks whichever it can decode + finds first.
+ *
+ * Motion:
+ *   - DvdLogo paint is gone (the hero is typographic now; the wordmark
+ *     lives in the nav + giant in the footer).
+ *   - No more scroll-driven spring zoom. Per the redesign motion
+ *     contract: color/opacity only. The video loop carries its own
+ *     motion.
+ *   - Entry: fade + 12px translate-y on each block, staggered by 100ms,
+ *     600ms ease-out. Once-only via useInView.
+ */
+const HERO_GLITCH_WEBM = "/hero-glitch.webm";
+const HERO_GLITCH_MP4 = "/hero-glitch.mp4";
+const HERO_FALLBACK_MP4 = "/hero-rings-loop.mp4";
+const HERO_POSTER = "/hero-rings-poster.jpg";
 
-const copyItem = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
+const ENTRY = {
+  hidden: { opacity: 0, y: 12 },
+  visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
-  },
+    transition: { delay: 0.05 + i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+  }),
 };
 
 export function Hero() {
   const { t } = useTranslation();
+  const lightMode = useLightMode();
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const inView = useInView(sectionRef, { margin: "0px" });
+  const [copied, setCopied] = useState(false);
 
-  // On mobile / reduce-motion: skip the 2.5 MB video entirely and show
-  // the poster JPG as a static backdrop. Saves the MP4 download, the
-  // decoder context, AND the scroll-driven zoom spring chain below.
-  const lightMode = useLightMode();
-
-  // Pause the video when the hero scrolls out of view. Even at 720p
-  // h.264, a running decoder context burns ~5% CPU on a quiet thread
-  // and prevents the browser from going idle. IntersectionObserver
-  // via Framer's useInView is the cheapest viewport gate available.
-  // `margin: "0px"` = strict viewport intersection — no pre-warm
-  // needed for this one because the user has to scroll past it
-  // before pause is desirable.
-  const heroInView = useInView(sectionRef, { margin: "0px" });
-
-  /**
-   * Two responsibilities here, both keyed off `heroInView`:
-   *
-   *   1. First entry: gate the initial play() until after the DVD
-   *      logo paint completes (DVD_LOGO_TOTAL_DURATION + 0.2s) so
-   *      the brand moment happens on a frozen poster frame. We also
-   *      seek to 0.5s before playing to match the poster offset and
-   *      hide the poster→video handoff.
-   *
-   *   2. Subsequent entries / exits: pause when offscreen, resume
-   *      when back in view. Doesn't reset currentTime, so the loop
-   *      picks up where it left off — feels like the scene was
-   *      always running, but the decoder costs nothing while you're
-   *      reading About / Projects / etc.
-   */
+  // Pause the video when the hero scrolls out of view — same logic as
+  // before, just simplified now that there's no spring chain to manage.
   useEffect(() => {
     const video = videoRef.current;
-    // Light mode renders no <video> — bail before touching anything.
     if (!video || lightMode) return;
-
-    if (!heroInView) {
-      video.pause();
-      return;
-    }
-
-    // In view: schedule (or immediately re-trigger) playback. The
-    // setTimeout handles the first-mount "wait for the logo paint"
-    // case; on subsequent re-entries the wait is already past so
-    // play() fires immediately.
-    const delay = video.currentTime === 0
-      ? (DVD_LOGO_TOTAL_DURATION + 0.2) * 1000
-      : 0;
-    const start = window.setTimeout(() => {
-      if (video.currentTime === 0) video.currentTime = 0.5;
+    if (inView) {
       void video.play().catch(() => undefined);
-    }, delay);
-    return () => window.clearTimeout(start);
-  }, [heroInView, lightMode]);
+    } else {
+      video.pause();
+    }
+  }, [inView, lightMode]);
 
-  // Scroll-driven cinematic. Offset maps "hero top at top of viewport"
-  // → "hero bottom at top of viewport" to scrollYProgress 0 → 1 across
-  // exactly one section-height of scroll.
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Raw scroll-driven targets. y is in pixels (number) instead of "%"
-  // strings — Framer Motion doesn't have to parse the unit each frame
-  // and the spring layer below can interpolate scalars cleanly.
-  const rawScale = useTransform(scrollYProgress, [0, 1], [1, 1.22]);
-  const rawY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-
-  // Spring layer: scrollYProgress can jitter slightly (especially under
-  // Lenis's lerp + native scroll event timing differences). Piping it
-  // through a stiff spring smooths any micro-stutter into continuous
-  // motion. Tuned for "responsive but never sloppy":
-  //   stiffness 220 = catches up to target within ~150ms
-  //   damping 32    = no perceptible overshoot
-  //   mass 0.45     = light feel, snappy follow-through
-  const springConfig = { stiffness: 220, damping: 32, mass: 0.45 };
-  const videoScale = useSpring(rawScale, springConfig);
-  const videoY = useSpring(rawY, springConfig);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(t.hero.ctaCommand);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard permission denied — silently fail (rare).
+    }
+  };
 
   return (
     <section
       ref={sectionRef}
       id="hero"
-      className="relative h-screen w-full overflow-hidden bg-space-black"
+      data-transparent-nav="true"
+      className="relative w-full overflow-hidden bg-ink-base"
     >
-      {lightMode ? (
-        // Light path: just the poster JPG as a static background. No
-        // MP4 download, no decoder, no scroll-driven spring chain.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/hero-rings-poster.jpg"
-          alt=""
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-          fetchPriority="high"
-          decoding="async"
-        />
-      ) : (
-        <motion.video
-          ref={videoRef}
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          poster="/hero-rings-poster.jpg"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{
-            scale: videoScale,
-            y: videoY,
-            willChange: "transform",
-          }}
+      {/* Background video — kept dim on top of ink-base, no zoom spring. */}
+      {!lightMode && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10"
         >
-          <source src="/hero-rings-loop.mp4" type="video/mp4" />
-        </motion.video>
+          <video
+            ref={videoRef}
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            poster={HERO_POSTER}
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
+          >
+            <source src={HERO_GLITCH_WEBM} type="video/webm" />
+            <source src={HERO_GLITCH_MP4} type="video/mp4" />
+            <source src={HERO_FALLBACK_MP4} type="video/mp4" />
+          </video>
+        </div>
       )}
 
+      {/* Bottom gradient scrim so the trust marquee (Phase 5) can sit
+          flush without the video bleeding into its top edge. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(5,5,16,0.55)_75%,rgba(5,5,16,0.85)_100%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/3 bg-gradient-to-t from-space-black/80 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-1/4 bg-gradient-to-t from-ink-base/95 to-transparent"
       />
 
-      <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-6 py-8 md:px-12 md:py-12">
-        <div className="flex flex-col items-center text-center">
-          <div className="w-[80vw] max-w-[1300px] md:w-[65vw] lg:w-[58vw]">
-            {/* Sized up from 70/55/50vw → 80/65/58vw so the logo owns
-                more of the frame against the Saturn backdrop. No
-                `color` prop = pink-galaxy gradient with tight nebula
-                glow (see DvdLogo). */}
-            <DvdLogo className="h-auto w-full" />
-          </div>
+      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-67px-36px)] max-w-[1248px] flex-col justify-center px-6 py-32 md:px-12 lg:py-48">
+        {/* Eyebrow */}
+        <motion.p
+          custom={0}
+          variants={ENTRY}
+          initial="hidden"
+          animate="visible"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-fg-faint"
+        >
+          {t.hero.eyebrow}
+        </motion.p>
 
-          <motion.div
-            variants={copyContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-center"
+        {/* Headline — left-aligned, weight 400, max-w-[12ch] cap forces
+            the natural 2-line break. */}
+        <motion.h1
+          custom={1}
+          variants={ENTRY}
+          initial="hidden"
+          animate="visible"
+          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] text-fg-base md:text-[72px] lg:text-[96px] xl:text-[112px]"
+        >
+          {t.hero.headline}
+        </motion.h1>
+
+        {/* Subhead */}
+        <motion.p
+          custom={2}
+          variants={ENTRY}
+          initial="hidden"
+          animate="visible"
+          className="mt-12 max-w-[44ch] text-lg leading-relaxed text-fg-dim md:text-xl"
+        >
+          {t.hero.subhead}
+        </motion.p>
+
+        {/* CTA cluster */}
+        <motion.div
+          custom={3}
+          variants={ENTRY}
+          initial="hidden"
+          animate="visible"
+          className="mt-12 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-3"
+        >
+          {/* Primary — brand mint fill */}
+          <a
+            href="#contact"
+            className="inline-flex h-14 items-center justify-center rounded-full bg-brand px-7 font-mono text-[13px] font-medium uppercase tracking-[0.18em] text-ink-base transition-colors hover:bg-brand-dim"
           >
-            <motion.p
-              variants={copyItem}
-              className="mt-8 max-w-2xl font-mono text-saturn-cream/70"
-              style={{ fontSize: "clamp(0.875rem, 1.4vw, 1.125rem)" }}
-            >
-              {t.hero.tagline}
-            </motion.p>
+            {t.hero.ctaPrimary}
+          </a>
 
-            <motion.div variants={copyItem} className="mt-10">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const next = document.querySelector("#about");
-                  next?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                {t.hero.cta}
-                <ArrowDown className="h-4 w-4" aria-hidden />
-              </Button>
-            </motion.div>
-          </motion.div>
-        </div>
+          {/* Secondary — outline */}
+          <a
+            href="#projects"
+            className="inline-flex h-14 items-center justify-center rounded-full border border-border-dim px-7 font-mono text-[13px] font-medium uppercase tracking-[0.18em] text-fg-base transition-colors hover:border-fg-base"
+          >
+            {t.hero.ctaSecondary}
+          </a>
+
+          {/* Tertiary — mono code copy-snippet (Sanity's signature 3rd CTA) */}
+          <button
+            type="button"
+            onClick={handleCopy}
+            title={copied ? t.hero.ctaCopied : t.hero.ctaCopyHint}
+            className="hidden h-14 items-center justify-center gap-3 rounded-full border border-border-faint px-5 font-mono text-[13px] text-fg-dim transition-colors hover:border-border-dim hover:text-fg-base md:inline-flex"
+          >
+            <span>{t.hero.ctaCommand}</span>
+            {copied ? (
+              <Check className="h-4 w-4 text-brand" strokeWidth={2} />
+            ) : (
+              <Copy className="h-4 w-4" strokeWidth={2} />
+            )}
+          </button>
+        </motion.div>
       </div>
     </section>
   );
