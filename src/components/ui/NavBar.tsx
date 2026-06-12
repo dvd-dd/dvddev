@@ -65,7 +65,7 @@ export function NavBar() {
         "sticky top-0 z-50 flex h-[67px] w-full items-center transition-colors duration-200",
         scrolled
           ? "border-b border-border-faint bg-bg-base/95 backdrop-blur"
-          : "border-b border-transparent bg-bg-base/80 backdrop-blur"
+          : "border-b border-transparent bg-transparent"
       )}
     >
       <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-6 px-6 md:px-12">
