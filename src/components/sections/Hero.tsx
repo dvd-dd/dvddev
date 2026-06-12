@@ -10,29 +10,12 @@ import {
 } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { HUDPanel } from "@/components/ui/HUDPanel";
-import { LanguageToggle } from "@/components/ui/LanguageToggle";
+// HUDPanel + LanguageToggle moved into the new NavBar (Phase 2 redesign).
+// Hero now starts with the DVD logo + tagline + CTA only, since the
+// announcement strip + nav live above it in the root layout.
 import { DvdLogo, DVD_LOGO_TOTAL_DURATION } from "@/components/ui/DvdLogo";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLightMode } from "@/hooks/useLightMode";
-import { SITE } from "@/lib/constants";
-
-const hudContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.18, delayChildren: 0.4 },
-  },
-};
-
-const hudItem = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
 
 const copyContainer = {
   hidden: { opacity: 0 },
@@ -182,21 +165,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/3 bg-gradient-to-t from-space-black/80 to-transparent"
       />
 
-      <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col items-center justify-between px-6 py-8 md:px-12 md:py-12">
-        <motion.div
-          variants={hudContainer}
-          initial="hidden"
-          animate="visible"
-          className="flex w-full items-start justify-between"
-        >
-          <motion.div variants={hudItem}>
-            <HUDPanel label={`${t.hud.sysPrefix}${SITE.domain}`} />
-          </motion.div>
-          <motion.div variants={hudItem}>
-            <LanguageToggle />
-          </motion.div>
-        </motion.div>
-
+      <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-6 py-8 md:px-12 md:py-12">
         <div className="flex flex-col items-center text-center">
           <div className="w-[80vw] max-w-[1300px] md:w-[65vw] lg:w-[58vw]">
             {/* Sized up from 70/55/50vw → 80/65/58vw so the logo owns
@@ -234,19 +203,6 @@ export function Hero() {
             </motion.div>
           </motion.div>
         </div>
-
-        <motion.div
-          variants={hudContainer}
-          initial="hidden"
-          animate="visible"
-          className="flex w-full items-end justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-cream/50"
-        >
-          <motion.span variants={hudItem}>{t.hud.coords}</motion.span>
-          <motion.span variants={hudItem} className="hidden sm:inline">
-            {t.hud.scrollExplore}
-          </motion.span>
-          <motion.span variants={hudItem}>{t.hud.version}</motion.span>
-        </motion.div>
       </div>
     </section>
   );

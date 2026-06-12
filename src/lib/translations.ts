@@ -143,8 +143,92 @@ export const translations = {
         },
       },
     },
+    chrome: {
+      announcement: {
+        prefix: "Currently shipping for clients in",
+        flags: "🇺🇸 🇧🇷 🇬🇧",
+        suffix: "add yours",
+      },
+      nav: {
+        links: {
+          work: "Work",
+          about: "About",
+          process: "Process",
+          contact: "Contact",
+        },
+        ctas: {
+          linkedin: "LinkedIn",
+          email: "Email",
+          hire: "Hire me",
+        },
+        openMenu: "Open menu",
+        closeMenu: "Close menu",
+      },
+      statusPill: "Available for work",
+      themeToggle: {
+        legend: "Change site theme",
+        light: "Light",
+        system: "System",
+        dark: "Dark",
+      },
+    },
     footer: {
-      copyright: "Transmission ends · Until next orbit.",
+      copyright: "© DVDDEV",
+      ctas: {
+        community: "Join the conversation on LinkedIn →",
+        newsletter: "Subscribe to my newsletter",
+        newsletterButton: "Subscribe",
+      },
+      columns: {
+        work: {
+          heading: "Work",
+          links: [
+            { label: "Upward Media", href: "https://upwardbr.com" },
+            { label: "Smart Hardwood Floors", href: "https://smartfloorservices.com" },
+            { label: "Phoenix", href: "/phoenix" },
+            { label: "PeçaAí", href: "/pecaai" },
+            { label: "Luxor", href: "/luxor" },
+            { label: "Wood Frame", href: "/woodframe" },
+          ],
+        },
+        about: {
+          heading: "About",
+          links: [
+            { label: "Origin", href: "#about" },
+            { label: "Mission", href: "#about" },
+            { label: "Studio (Upward)", href: "https://upwardbr.com" },
+            { label: "Process", href: "#process" },
+            { label: "Stack", href: "#skills" },
+            { label: "Timeline", href: "#about" },
+          ],
+        },
+        channels: {
+          heading: "Channels",
+          links: [
+            { label: "WhatsApp", href: "https://wa.me/5535988234633" },
+            { label: "LinkedIn", href: "https://www.linkedin.com/in/david-romualdo-a50b1231a/" },
+            { label: "Instagram", href: "https://www.instagram.com/dvd_dd/" },
+            { label: "GitHub", href: "https://github.com/dvd-dd" },
+            { label: "Email", href: "mailto:nextnumberdev@gmail.com" },
+          ],
+        },
+        trust: {
+          heading: "Trust",
+          links: [
+            { label: "Privacy", href: "#contact" },
+            { label: "Terms", href: "#contact" },
+            { label: "Accessibility", href: "#contact" },
+            { label: "Textures · CC BY 4.0", href: "https://creativecommons.org/licenses/by/4.0/" },
+          ],
+        },
+      },
+      socials: {
+        heading: "Keep in touch",
+      },
+      flags: {
+        heading: "Shipped for clients in",
+        cities: ["Birmingham", "Connecticut", "São Paulo"],
+      },
     },
     a11y: {
       switchLanguage: "Switch language to {target}",
@@ -287,8 +371,92 @@ export const translations = {
         },
       },
     },
+    chrome: {
+      announcement: {
+        prefix: "Entregando para clientes em",
+        flags: "🇺🇸 🇧🇷 🇬🇧",
+        suffix: "adicione o seu",
+      },
+      nav: {
+        links: {
+          work: "Trabalho",
+          about: "Sobre",
+          process: "Processo",
+          contact: "Contato",
+        },
+        ctas: {
+          linkedin: "LinkedIn",
+          email: "Email",
+          hire: "Me contrate",
+        },
+        openMenu: "Abrir menu",
+        closeMenu: "Fechar menu",
+      },
+      statusPill: "Disponível para trabalho",
+      themeToggle: {
+        legend: "Trocar tema do site",
+        light: "Claro",
+        system: "Sistema",
+        dark: "Escuro",
+      },
+    },
     footer: {
-      copyright: "Transmissão encerrada · Até a próxima órbita.",
+      copyright: "© DVDDEV",
+      ctas: {
+        community: "Entre na conversa no LinkedIn →",
+        newsletter: "Assine minha newsletter",
+        newsletterButton: "Assinar",
+      },
+      columns: {
+        work: {
+          heading: "Trabalho",
+          links: [
+            { label: "Upward Media", href: "https://upwardbr.com" },
+            { label: "Smart Hardwood Floors", href: "https://smartfloorservices.com" },
+            { label: "Phoenix", href: "/phoenix" },
+            { label: "PeçaAí", href: "/pecaai" },
+            { label: "Luxor", href: "/luxor" },
+            { label: "Wood Frame", href: "/woodframe" },
+          ],
+        },
+        about: {
+          heading: "Sobre",
+          links: [
+            { label: "Origem", href: "#about" },
+            { label: "Missão", href: "#about" },
+            { label: "Estúdio (Upward)", href: "https://upwardbr.com" },
+            { label: "Processo", href: "#process" },
+            { label: "Stack", href: "#skills" },
+            { label: "Timeline", href: "#about" },
+          ],
+        },
+        channels: {
+          heading: "Canais",
+          links: [
+            { label: "WhatsApp", href: "https://wa.me/5535988234633" },
+            { label: "LinkedIn", href: "https://www.linkedin.com/in/david-romualdo-a50b1231a/" },
+            { label: "Instagram", href: "https://www.instagram.com/dvd_dd/" },
+            { label: "GitHub", href: "https://github.com/dvd-dd" },
+            { label: "Email", href: "mailto:nextnumberdev@gmail.com" },
+          ],
+        },
+        trust: {
+          heading: "Trust",
+          links: [
+            { label: "Privacidade", href: "#contact" },
+            { label: "Termos", href: "#contact" },
+            { label: "Acessibilidade", href: "#contact" },
+            { label: "Texturas · CC BY 4.0", href: "https://creativecommons.org/licenses/by/4.0/" },
+          ],
+        },
+      },
+      socials: {
+        heading: "Mantenha contato",
+      },
+      flags: {
+        heading: "Entregando para clientes em",
+        cities: ["Birmingham", "Connecticut", "São Paulo"],
+      },
     },
     a11y: {
       switchLanguage: "Trocar idioma para {target}",
