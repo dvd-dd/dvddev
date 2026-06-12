@@ -120,7 +120,7 @@ export function Hero() {
           enough that the cool clips still read. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-ink-base/45"
+        className="pointer-events-none absolute inset-0 z-0 bg-ink-base/30"
       />
       <div
         aria-hidden
