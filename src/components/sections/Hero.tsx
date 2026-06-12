@@ -127,7 +127,7 @@ export function Hero() {
           variants={ENTRY}
           initial="hidden"
           animate="visible"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-fg-faint"
+          className="font-mono text-[14px] font-medium uppercase tracking-[0.16em] text-fg-dim"
         >
           {t.hero.eyebrow}
         </motion.p>
