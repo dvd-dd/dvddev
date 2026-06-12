@@ -18,7 +18,7 @@ export const translations = {
     },
     hero: {
       eyebrow: "DVDDEV — Front-end Developer",
-      headline: "Code shapes form.",
+      headline: "Code builds worlds.",
       subhead:
         "Engineer building landing pages that ship in the first 3 seconds. Available for product teams.",
       ctaPrimary: "Start a project",
@@ -255,7 +255,7 @@ export const translations = {
     },
     hero: {
       eyebrow: "DVDDEV — Desenvolvedor Front-end",
-      headline: "Código molda forma.",
+      headline: "Código constrói mundos.",
       subhead:
         "Engenheiro construindo landing pages que entregam nos primeiros 3 segundos. Disponível para times de produto.",
       ctaPrimary: "Iniciar projeto",
