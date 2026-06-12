@@ -62,7 +62,7 @@ export function NavBar() {
     <header
       data-scrolled={scrolled ? "true" : "false"}
       className={cn(
-        "sticky top-9 z-50 flex h-[52px] w-full items-center transition-colors duration-200",
+        "sticky top-0 z-50 flex h-[52px] w-full items-center transition-colors duration-200",
         scrolled
           ? "border-b border-border-faint bg-bg-base/95 backdrop-blur"
           : "border-b border-transparent bg-transparent"
