@@ -99,7 +99,7 @@ export function Hero() {
             playsInline
             preload="metadata"
             poster={HERO_POSTER}
-            className="absolute inset-0 h-full w-full object-cover opacity-40"
+            className="absolute inset-0 h-full w-full object-cover opacity-70 [mix-blend-mode:screen]"
           >
             <source src={HERO_GLITCH_WEBM} type="video/webm" />
             <source src={HERO_GLITCH_MP4} type="video/mp4" />
