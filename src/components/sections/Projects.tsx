@@ -1,45 +1,78 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { StellarConsole } from "@/components/ui/StellarConsole";
-import { ProjectsList } from "@/components/ui/ProjectsList";
+import { PROJECTS } from "@/lib/projects";
+import { WorkCard } from "@/components/ui/WorkCard";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useIsMobile } from "@/hooks/useLightMode";
 
 /**
- * Discovered Worlds — cockpit-style portfolio console.
+ * Selected work — image-led case study grid that replaces the prior
+ * StellarConsole cockpit. Each project shows its screenshot, name,
+ * tagline, tech-stack chips, and a "Visit Surface →" affordance.
  *
- * Heading on top, 3-column StellarConsole below (mission roster +
- * center planet + telemetry HUD + command bar). Console pulls its
- * data from projects.ts and translations.ts items.*.
+ * Layout: 3-up on desktop / 2-up on tablet / single column on mobile.
+ * Spacing follows the redesign brief: container max-w-[1248px],
+ * py-96/128 section rhythm.
  */
 export function Projects() {
   const { t } = useTranslation();
-  const isMobile = useIsMobile();
+  const items = t.sections.projects.items as Record<
+    string,
+    { tagline: string; description: string; highlight: string }
+  >;
 
   return (
     <section
       id="projects"
-      className="relative w-full overflow-hidden px-6 py-24 md:min-h-screen md:py-32"
+      className="relative w-full px-6 py-24 md:px-12 md:py-32"
     >
-      {/* Heading */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 mx-auto mb-10 max-w-3xl text-center md:mb-16"
-      >
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
-          {t.sections.projects.chapter}
-        </p>
-        <h2 className="mt-3 font-display text-4xl font-bold leading-[0.95] tracking-tight text-saturn-cream md:text-6xl">
-          {t.sections.projects.heading}
-        </h2>
-      </motion.div>
+      <div className="mx-auto max-w-[1248px]">
+        {/* Heading block */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-12 max-w-2xl md:mb-16"
+        >
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-fg-faint">
+            {t.sections.projects.chapter}
+          </p>
+          <h2 className="mt-4 text-balance text-4xl font-normal leading-[1.05] tracking-[-0.03em] text-fg-base md:text-6xl">
+            {t.sections.projects.heading}
+          </h2>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-fg-dim md:text-lg">
+            {t.sections.projects.instruction}
+          </p>
+        </motion.div>
 
-      {/* Desktop: full cockpit. Mobile: lightweight accordion list. */}
-      {isMobile ? <ProjectsList /> : <StellarConsole />}
+        {/* Card grid */}
+        <ul className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 md:gap-y-16 lg:grid-cols-3">
+          {PROJECTS.map((project, i) => {
+            const copy = items[project.id];
+            if (!copy) return null;
+            return (
+              <motion.li
+                key={project.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  duration: 0.55,
+                  delay: 0.06 * (i % 3),
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <WorkCard
+                  project={project}
+                  copy={{ tagline: copy.tagline, description: copy.description }}
+                  visitLabel={t.sections.projects.ctaVisit}
+                />
+              </motion.li>
+            );
+          })}
+        </ul>
+      </div>
     </section>
   );
 }

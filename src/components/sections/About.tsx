@@ -1,15 +1,20 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { HelmetVisor } from "@/components/ui/HelmetVisor";
 import { RadioTimeline } from "@/components/ui/RadioTimeline";
 import { useTranslation } from "@/hooks/useTranslation";
 
-/*
- * Per-block decoder reveal. Each bio paragraph wipes left→right via
- * clip-path inset (same idiom we use for the logo paint), but here
- * the wipe runs in 1.2s with a slightly longer ease tail so it reads
- * as "signal resolving" rather than "stroke being painted".
+/**
+ * About — bio in four acts (Origin / Mission / Trajectory / Studio)
+ * paired with the RadioTimeline visual on the left column.
+ *
+ * Phase 5 refresh:
+ *   - Dropped the HelmetVisor astronaut PNG — too Saturn-specific.
+ *   - Repaint all `saturn-gold` / `saturn-cream` legacy classes to the
+ *     new fg-base / fg-dim / brand tokens.
+ *   - Headline weight 400 (per the typography contract), max-w-[12ch].
+ *   - Per-block clip-path reveal kept (Sanity's restraint allows this
+ *     since it's a one-shot once:true enter, not a hover state).
  */
 const blockVariants: Variants = {
   hidden: { opacity: 0, y: 24, clipPath: "inset(0% 100% 0% 0%)" },
@@ -28,13 +33,7 @@ const containerVariants: Variants = {
 
 export function About() {
   const { t } = useTranslation();
-  // Tag each act with a locale-invariant id so the React keys below
-  // stay stable across language toggles. If we keyed by `act.title`,
-  // switching EN→PT would change every key, unmounting/remounting the
-  // motion.article elements; the fresh mounts then start at
-  // initial="hidden" (clip-path fully clipped) and never re-trigger
-  // the parent's `whileInView once: true` reveal — leaving the bio
-  // bodies stuck invisible.
+
   const acts: ReadonlyArray<{
     id: string;
     title: string;
@@ -58,31 +57,25 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative w-full overflow-hidden px-6 py-32 md:px-12 md:py-40"
+      className="relative w-full overflow-hidden px-6 py-24 md:px-12 md:py-32"
     >
-      {/* (Decorative CSS starfield removed — SiteStarfield now
-          provides ambient stars across the whole site, so this
-          local layer was double-rendering. */}
-
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 lg:gap-20">
-        {/* Left column: visual anchor + timeline. Stacks under the bio
-            on mobile, sits beside it on desktop. */}
+      <div className="mx-auto grid max-w-[1248px] grid-cols-1 gap-12 md:grid-cols-[5fr_7fr] md:gap-16">
+        {/* Left — timeline */}
         <div className="flex flex-col gap-12">
-          <HelmetVisor />
           <RadioTimeline
             heading={t.about.timeline.heading}
             events={t.about.timeline.events}
           />
         </div>
 
-        {/* Right column: bio in three acts. */}
+        {/* Right — bio in four acts */}
         <div className="flex flex-col">
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold"
+            className="font-mono text-[11px] uppercase tracking-[0.18em] text-fg-faint"
           >
             {t.about.chapter}
           </motion.p>
@@ -92,7 +85,7 @@ export function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4 font-display text-6xl font-bold leading-[0.95] tracking-tight text-saturn-cream md:text-7xl"
+            className="mt-4 max-w-[14ch] text-balance text-5xl font-normal leading-[1.05] tracking-[-0.03em] text-fg-base md:text-6xl"
           >
             {t.about.heading}
           </motion.h2>
@@ -106,10 +99,10 @@ export function About() {
           >
             {acts.map((act) => (
               <motion.article key={act.id} variants={blockVariants}>
-                <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
+                <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
                   {act.title}
                 </h3>
-                <p className="mt-3 text-base leading-relaxed text-saturn-cream/80 md:text-lg">
+                <p className="mt-3 text-base leading-relaxed text-fg-dim md:text-lg">
                   {act.body}
                 </p>
                 {act.link && (
@@ -117,7 +110,7 @@ export function About() {
                     href={act.link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-saturn-gold transition-colors hover:text-saturn-cream"
+                    className="group mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-brand transition-colors hover:text-fg-base"
                   >
                     {act.link.label}
                     <span className="transition-transform duration-300 group-hover:translate-x-1">
