@@ -65,10 +65,10 @@ export function Contact() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 mx-auto mb-12 max-w-3xl text-center md:mb-16"
       >
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-saturn-gold">
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand">
           {c.chapter}
         </p>
-        <h2 className="mt-3 font-display text-4xl font-bold leading-[0.95] tracking-tight text-saturn-cream md:text-6xl">
+        <h2 className="mt-3 font-display text-4xl font-bold leading-[0.95] tracking-tight text-fg-base md:text-6xl">
           {c.heading}
         </h2>
 
@@ -83,7 +83,7 @@ export function Contact() {
           </span>
         </div>
 
-        <p className="mx-auto mt-6 max-w-xl font-mono text-sm leading-relaxed text-saturn-cream/55">
+        <p className="mx-auto mt-6 max-w-xl font-mono text-sm leading-relaxed text-fg-base/55">
           {c.subheading}
         </p>
       </motion.div>
@@ -107,7 +107,7 @@ export function Contact() {
                 ease: [0.22, 1, 0.36, 1],
               }}
               whileHover={{ y: -4 }}
-              className="group relative flex flex-col items-start gap-4 overflow-hidden rounded-md border border-saturn-cream/10 bg-saturn-cream/[0.02] p-6 transition-colors duration-300 hover:border-saturn-cream/30"
+              className="group relative flex flex-col items-start gap-4 overflow-hidden rounded-md border border-fg-base/10 bg-fg-base/[0.02] p-6 transition-colors duration-300 hover:border-fg-base/30"
               style={
                 {
                   ["--brand" as string]: ch.color,
@@ -124,25 +124,25 @@ export function Contact() {
               />
 
               {/* Mono-caps frequency label up top. */}
-              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-saturn-cream/40">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-fg-base/40">
                 CH/{String(i + 1).padStart(2, "0")} · {copy.label}
               </span>
 
               {/* Brand icon + handle row */}
               <div className="flex items-center gap-4">
                 <span
-                  className="flex h-12 w-12 items-center justify-center rounded-md border border-saturn-cream/10 transition-all duration-300 group-hover:border-[var(--brand)] group-hover:shadow-[0_0_24px_-4px_var(--brand)]"
+                  className="flex h-12 w-12 items-center justify-center rounded-md border border-fg-base/10 transition-all duration-300 group-hover:border-[var(--brand)] group-hover:shadow-[0_0_24px_-4px_var(--brand)]"
                   style={{ color: ch.color }}
                 >
                   <ch.Icon size={24} />
                 </span>
-                <span className="font-mono text-sm text-saturn-cream/90">
+                <span className="font-mono text-sm text-fg-base/90">
                   {copy.handle}
                 </span>
               </div>
 
               {/* Action prompt — feels like a button without being one. */}
-              <span className="mt-auto inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-saturn-cream/70 transition-colors duration-300 group-hover:text-saturn-cream">
+              <span className="mt-auto inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-fg-base/70 transition-colors duration-300 group-hover:text-fg-base">
                 {copy.action}
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
                   →

@@ -1,17 +1,25 @@
 import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
+import { TrustMarquee } from "@/components/ui/TrustMarquee";
 import { Projects } from "@/components/sections/Projects";
-import { Skills } from "@/components/sections/Skills";
+import { Process } from "@/components/sections/Process";
+import { About } from "@/components/sections/About";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 
+/**
+ * Page architecture per reference/dvddev-redesign-brief.md §5.
+ * Skills section was rolled into the TrustMarquee — stack icons
+ * scroll alongside client wordmarks + flags, matching David's call
+ * ("minhas skills poderiam rodar aqui nessa faixa carrossel").
+ */
 export default function HomePage() {
   return (
     <main className="relative w-full">
       <Hero />
-      <About />
+      <TrustMarquee />
       <Projects />
-      <Skills />
+      <Process />
+      <About />
       <Contact />
       <Footer />
     </main>
