@@ -100,7 +100,7 @@ export function Hero() {
           playsInline
           preload="metadata"
           poster={HERO_POSTER}
-          className="absolute inset-0 h-full w-full object-cover opacity-60 [mix-blend-mode:screen]"
+          className="absolute inset-0 h-full w-full object-cover opacity-50"
         >
           {/* Responsive contract — the breakpoint media hint is wired
               even though we currently only have a single 640×360 source,
