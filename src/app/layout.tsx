@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -50,19 +51,12 @@ const STRUCTURED_DATA = {
   ],
 };
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600"],
-});
+// Geist (Vercel, OFL) replaces the previous Space Grotesk + JetBrains
+// Mono pair. GeistSans / GeistMono ship `.variable` + `.className` out
+// of the box and expose CSS custom properties `--font-geist-sans` /
+// `--font-geist-mono` automatically when the variables are bound to
+// <html>. Globals.css points the `--font-display / --font-sans /
+// --font-mono` aliases at those vars in C2.
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -138,7 +132,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
         {/* JSON-LD structured data — see STRUCTURED_DATA above. Inline
