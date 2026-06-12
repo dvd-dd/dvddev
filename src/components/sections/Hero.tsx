@@ -38,7 +38,7 @@ import { useLightMode } from "@/hooks/useLightMode";
 const HERO_GLITCH_WEBM = "/hero-glitch.webm";
 const HERO_GLITCH_MP4 = "/hero-glitch.mp4";
 const HERO_FALLBACK_MP4 = "/hero-rings-loop.mp4";
-const HERO_POSTER = "/hero-rings-poster.jpg";
+const HERO_POSTER = "/hero-glitch-poster.jpg";
 
 const ENTRY = {
   hidden: { opacity: 0, y: 12 },
