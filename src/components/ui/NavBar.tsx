@@ -62,7 +62,7 @@ export function NavBar() {
     <header
       data-scrolled={scrolled ? "true" : "false"}
       className={cn(
-        "sticky top-9 z-50 flex h-[67px] w-full items-center transition-colors duration-200",
+        "sticky top-9 z-50 flex h-[52px] w-full items-center transition-colors duration-200",
         scrolled
           ? "border-b border-border-faint bg-bg-base/95 backdrop-blur"
           : "border-b border-transparent bg-transparent"
@@ -149,7 +149,7 @@ export function NavBar() {
           aria-label="Site menu"
           className="fixed inset-0 z-50 flex flex-col bg-bg-base"
         >
-          <div className="flex h-[67px] items-center justify-between px-6">
+          <div className="flex h-[52px] items-center justify-between px-6">
             <a
               href="/"
               aria-label="dvddev — home"
