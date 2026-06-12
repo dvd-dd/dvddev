@@ -15,14 +15,14 @@ export function AnnouncementBar() {
   return (
     <a
       href="#contact"
-      className="group absolute top-0 left-0 right-0 z-[60] flex w-full items-center justify-center gap-2.5 bg-transparent px-6 py-2 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-fg-base transition-colors hover:text-brand"
+      className="group absolute top-0 left-0 right-0 z-[60] flex w-full items-center justify-center gap-2.5 bg-gray-100 px-6 py-2 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink-base transition-colors hover:bg-gray-200"
     >
-      <span className="text-fg-dim">{a.prefix}</span>
+      <span className="text-ink-faint">{a.prefix}</span>
       <span aria-hidden className="text-[13px] leading-none">
         {a.flags}
       </span>
-      <span className="hidden text-fg-faint sm:inline">·</span>
-      <span className="hidden text-fg-base sm:inline">
+      <span className="hidden text-gray-500 sm:inline">·</span>
+      <span className="hidden text-ink-base sm:inline">
         {a.suffix}
       </span>
       <span
