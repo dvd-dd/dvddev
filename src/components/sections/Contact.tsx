@@ -104,9 +104,10 @@ export function Contact() {
               transition={{
                 duration: 0.5,
                 delay: 0.1 + i * 0.08,
-                ease: [0.22, 1, 0.36, 1],
+                ease: [0.4, 0, 0.2, 1],
               }}
-              whileHover={{ y: -4 }}
+              // Per the motion contract: no transform hovers — the
+              // border color + radial wash carry the affordance.
               className="group relative flex flex-col items-start gap-4 overflow-hidden rounded-md border border-fg-base/10 bg-fg-base/[0.02] p-6 transition-colors duration-300 hover:border-fg-base/30"
               style={
                 {
