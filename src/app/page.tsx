@@ -1,6 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { TrustMarquee } from "@/components/ui/TrustMarquee";
-import { UseCases } from "@/components/sections/UseCases";
+import { CustomEnvironments } from "@/components/sections/CustomEnvironments";
 import { Projects } from "@/components/sections/Projects";
 import { Process } from "@/components/sections/Process";
 import { About } from "@/components/sections/About";
@@ -18,7 +18,7 @@ export default function HomePage() {
     <main className="relative -mt-[116px] w-full">
       <Hero />
       <TrustMarquee />
-      <UseCases />
+      <CustomEnvironments />
       <Projects />
       <Process />
       <About />

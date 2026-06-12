@@ -128,39 +128,11 @@ export const translations = {
           },
         },
       },
-      useCases: {
+      customEnvironments: {
         eyebrow: "Capabilities",
-        heading: "Five disciplines on tap.",
+        heading: "Custom build environments.",
         subhead:
-          "Different audiences, different rhythms. I build for the one your product needs — not the one I happen to specialize in.",
-        learnMore: "Learn more",
-        cards: {
-          landing: {
-            title: "Landing pages",
-            body:
-              "High-conversion product pages tuned to the first three seconds. Built around a single decision, instrumented for the metric that matters.",
-          },
-          marketing: {
-            title: "Marketing sites",
-            body:
-              "Full-funnel storytelling across pricing, customers, and docs. The same content system carries you from raw launch to category leader.",
-          },
-          brand: {
-            title: "Portfolio + brand",
-            body:
-              "Editorial sites for founders, agencies, and creative shops. Typography-led, photo-aware, made to be memorable.",
-          },
-          ecommerce: {
-            title: "E-commerce",
-            body:
-              "Headless storefronts on Shopify Hydrogen or Next.js. Cart, checkout, search — all tuned to load on the first byte and convert on the first scroll.",
-          },
-          designSystem: {
-            title: "Design system implementation",
-            body:
-              "Tailwind v4 token systems, component libraries, and design ↔ code handoff. Ship a system your future hires can build on without my help.",
-          },
-        },
+          "Your tools shouldn't dictate the deliverable. The studio bends around your product — landing, brand, e-com, marketing, design system, and the dozens of shapes in between.",
       },
       skills: {
         chapter: "· Chapter 03 · Constellation",
@@ -406,39 +378,11 @@ export const translations = {
           },
         },
       },
-      useCases: {
+      customEnvironments: {
         eyebrow: "Capacidades",
-        heading: "Cinco disciplinas no menu.",
+        heading: "Ambientes de build sob medida.",
         subhead:
-          "Públicos diferentes, ritmos diferentes. Eu construo o tipo de site que o seu produto precisa — não o que eu prefiro fazer.",
-        learnMore: "Saiba mais",
-        cards: {
-          landing: {
-            title: "Landing pages",
-            body:
-              "Páginas de produto de alta conversão afinadas pros primeiros 3 segundos. Construídas em torno de uma decisão só, com a métrica certa instrumentada.",
-          },
-          marketing: {
-            title: "Sites de marketing",
-            body:
-              "Storytelling de funil inteiro: preços, clientes, docs. O mesmo sistema de conteúdo te leva do lançamento ao líder de categoria.",
-          },
-          brand: {
-            title: "Portfólio + marca",
-            body:
-              "Sites editoriais pra founders, agências e estúdios criativos. Tipografia primeiro, fotografia consciente, feitos pra serem lembrados.",
-          },
-          ecommerce: {
-            title: "E-commerce",
-            body:
-              "Storefronts headless em Shopify Hydrogen ou Next.js. Carrinho, checkout, busca — tudo otimizado pra carregar no primeiro byte e converter no primeiro scroll.",
-          },
-          designSystem: {
-            title: "Design system",
-            body:
-              "Tokens Tailwind v4, bibliotecas de componente, handoff design ↔ código. Ship um sistema que seu próximo dev evolui sem precisar de mim.",
-          },
-        },
+          "Suas ferramentas não deveriam ditar o entregável. O estúdio dobra em volta do seu produto — landing, brand, e-com, marketing, design system, e as dezenas de formas no meio.",
       },
       skills: {
         chapter: "· Capítulo 03 · Constelação",
