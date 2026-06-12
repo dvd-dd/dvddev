@@ -1,70 +1,94 @@
 @import "tailwindcss";
 
 /*
- * Tailwind v4 is CSS-first: tokens defined inside `@theme` become utility
- * classes automatically. `--color-brand` → `bg-brand`, `text-brand`, etc.
+ * Tailwind v4 CSS-first config. Every `--color-*` here becomes a
+ * utility (`bg-brand`, `text-fg-base`, etc.) automatically.
  *
- * --- Redesign post-2026-06-12 ----------------------------------------
+ * --- C1 of the literal Sanity clone --------------------------------
  *
- * Old saturn-gold/cream/space-black palette has been swapped for an
- * electric-mint brand + warm near-black ink system inspired by sanity.io's
- * 2024-25 rebrand. See reference/dvddev-redesign-brief.md for the full
- * design contract.
+ * Palette now matches sanity.io exactly: electric traffic-cone orange
+ * `#ff560a` as the brand, warm near-black `#0b0b0b` as the ink, 7-step
+ * gray ramp + 4 accent ramps with P3 wide-gamut companions, cool-blue
+ * shadow tokens. Theme is dark-only (the 3-way Light/System/Dark
+ * toggle was dropped this turn — see plan §C4/C8).
  *
- * Legacy `--color-saturn-*` / `--color-space-*` / `--color-ring-*` tokens
- * remain in this block — aliased to the new tokens — so code written
- * against `text-saturn-gold` / `bg-space-black` keeps rendering correctly
- * during the migration. They will be deleted once Phase 5 sweeps every
- * call site. Each alias is annotated with what it maps to.
- *
- * Font variables are injected by next/font at <html>.
+ * Legacy `--color-saturn-*` / `--color-space-*` / `--color-ring-amber`
+ * aliases have been removed. The only remaining consumer outside the
+ * dead-code pile was `src/app/not-found.tsx`, swept in the same commit.
  */
 @theme {
-  /* ─── Brand ─────────────────────────────────────────────────── */
-  --color-brand: #00ff9d;         /* electric mint — primary CTA + accents */
-  --color-brand-dim: #00cc7e;     /* hover state on brand fills */
-  --color-brand-p3: color(display-p3 0 1 0.616);
+  /* ─── Brand (electric traffic-cone orange) ──────────────────── */
+  --color-brand: #ff560a;
+  --color-brand-dim: #d94800;          /* hover state on brand fills */
+  --color-brand-p3: color(display-p3 1 0.3333 0);
 
   /* ─── Inks (warm near-black, deliberately not pure) ─────────── */
   --color-ink-base: #0b0b0b;
   --color-ink-dim: #212121;
   --color-ink-faint: #353535;
 
-  /* ─── Surfaces (dark theme default) ─────────────────────────── */
+  /* ─── Surfaces (dark theme — the only theme this turn) ──────── */
   --color-bg-base: #0b0b0b;
   --color-bg-dim: #1a1a1a;
   --color-bg-elevated: #212121;
 
-  /* ─── Foregrounds (dark theme default) ──────────────────────── */
+  /* ─── Foregrounds ───────────────────────────────────────────── */
   --color-fg-base: #ffffff;
   --color-fg-dim: #b9b9b9;
   --color-fg-faint: #797979;
 
-  /* ─── Borders (dark theme default) ──────────────────────────── */
+  /* ─── Borders ───────────────────────────────────────────────── */
   --color-border-base: #ffffff;
   --color-border-dim: #353535;
   --color-border-faint: #212121;
 
+  /* ─── 7-step gray ramp (Sanity spec §2a) ────────────────────── */
+  --color-gray-100: #ededed;
+  --color-gray-200: #d6d6d6;
+  --color-gray-300: #b9b9b9;
+  --color-gray-500: #797979;
+  --color-gray-700: #4a4a4a;
+  --color-gray-800: #353535;
+  --color-gray-900: #212121;
+
+  /* ─── Accent ramps (Sanity spec §2a, 4 steps each + P3) ─────── */
+  --color-blue-100: #afe3ff;
+  --color-blue-300: #55beff;
+  --color-blue-500: #0084f8;
+  --color-blue-700: #0052ef;
+  --color-blue-500-p3: color(display-p3 0 0.5176 0.9725);
+
+  --color-green-100: #96ff6f;
+  --color-green-300: #45ff00;
+  --color-green-500: #00fe00;
+  --color-green-700: #19d600;
+  --color-green-500-p3: color(display-p3 0 0.9961 0);
+
+  --color-magenta-100: #fcb9ff;
+  --color-magenta-300: #fa84ff;
+  --color-magenta-500: #ff23fc;
+  --color-magenta-700: #f500ff;
+  --color-magenta-500-p3: color(display-p3 1 0.1373 0.9882);
+
+  --color-yellow-100: #fcffd6;
+  --color-yellow-300: #ffff9f;
+  --color-yellow-500: #fdfe00;
+  --color-yellow-700: #fff500;
+  --color-yellow-500-p3: color(display-p3 0.9922 0.9961 0);
+
   /* ─── State ─────────────────────────────────────────────────── */
-  --color-success: #00ff9d;       /* brand alias */
+  --color-success: #00fe00;              /* alias to green-500 */
   --color-error: #ff4422;
 
-  /* ─── Legacy aliases (delete in Phase 5) ────────────────────── */
-  /* Anything that read as gold accent is now mint. */
-  --color-saturn-gold: var(--color-brand);
-  --color-ring-amber: var(--color-brand-dim);
-  /* Cream becomes white foreground. */
-  --color-saturn-cream: var(--color-fg-base);
-  /* Both space tones map to the new warm-black surfaces. */
-  --color-space-black: var(--color-bg-base);
-  --color-deep-space: var(--color-bg-dim);
-  /* Star white was always the same thing. */
-  --color-star-white: #fafafa;
+  /* ─── Shadows (cool-blue tint, Sanity spec §2a) ─────────────── */
+  --shadow-umbra: 0 1px 2px #14171f0d;    /* 5% */
+  --shadow-penumbra: 0 2px 4px #14171f14; /* 8% */
+  --shadow-ambient: 0 4px 12px #14171f30; /* 19% */
 
-  /* ─── Fonts (unchanged) ─────────────────────────────────────── */
+  /* ─── Fonts (Geist swap arrives in C2; placeholders kept) ───── */
   --font-display: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
   --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 /* Reset */
@@ -102,7 +126,7 @@ body {
   color: var(--color-ink-base);
 }
 
-/* Scrollbar — mint thumb on transparent track */
+/* Scrollbar — brand orange thumb on transparent track */
 html {
   scrollbar-width: thin;
   scrollbar-color: var(--color-brand) transparent;
@@ -127,14 +151,13 @@ html {
   }
 }
 
-/* Stellar Console CTA effects — kept for backward compat; the StellarConsole
-   itself will be replaced in Phase 4. Glow tinted in mint now (was gold). */
+/* CTA attention pulse — retinted to brand orange. */
 @keyframes cta-pulse {
   0%, 100% {
-    box-shadow: 0 0 16px -2px rgba(0, 255, 157, 0.2);
+    box-shadow: 0 0 16px -2px rgba(255, 86, 10, 0.2);
   }
   50% {
-    box-shadow: 0 0 36px -2px rgba(0, 255, 157, 0.45);
+    box-shadow: 0 0 36px -2px rgba(255, 86, 10, 0.45);
   }
 }
 
@@ -152,16 +175,15 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
   @keyframes cta-pulse {
-    0%, 100% { box-shadow: 0 0 16px -2px rgba(0, 255, 157, 0.25); }
+    0%, 100% { box-shadow: 0 0 16px -2px rgba(255, 86, 10, 0.25); }
   }
   @keyframes cta-shimmer {
     0%, 100% { transform: translateX(0) skewX(-12deg); opacity: 0; }
   }
 }
 
-/* Asymmetric blink for live status indicators — Sanity's recording-heartbeat
-   feel: 1.6s loop, opacity drops at 60% keyframe instead of midway. Used by
-   the StatusPill "Available for work" dot. */
+/* Asymmetric blink for live status indicators (Sanity's recording-
+   heartbeat feel: 1.6s loop, opacity drops at 60% keyframe). */
 @keyframes pulse-heartbeat {
   0%, 100% { opacity: 1; }
   60%      { opacity: 0; }
