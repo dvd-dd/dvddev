@@ -75,7 +75,7 @@ export function NavBar() {
           aria-label="dvddev — home"
           className="flex items-center text-fg-base transition-colors hover:text-brand"
         >
-          <DvdWordmark className="h-[28px] w-auto" />
+          <DvdWordmark className="h-[44px] w-auto" />
         </a>
 
         {/* Center: section links (desktop) */}
@@ -156,7 +156,7 @@ export function NavBar() {
               onClick={() => setOpen(false)}
               className="flex items-center text-fg-base"
             >
-              <DvdWordmark className="h-[28px] w-auto" />
+              <DvdWordmark className="h-[44px] w-auto" />
             </a>
             <button
               type="button"
