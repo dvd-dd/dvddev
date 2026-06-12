@@ -63,7 +63,7 @@ export function NavBar() {
     <header
       data-scrolled={scrolled ? "true" : "false"}
       className={cn(
-        "sticky top-0 z-50 flex h-[52px] w-full items-center transition-colors duration-200",
+        "sticky top-0 z-50 flex h-[60px] w-full items-center transition-colors duration-200",
         scrolled
           ? "border-b border-border-faint bg-bg-base/95 backdrop-blur"
           : "border-b border-transparent bg-transparent"
@@ -86,8 +86,8 @@ export function NavBar() {
             className="block [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(255,86,10,0.65))_drop-shadow(0_0_16px_rgba(255,86,10,0.35))]"
           >
             <DvdWordmark
-              className="h-[44px] w-auto"
-              crossbarColor="var(--color-brand)"
+              className="h-[52px] w-auto"
+              thicken
             />
           </motion.span>
         </a>
@@ -163,7 +163,7 @@ export function NavBar() {
           aria-label="Site menu"
           className="fixed inset-0 z-50 flex flex-col bg-bg-base"
         >
-          <div className="flex h-[52px] items-center justify-between px-6">
+          <div className="flex h-[60px] items-center justify-between px-6">
             <a
               href="/"
               aria-label="dvddev — home"
@@ -171,8 +171,8 @@ export function NavBar() {
               className="flex items-center text-fg-base"
             >
               <DvdWordmark
-                className="h-[44px] w-auto [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))]"
-                crossbarColor="var(--color-brand)"
+                className="h-[52px] w-auto [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))]"
+                thicken
               />
             </a>
             <button
