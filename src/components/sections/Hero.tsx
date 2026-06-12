@@ -102,7 +102,7 @@ export function Hero() {
         preload="auto"
         poster={HERO_POSTER}
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-0 h-full w-full object-cover opacity-80"
+        className="pointer-events-none absolute inset-0 -z-0 h-full w-full object-cover opacity-65"
       >
         {/* Responsive contract — breakpoint media hint wired in for
             when a higher-res cosmic clip later replaces the current
@@ -112,6 +112,20 @@ export function Hero() {
         <source src={HERO_GLITCH_MP4} type="video/mp4" />
         <source src={HERO_FALLBACK_MP4} type="video/mp4" />
       </video>
+
+      {/* Full-bleed flat tint + left-bias gradient. The reel now cycles
+          through 11 wildly different clips (bright Chongqing daylight,
+          golden-hour skater, orange race car) — without this scrim
+          the lighter clips wash out the eyebrow + subhead. Stays subtle
+          enough that the cool clips still read. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-ink-base/45"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-ink-base/55 via-ink-base/20 to-transparent"
+      />
 
       {/* Bottom gradient scrim so the trust marquee (Phase 5) can sit
           flush without the video bleeding into its top edge. */}
@@ -127,7 +141,7 @@ export function Hero() {
           variants={ENTRY}
           initial="hidden"
           animate="visible"
-          className="font-mono text-[14px] font-medium uppercase tracking-[0.16em] text-fg-dim"
+          className="font-mono text-[14px] font-medium uppercase tracking-[0.16em] text-fg-base [text-shadow:0_1px_6px_rgba(0,0,0,0.7)]"
         >
           {t.hero.eyebrow}
         </motion.p>
@@ -139,7 +153,7 @@ export function Hero() {
           variants={ENTRY}
           initial="hidden"
           animate="visible"
-          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] text-fg-base md:text-[72px] lg:text-[96px] xl:text-[112px]"
+          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] text-fg-base [text-shadow:0_2px_16px_rgba(0,0,0,0.45)] md:text-[72px] lg:text-[96px] xl:text-[112px]"
         >
           {t.hero.headline}
         </motion.h1>
@@ -150,7 +164,7 @@ export function Hero() {
           variants={ENTRY}
           initial="hidden"
           animate="visible"
-          className="mt-12 max-w-[44ch] text-lg leading-relaxed text-fg-dim md:text-xl"
+          className="mt-12 max-w-[44ch] text-lg leading-relaxed text-fg-base/95 [text-shadow:0_1px_8px_rgba(0,0,0,0.7)] md:text-xl"
         >
           {t.hero.subhead}
         </motion.p>
