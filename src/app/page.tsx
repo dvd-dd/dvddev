@@ -15,7 +15,7 @@ import { Footer } from "@/components/sections/Footer";
  */
 export default function HomePage() {
   return (
-    <main className="relative w-full">
+    <main className="relative -mt-[67px] w-full">
       <Hero />
       <TrustMarquee />
       <UseCases />
