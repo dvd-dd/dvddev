@@ -3,12 +3,10 @@
 import { useTranslation } from "@/hooks/useTranslation";
 
 /**
- * Thin inverse strip above the top nav — Sanity's announcement-bar
- * pattern. Single line with the "currently shipping for" status
- * message + flags + a call-to-action arrow link to #contact.
- *
- * Renders inverted (white text on near-black) regardless of theme, so
- * it reads as system chrome rather than content.
+ * Thin strip above the top nav. Light cream background (`bg-gray-100`)
+ * with dark ink text — matches the current sanity.io chrome where the
+ * announcement reads as a page sign-on rather than inverted system
+ * chrome.
  */
 export function AnnouncementBar() {
   const { t } = useTranslation();
@@ -17,14 +15,14 @@ export function AnnouncementBar() {
   return (
     <a
       href="#contact"
-      className="group relative flex w-full items-center justify-center gap-2.5 bg-ink-base px-6 py-2 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-fg-base transition-colors hover:bg-ink-dim"
+      className="group relative flex w-full items-center justify-center gap-2.5 bg-gray-100 px-6 py-2 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-ink-base transition-colors hover:bg-gray-200"
     >
-      <span className="text-fg-dim">{a.prefix}</span>
+      <span className="text-ink-faint">{a.prefix}</span>
       <span aria-hidden className="text-[13px] leading-none">
         {a.flags}
       </span>
-      <span className="hidden text-fg-faint sm:inline">·</span>
-      <span className="hidden text-fg-base sm:inline">
+      <span className="hidden text-gray-500 sm:inline">·</span>
+      <span className="hidden text-ink-base sm:inline">
         {a.suffix}
       </span>
       <span
