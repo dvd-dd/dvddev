@@ -1,5 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { TrustMarquee } from "@/components/ui/TrustMarquee";
+import { UseCases } from "@/components/sections/UseCases";
 import { Projects } from "@/components/sections/Projects";
 import { Process } from "@/components/sections/Process";
 import { About } from "@/components/sections/About";
@@ -17,6 +18,7 @@ export default function HomePage() {
     <main className="relative w-full">
       <Hero />
       <TrustMarquee />
+      <UseCases />
       <Projects />
       <Process />
       <About />
