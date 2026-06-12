@@ -136,7 +136,7 @@ export function Footer() {
         <div className="flex items-center justify-center py-12 md:py-24 lg:pt-24 lg:pb-[256px]">
           <DvdWordmark
             ariaLabel="dvddev"
-            className="h-9 w-auto text-fg-base md:h-16 lg:h-[120px]"
+            className="h-20 w-auto text-fg-base md:h-40 lg:h-[280px] xl:h-[400px]"
           />
         </div>
 
