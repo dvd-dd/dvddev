@@ -2,20 +2,66 @@
 
 /*
  * Tailwind v4 is CSS-first: tokens defined inside `@theme` become utility
- * classes automatically. So `--color-saturn-gold` exposes `bg-saturn-gold`,
- * `text-saturn-gold`, etc — no separate tailwind.config.ts needed.
+ * classes automatically. `--color-brand` → `bg-brand`, `text-brand`, etc.
  *
- * Font variables are injected by next/font at the <html> level and bound
- * here to the `font-display` / `font-mono` utilities.
+ * --- Redesign post-2026-06-12 ----------------------------------------
+ *
+ * Old saturn-gold/cream/space-black palette has been swapped for an
+ * electric-mint brand + warm near-black ink system inspired by sanity.io's
+ * 2024-25 rebrand. See reference/dvddev-redesign-brief.md for the full
+ * design contract.
+ *
+ * Legacy `--color-saturn-*` / `--color-space-*` / `--color-ring-*` tokens
+ * remain in this block — aliased to the new tokens — so code written
+ * against `text-saturn-gold` / `bg-space-black` keeps rendering correctly
+ * during the migration. They will be deleted once Phase 5 sweeps every
+ * call site. Each alias is annotated with what it maps to.
+ *
+ * Font variables are injected by next/font at <html>.
  */
 @theme {
-  --color-space-black: #050510;
-  --color-deep-space: #0a0a1a;
-  --color-saturn-gold: #d4a574;
-  --color-saturn-cream: #f5e6d3;
-  --color-ring-amber: #c89860;
+  /* ─── Brand ─────────────────────────────────────────────────── */
+  --color-brand: #00ff9d;         /* electric mint — primary CTA + accents */
+  --color-brand-dim: #00cc7e;     /* hover state on brand fills */
+  --color-brand-p3: color(display-p3 0 1 0.616);
+
+  /* ─── Inks (warm near-black, deliberately not pure) ─────────── */
+  --color-ink-base: #0b0b0b;
+  --color-ink-dim: #212121;
+  --color-ink-faint: #353535;
+
+  /* ─── Surfaces (dark theme default) ─────────────────────────── */
+  --color-bg-base: #0b0b0b;
+  --color-bg-dim: #1a1a1a;
+  --color-bg-elevated: #212121;
+
+  /* ─── Foregrounds (dark theme default) ──────────────────────── */
+  --color-fg-base: #ffffff;
+  --color-fg-dim: #b9b9b9;
+  --color-fg-faint: #797979;
+
+  /* ─── Borders (dark theme default) ──────────────────────────── */
+  --color-border-base: #ffffff;
+  --color-border-dim: #353535;
+  --color-border-faint: #212121;
+
+  /* ─── State ─────────────────────────────────────────────────── */
+  --color-success: #00ff9d;       /* brand alias */
+  --color-error: #ff4422;
+
+  /* ─── Legacy aliases (delete in Phase 5) ────────────────────── */
+  /* Anything that read as gold accent is now mint. */
+  --color-saturn-gold: var(--color-brand);
+  --color-ring-amber: var(--color-brand-dim);
+  /* Cream becomes white foreground. */
+  --color-saturn-cream: var(--color-fg-base);
+  /* Both space tones map to the new warm-black surfaces. */
+  --color-space-black: var(--color-bg-base);
+  --color-deep-space: var(--color-bg-dim);
+  /* Star white was always the same thing. */
   --color-star-white: #fafafa;
 
+  /* ─── Fonts (unchanged) ─────────────────────────────────────── */
   --font-display: var(--font-space-grotesk), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
   --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
@@ -32,8 +78,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-space-black);
-  color: var(--color-saturn-cream);
+  background: var(--color-bg-base);
+  color: var(--color-fg-base);
   font-family: var(--font-sans);
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -50,20 +96,16 @@ body {
   overflow-x: hidden;
 }
 
-/* Custom SVG cursors removed — the shooting-star trail is the
-   cursor expression now. Browser default arrow + pointer renders
-   crisp on every OS and stays out of the trail's way visually. */
-
 /* Selection */
 ::selection {
-  background: var(--color-saturn-gold);
-  color: var(--color-space-black);
+  background: var(--color-brand);
+  color: var(--color-ink-base);
 }
 
-/* Hide scrollbar while preserving scroll — Lenis drives the motion. */
+/* Scrollbar — mint thumb on transparent track */
 html {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-saturn-gold) transparent;
+  scrollbar-color: var(--color-brand) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -75,31 +117,24 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-saturn-gold);
+  background: var(--color-brand);
   border-radius: 3px;
 }
 
-/* Respect users who prefer reduced motion — disable the scroll smoothing,
-   Lenis will pick this up but a CSS hook is a safer belt-and-braces. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 }
 
-/* Stellar Console — primary CTA "DEPLOY TO SURFACE" attention effects.
-   Two stacked animations:
-     • cta-pulse   : gentle box-shadow halo breathing 3.2s ease-in-out
-     • cta-shimmer : translucent diagonal band sweeping across the bar
-                     in the first ~20% of a 5s cycle, then sitting off
-                     screen — feels like an occasional ping, not a
-                     continuous shine. */
+/* Stellar Console CTA effects — kept for backward compat; the StellarConsole
+   itself will be replaced in Phase 4. Glow tinted in mint now (was gold). */
 @keyframes cta-pulse {
   0%, 100% {
-    box-shadow: 0 0 16px -2px rgba(212, 165, 116, 0.2);
+    box-shadow: 0 0 16px -2px rgba(0, 255, 157, 0.2);
   }
   50% {
-    box-shadow: 0 0 36px -2px rgba(212, 165, 116, 0.45);
+    box-shadow: 0 0 36px -2px rgba(0, 255, 157, 0.45);
   }
 }
 
@@ -115,14 +150,19 @@ html {
   }
 }
 
-/* Honour reduced-motion: kill the breathing/shimmer so the CTA still
-   looks distinctive (gold border + glow halo from hover stay) but
-   doesn't pulse. */
 @media (prefers-reduced-motion: reduce) {
   @keyframes cta-pulse {
-    0%, 100% { box-shadow: 0 0 16px -2px rgba(212, 165, 116, 0.25); }
+    0%, 100% { box-shadow: 0 0 16px -2px rgba(0, 255, 157, 0.25); }
   }
   @keyframes cta-shimmer {
     0%, 100% { transform: translateX(0) skewX(-12deg); opacity: 0; }
   }
+}
+
+/* Asymmetric blink for live status indicators — Sanity's recording-heartbeat
+   feel: 1.6s loop, opacity drops at 60% keyframe instead of midway. Used by
+   the StatusPill "Available for work" dot. */
+@keyframes pulse-heartbeat {
+  0%, 100% { opacity: 1; }
+  60%      { opacity: 0; }
 }
