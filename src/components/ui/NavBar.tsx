@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Mail, Menu, X } from "lucide-react";
 import { FaLinkedin } from "react-icons/fa6";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -69,13 +70,26 @@ export function NavBar() {
       )}
     >
       <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between gap-6 px-6 md:px-12">
-        {/* Brand / wordmark */}
+        {/* Brand / wordmark — orange crossbar accent + brand-color glow.
+            Intro paints in left→right via clip-path, then idles. On
+            hover the glow intensifies (no scale, per the motion
+            contract). */}
         <a
           href="/"
           aria-label="dvddev — home"
-          className="flex items-center text-fg-base transition-colors hover:text-brand"
+          className="group flex items-center text-fg-base transition-colors hover:text-brand"
         >
-          <DvdWordmark className="h-[44px] w-auto" />
+          <motion.span
+            initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0 }}
+            animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
+            transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+            className="block [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(255,86,10,0.65))_drop-shadow(0_0_16px_rgba(255,86,10,0.35))]"
+          >
+            <DvdWordmark
+              className="h-[44px] w-auto"
+              crossbarColor="var(--color-brand)"
+            />
+          </motion.span>
         </a>
 
         {/* Center: section links (desktop) */}
@@ -156,7 +170,10 @@ export function NavBar() {
               onClick={() => setOpen(false)}
               className="flex items-center text-fg-base"
             >
-              <DvdWordmark className="h-[44px] w-auto" />
+              <DvdWordmark
+                className="h-[44px] w-auto [filter:drop-shadow(0_0_4px_rgba(255,86,10,0.35))_drop-shadow(0_0_10px_rgba(255,86,10,0.18))]"
+                crossbarColor="var(--color-brand)"
+              />
             </a>
             <button
               type="button"
