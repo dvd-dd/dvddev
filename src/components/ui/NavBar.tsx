@@ -88,7 +88,7 @@ export function NavBar() {
               <li key={key}>
                 <a
                   href={href}
-                  className="rounded-full px-3 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-fg-dim transition-colors hover:text-fg-base"
+                  className="rounded-full px-3 py-2 font-sans text-[14px] font-medium tracking-[-0.005em] text-fg-dim transition-colors hover:text-fg-base"
                 >
                   {t.chrome.nav.links[key]}
                 </a>
@@ -107,24 +107,24 @@ export function NavBar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t.chrome.nav.ctas.linkedin}
-            className="hidden h-9 items-center justify-center rounded-full px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-fg-dim transition-colors hover:text-fg-base md:inline-flex"
+            className="hidden h-10 items-center justify-center rounded-full px-3 font-sans text-[14px] font-medium tracking-[-0.005em] text-fg-dim transition-colors hover:text-fg-base md:inline-flex"
           >
-            <FaLinkedin className="h-3.5 w-3.5" aria-hidden />
+            <FaLinkedin className="h-4 w-4" aria-hidden />
           </a>
 
           {/* Outline Email */}
           <a
             href={EMAIL_HREF}
             aria-label={t.chrome.nav.ctas.email}
-            className="hidden h-9 items-center justify-center gap-1.5 rounded-full border border-border-dim px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-fg-base transition-colors hover:border-fg-base md:inline-flex"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-full border border-border-dim px-4 font-sans text-[14px] font-medium tracking-[-0.005em] text-fg-base transition-colors hover:border-fg-base md:inline-flex"
           >
-            <Mail className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+            <Mail className="h-4 w-4" strokeWidth={2} aria-hidden />
           </a>
 
           {/* Brand fill — Hire me */}
           <a
             href="#contact"
-            className="hidden h-9 items-center justify-center rounded-full bg-brand px-4 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-base transition-colors hover:bg-brand-dim md:inline-flex"
+            className="hidden h-10 items-center justify-center rounded-full bg-brand px-5 font-sans text-[14px] font-medium tracking-[-0.005em] text-ink-base transition-colors hover:bg-brand-dim md:inline-flex"
           >
             {t.chrome.nav.ctas.hire}
           </a>
