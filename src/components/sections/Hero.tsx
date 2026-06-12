@@ -84,33 +84,34 @@ export function Hero() {
       ref={sectionRef}
       id="hero"
       data-transparent-nav="true"
-      className="relative w-full overflow-hidden bg-ink-base"
+      className="relative isolate w-full overflow-hidden bg-ink-base"
     >
-      {/* Background video — straight 40% opacity over bg-ink-base, no
-          blend mode (Sanity spec exact). Dark-only theme means the
-          video always renders; useLightMode gating dropped. */}
-      <div
+      {/* Background video. The `isolate` on the section above creates a
+          new stacking context so `-z-0` here keeps the video tucked
+          behind the headline content (z-10 below) without falling
+          underneath the section's own bg-ink-base. Wrapper div removed
+          — it was forming an extra stacking context that, paired with
+          mix-blend-mode on the inner video, prevented the screen blend
+          from reaching the section background. */}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster={HERO_POSTER}
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-0 h-full w-full object-cover opacity-80"
       >
-        <video
-          ref={videoRef}
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          poster={HERO_POSTER}
-          className="absolute inset-0 h-full w-full object-cover opacity-90 [mix-blend-mode:screen]"
-        >
-          {/* Responsive contract — the breakpoint media hint is wired
-              even though we currently only have a single 640×360 source,
-              so dropping a higher-res clip later picks up automatically. */}
-          <source src={HERO_GLITCH_WEBM} type="video/webm" media="(min-width: 1200px)" />
-          <source src={HERO_GLITCH_WEBM} type="video/webm" />
-          <source src={HERO_GLITCH_MP4} type="video/mp4" />
-          <source src={HERO_FALLBACK_MP4} type="video/mp4" />
-        </video>
-      </div>
+        {/* Responsive contract — breakpoint media hint wired in for
+            when a higher-res cosmic clip later replaces the current
+            960×540 crop. */}
+        <source src={HERO_GLITCH_WEBM} type="video/webm" media="(min-width: 1200px)" />
+        <source src={HERO_GLITCH_WEBM} type="video/webm" />
+        <source src={HERO_GLITCH_MP4} type="video/mp4" />
+        <source src={HERO_FALLBACK_MP4} type="video/mp4" />
+      </video>
 
       {/* Bottom gradient scrim so the trust marquee (Phase 5) can sit
           flush without the video bleeding into its top edge. */}
