@@ -133,7 +133,7 @@ export function Footer() {
         </div>
 
         {/* ─── BLOCK 2: GIANT wordmark + 256px breathing ───── */}
-        <div className="flex items-center justify-center py-12 md:py-24 lg:pt-24 lg:pb-[256px]">
+        <div className="flex items-center justify-center py-8 md:py-12 lg:pt-12 lg:pb-[120px]">
           <DvdWordmark
             ariaLabel="dvddev"
             className="h-20 w-auto text-fg-base md:h-40 lg:h-[280px] xl:h-[400px]"
