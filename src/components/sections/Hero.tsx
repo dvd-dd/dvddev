@@ -120,7 +120,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-1/4 bg-gradient-to-t from-ink-base/95 to-transparent"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-67px-36px)] max-w-[1248px] flex-col justify-center px-6 py-32 md:px-12 lg:py-48">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-67px-36px-72px)] max-w-[1248px] flex-col justify-center px-6 py-32 md:px-12 lg:py-48">
         {/* Eyebrow */}
         <motion.p
           custom={0}
