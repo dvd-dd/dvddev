@@ -148,11 +148,17 @@ function FloatingPanel({
   children: React.ReactNode;
   offsetClass: string;
 }) {
+  // Two-layer wrapper:
+  //   outer — carries the static lg+ Y offset (the 3D stagger).
+  //   inner — carries the cursor-hover scale + lift + shadow.
+  // Splitting them avoids the offsetClass's translate-y fighting with
+  // the hover's translate-y on the same element (they'd write to the
+  // same --tw-translate-y CSS var).
   return (
-    <div
-      className={`relative transform-gpu shadow-[0_20px_48px_-16px_rgba(0,0,0,0.45)] transition-transform duration-500 ${offsetClass}`}
-    >
-      {children}
+    <div className={`relative h-full transform-gpu ${offsetClass}`}>
+      <div className="group/panel h-full transform-gpu shadow-[0_20px_48px_-16px_rgba(0,0,0,0.45)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.025] hover:shadow-[0_28px_56px_-12px_rgba(168,85,247,0.35)]">
+        {children}
+      </div>
     </div>
   );
 }
