@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { ChevronDown, Info, MoreHorizontal } from "lucide-react";
+import { ChevronDown, MoreHorizontal, Sparkles } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { BRIEFS_EN, BRIEFS_PT } from "@/lib/briefs";
@@ -40,7 +40,10 @@ export function CustomEnvironments() {
   const inView = useInView(sectionRef, { margin: "-10% 0px -10% 0px" });
 
   const pairs = locale === "pt" ? BRIEFS_PT : BRIEFS_EN;
-  const { title, description } = useTypewriter({ pairs, enabled: inView });
+  const { title, description, pairIdx } = useTypewriter({
+    pairs,
+    enabled: inView,
+  });
 
   return (
     <section
@@ -79,7 +82,7 @@ export function CustomEnvironments() {
             <TerminalPanel />
           </FloatingPanel>
           <FloatingPanel offsetClass="lg:translate-y-4">
-            <ReleasePanel />
+            <AIStudioPanel title={title} pairIdx={pairIdx} />
           </FloatingPanel>
         </div>
       </div>
@@ -147,7 +150,7 @@ function FloatingPanel({
 }) {
   return (
     <div
-      className={`relative transform-gpu shadow-[0_24px_64px_-12px_rgba(0,0,0,0.6)] transition-transform duration-500 ${offsetClass}`}
+      className={`relative transform-gpu shadow-[0_20px_48px_-16px_rgba(0,0,0,0.45)] transition-transform duration-500 ${offsetClass}`}
     >
       {children}
     </div>
@@ -395,27 +398,36 @@ function TerminalPanel() {
   );
 }
 
-/* ─── Panel 4 · New brief release (with confetti easter egg) ───── */
+/* ─── Panel 4 · ai studio (with confetti easter egg) ────────────── */
 
-const RELEASE_ROWS: Array<{
-  symbol: string;
-  label: string;
-  action: string;
-  actionColor: string;
-}> = [
-  { symbol: "⌘", label: "Locale: EN-US", action: "Add", actionColor: "text-green-500" },
-  { symbol: "⌘", label: "Locale: PT-BR", action: "Add", actionColor: "text-green-500" },
-  { symbol: "≡", label: "Site nav bar", action: "Change", actionColor: "text-yellow-500" },
-  { symbol: "↻", label: "Brand promo", action: "Publish", actionColor: "text-green-500" },
+const AI_SAMPLES = [
+  "/ai-samples/01-cosmic.jpg",
+  "/ai-samples/02-matrix.jpg",
+  "/ai-samples/03-neon.jpg",
+  "/ai-samples/04-sunset.jpg",
+  "/ai-samples/05-rocket.jpg",
 ];
 
-function ReleasePanel() {
+function AIStudioPanel({
+  title,
+  pairIdx,
+}: {
+  title: string;
+  pairIdx: number;
+}) {
+  // The "regenerate" click bumps a manual offset on top of pairIdx so
+  // clicking the button visibly swaps the image without waiting for
+  // the typewriter cycle.
+  const [manualOffset, setManualOffset] = useState(0);
   const [bursts, setBursts] = useState<number[]>([]);
 
-  const handleRunRelease = () => {
+  const imageIdx = (pairIdx + manualOffset) % AI_SAMPLES.length;
+  const currentImage = AI_SAMPLES[imageIdx];
+
+  const handleRegenerate = () => {
+    setManualOffset((o) => o + 1);
     const id = Date.now();
     setBursts((b) => [...b, id]);
-    // Auto-cleanup after the burst animation finishes.
     setTimeout(() => {
       setBursts((b) => b.filter((x) => x !== id));
     }, 1500);
@@ -424,62 +436,82 @@ function ReleasePanel() {
   return (
     <PanelShell>
       <PanelHeader>
-        <span className="text-fg-base">new brief release</span>
-        <Info
-          className="ml-auto h-3.5 w-3.5 text-fg-faint"
+        <Sparkles
+          className="h-3 w-3 text-brand"
           strokeWidth={2}
           aria-hidden
         />
+        <span className="text-fg-base">ai studio</span>
+        <span className="text-fg-faint">generate</span>
+        <span className="ml-auto text-fg-faint">⌘K</span>
       </PanelHeader>
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
-          <span className="font-sans text-[11px] text-fg-dim">
-            Set publishing date
-          </span>
-          <div className="flex items-center justify-between rounded-md border border-border-faint bg-bg-elevated px-3 py-2 font-sans text-[12px] text-fg-faint">
-            <span>dd/mm/aaaa</span>
-            <ChevronDown className="h-3 w-3" strokeWidth={2} aria-hidden />
+      <div className="flex flex-col gap-3 p-4">
+        {/* Model selector (decorative) */}
+        <FormField label="Model">
+          <div className="flex items-center justify-between font-sans text-[13px] text-fg-base">
+            <span>Claude Fable 5</span>
+            <ChevronDown
+              className="h-3 w-3 text-fg-faint"
+              strokeWidth={2}
+              aria-hidden
+            />
           </div>
-        </div>
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between border-b border-border-faint pb-1 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-faint">
-            <span>Documents</span>
-            <span>Action</span>
+        </FormField>
+
+        {/* Prompt — interpolates the current typewriter title */}
+        <FormField label="Prompt">
+          <div className="font-sans text-[12px] leading-relaxed text-fg-base">
+            Hero image for{" "}
+            <span className="text-brand">
+              {title ? `"${title}"` : "..."}
+            </span>
+            <Caret />
           </div>
-          {RELEASE_ROWS.map((row, i) => (
-            <div
-              key={`${row.label}-${i}`}
-              className="flex items-center justify-between border-b border-border-faint/40 py-1.5 last:border-b-0"
-            >
-              <span className="flex items-center gap-2 font-sans text-[12px] text-fg-base">
-                <span className="text-fg-faint" aria-hidden>
-                  {row.symbol}
-                </span>
-                {row.label}
-              </span>
-              <button
-                type="button"
-                disabled
-                className={`font-mono text-[10px] uppercase tracking-[0.14em] ${row.actionColor}`}
-              >
-                {row.action}
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="relative self-start">
-          <button
-            type="button"
-            onClick={handleRunRelease}
-            className="rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
-          >
-            Run release
-          </button>
-          <AnimatePresence>
-            {bursts.map((id) => (
-              <ConfettiBurst key={id} />
-            ))}
+        </FormField>
+
+        {/* Generated image preview — fades between samples as the
+            brief cycles, plus on manual regen. */}
+        <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-border-faint bg-bg-elevated">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentImage}
+              src={currentImage}
+              alt=""
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+            />
           </AnimatePresence>
+          <div className="absolute bottom-2 left-2 inline-flex items-center gap-1.5 rounded-full bg-ink-base/70 px-2 py-1 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500 [animation:caret-blink_1.4s_steps(2,end)_infinite]" />
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-base">
+              generated · 1024×640
+            </span>
+          </div>
+        </div>
+
+        {/* Footer: token meter + regenerate button (with confetti) */}
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
+            ~1.4k tokens
+          </span>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={handleRegenerate}
+              className="rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
+            >
+              Regenerate
+            </button>
+            <AnimatePresence>
+              {bursts.map((id) => (
+                <ConfettiBurst key={id} />
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </PanelShell>
@@ -539,10 +571,15 @@ function PanelShell({
   children: React.ReactNode;
   highlight?: boolean;
 }) {
+  // Translucent frosted-glass surface — the gradient mesh + grain
+  // behind the section bleeds through, which is the whole point of
+  // having an ambient bg in the first place. backdrop-blur-md picks up
+  // enough of the surface to keep text readable without sealing the
+  // panel into a flat black tile.
   return (
     <div
-      className={`relative flex h-full flex-col overflow-hidden rounded-[11px] border bg-bg-dim/95 backdrop-blur-sm ${
-        highlight ? "border-border-dim" : "border-border-faint"
+      className={`relative flex h-full flex-col overflow-hidden rounded-[11px] border bg-bg-dim/45 backdrop-blur-xl ${
+        highlight ? "border-fg-base/15" : "border-fg-base/10"
       }`}
     >
       {children}
