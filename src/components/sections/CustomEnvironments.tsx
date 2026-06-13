@@ -2,36 +2,53 @@
 
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { ChevronDown, MoreHorizontal, Sparkles } from "lucide-react";
+import {
+  ArrowUp,
+  ChevronDown,
+  Globe,
+  Image as ImageIcon,
+  Info,
+  Languages,
+  Menu,
+  MoreHorizontal,
+  RotateCcw,
+  RotateCw,
+} from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { BRIEFS_EN, BRIEFS_PT } from "@/lib/briefs";
 
 /**
- * Custom build environments — Sanity's editorial-environments
- * showcase, dvddev-flavored. Replaces the older 5-card UseCases
- * section. Four panels arranged in a CMS-editor mockup over an
- * ambient violet-cyan gradient mesh + SVG grain bg.
+ * Custom build environments — literal visual clone of sanity.io's
+ * editorial-environments showcase, dvddev-flavored. Four panels in
+ * a single equal-baseline row over an ambient violet-cyan gradient
+ * mesh + SVG grain bg.
  *
  *   eyebrow  ┊  heading left / subhead right
  *   ─────────────────────────────────────────────
- *   ╭ brief.ts ╮ ╭ Studio ╮ ╭ terminal ╮ ╭ release ╮
- *   │ TW       │ │ TW     │ │ pnpm dev │ │ Run     │  ← each panel
- *   │          │ │        │ │ output   │ │ release │    sits on its
- *   ╰──────────╯ ╰────────╯ ╰──────────╯ ╰─────────╯    own Y offset
+ *   ╭ brief.ts ╮ ╭ Studio ╮ ╭ History ╮ ╭ Release ╮
+ *   │ schema   │ │ Title  │ │ ● CV    │ │ EN-US   │
+ *   │ defineTy │ │ Desc.  │ │ ● WF    │ │ PT-BR   │
+ *   │ pe (…)   │ │ Image  │ │ ● LX    │ │ navbar  │
+ *   │          │ │        │ │ ● PA    │ │ Run     │
+ *   ╰──────────╯ ╰────────╯ ╰─────────╯ ╰─────────╯
  *
- * Panels intentionally NOT same-height: each has a static lg+ Y
- * translate (−12 / +8 / −16 / +14) + a drop shadow tuned to suggest
- * the layer is closer or further from the viewer. No cursor-tilt JS;
- * the depth read is from the bg + offsets alone, which is what Sanity
- * does too.
+ * Sanity-fidelity per user spec ("identico totalmente"):
+ * - Code panel is the static schema definition (defineType + nested
+ *   defineFields), 18 lines visible, syntax-highlighted. NOT a
+ *   typewriter target — it describes what the form fields ARE.
+ * - Studio form is where the typewriter title + description values
+ *   appear, in matching input/textarea controls. Image field is a
+ *   decorative placeholder beneath, same as Sanity.
+ * - History is a stylized publish log — 5 dvddev project initials
+ *   (CV/WF/LX/PA/PH) with relative times. The top row gets a
+ *   highlighted bg row treatment like Sanity's selected revision.
+ * - New Brief Release is the deploy panel — date + 4 documents/action
+ *   rows. Run Release fires the brand-violet confetti easter egg.
  *
- * Honesty pass: a previous V1 had a fake "History" panel timeline
- * (Shipped — just now, Shipped — a minute ago) for projects that
- * weren't actually shipping. Replaced with a stylized `pnpm dev`
- * terminal output — no false claim, anchored to actual dev work. The
- * one interactive moment is the "Run release" button, which throws
- * a small brand-violet confetti burst on click (purely cosmetic).
+ * Layout differences from V1: panels are baseline-aligned (no Y
+ * stagger). Depth comes entirely from the ambient backdrop +
+ * translucent panel surfaces + hover swell.
  */
 export function CustomEnvironments() {
   const { t, locale } = useTranslation();
@@ -40,10 +57,7 @@ export function CustomEnvironments() {
   const inView = useInView(sectionRef, { margin: "-10% 0px -10% 0px" });
 
   const pairs = locale === "pt" ? BRIEFS_PT : BRIEFS_EN;
-  const { title, description, pairIdx } = useTypewriter({
-    pairs,
-    enabled: inView,
-  });
+  const { title, description } = useTypewriter({ pairs, enabled: inView });
 
   return (
     <section
@@ -51,7 +65,6 @@ export function CustomEnvironments() {
       id="capabilities"
       className="relative isolate w-full overflow-hidden px-6 py-24 md:px-12 md:py-32"
     >
-      {/* ─── Ambient bg: gradient mesh + SVG grain ────────────────── */}
       <AmbientBackdrop />
 
       <div className="relative mx-auto max-w-[1248px]">
@@ -70,19 +83,19 @@ export function CustomEnvironments() {
           </p>
         </div>
 
-        {/* Mockup grid — 4 panels at staggered Y offsets on lg+ */}
+        {/* Mockup grid — 4 panels, equal width, baseline-aligned */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          <FloatingPanel offsetClass="lg:-translate-y-3">
-            <CodeEditorPanel title={title} description={description} />
+          <FloatingPanel>
+            <CodeEditorPanel />
           </FloatingPanel>
-          <FloatingPanel offsetClass="lg:translate-y-2">
+          <FloatingPanel>
             <StudioFormPanel title={title} description={description} />
           </FloatingPanel>
-          <FloatingPanel offsetClass="lg:-translate-y-4">
-            <TerminalPanel />
+          <FloatingPanel>
+            <HistoryPanel />
           </FloatingPanel>
-          <FloatingPanel offsetClass="lg:translate-y-4">
-            <AIStudioPanel title={title} pairIdx={pairIdx} />
+          <FloatingPanel>
+            <ReleasePanel />
           </FloatingPanel>
         </div>
       </div>
@@ -94,24 +107,44 @@ export function CustomEnvironments() {
 
 function AmbientBackdrop() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-      {/* Gradient mesh — violet + cyan + magenta blobs */}
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10 bg-bg-base"
+    >
+      {/* The "subject" smear — Sanity's bg reads as a heavily motion-
+          blurred photo of someone in a red outfit; the warmth wraps
+          the section while ink-base fills the corners. We rebuild
+          that composition in pure CSS using brand violet so it stays
+          locked to the dvddev palette without an extra asset.
+
+          Three stacked layers:
+            (a) tall violet ellipse, left-center — the "figure",
+            (b) magenta highlight band, slightly diagonal — the
+                lit-from-behind stripe in Sanity's reference,
+            (c) deep-violet shadow on the right — gives volumetric
+                depth, keeps the blob from reading as a single circle.
+
+          Using radial gradients (no <img>) avoids the spotty halo
+          you get when an actual cosmic photo's stars survive blur. */}
       <div
-        className="absolute inset-0 opacity-70 [filter:blur(80px)]"
+        className="absolute inset-0"
         style={{
           background: [
-            "radial-gradient(45% 40% at 25% 35%, rgba(168, 85, 247, 0.55), transparent 70%)",
-            "radial-gradient(40% 35% at 75% 55%, rgba(56, 189, 248, 0.30), transparent 70%)",
-            "radial-gradient(35% 30% at 50% 80%, rgba(244, 114, 182, 0.25), transparent 70%)",
-            "radial-gradient(50% 45% at 95% 15%, rgba(124, 58, 237, 0.30), transparent 70%)",
+            "radial-gradient(60% 75% at 35% 50%, rgba(168, 85, 247, 0.70), transparent 75%)",
+            "linear-gradient(170deg, transparent 30%, rgba(217, 70, 239, 0.35) 48%, transparent 65%)",
+            "radial-gradient(45% 60% at 75% 60%, rgba(124, 58, 237, 0.45), transparent 75%)",
           ].join(", "),
         }}
       />
 
-      {/* SVG turbulence grain — gives depth, hides the seams between
-          the radial gradients, matches Sanity's grainy bg texture. */}
+      {/* Heavy SVG turbulence grain — Sanity's reference is *very*
+          grainy, which is the strongest tell that it's a photograph
+          rather than a synthetic gradient. Opacity bumped to 0.32
+          (was 0.18) and mix-blend-overlay keeps it from washing the
+          violet out. baseFrequency stays at 0.85 for fine photo-film
+          grain texture. */}
       <svg
-        className="absolute inset-0 h-full w-full opacity-[0.18] mix-blend-overlay"
+        className="absolute inset-0 h-full w-full opacity-[0.32] mix-blend-overlay"
         xmlns="http://www.w3.org/2000/svg"
       >
         <filter id="dvddev-grain">
@@ -125,38 +158,27 @@ function AmbientBackdrop() {
             values="0 0 0 0 0
                     0 0 0 0 0
                     0 0 0 0 0
-                    0 0 0 0.55 0"
+                    0 0 0 0.6 0"
           />
         </filter>
         <rect width="100%" height="100%" filter="url(#dvddev-grain)" />
       </svg>
 
-      {/* Vignette so the gradient doesn't bleed into trust marquee
-          above or projects below. */}
-      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-bg-base to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg-base to-transparent" />
+      {/* Top + bottom vignettes contain the smear to this section —
+          stops it bleeding into the hero reel above or Projects
+          grid below. */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg-base to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg-base to-transparent" />
     </div>
   );
 }
 
-/* ─── Floating panel wrapper (Y offset + shadow) ────────────────── */
+/* ─── Floating panel wrapper (hover swell + shadow) ─────────────── */
 
-function FloatingPanel({
-  children,
-  offsetClass,
-}: {
-  children: React.ReactNode;
-  offsetClass: string;
-}) {
-  // Two-layer wrapper:
-  //   outer — carries the static lg+ Y offset (the 3D stagger).
-  //   inner — carries the cursor-hover scale + lift + shadow.
-  // Splitting them avoids the offsetClass's translate-y fighting with
-  // the hover's translate-y on the same element (they'd write to the
-  // same --tw-translate-y CSS var).
+function FloatingPanel({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`relative h-full transform-gpu ${offsetClass}`}>
-      <div className="group/panel h-full transform-gpu shadow-[0_20px_48px_-16px_rgba(0,0,0,0.45)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.025] hover:shadow-[0_28px_56px_-12px_rgba(168,85,247,0.35)]">
+    <div className="relative h-full transform-gpu">
+      <div className="h-full transform-gpu shadow-[0_20px_48px_-16px_rgba(0,0,0,0.45)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.025] hover:shadow-[0_28px_56px_-12px_rgba(168,85,247,0.35)]">
         {children}
       </div>
     </div>
@@ -174,15 +196,9 @@ function Caret() {
   );
 }
 
-/* ─── Panel 1 · brief.ts (code editor) ──────────────────────────── */
+/* ─── Panel 1 · brief.ts (Sanity-style static schema) ────────────── */
 
-function CodeEditorPanel({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function CodeEditorPanel() {
   return (
     <PanelShell>
       <PanelHeader>
@@ -190,57 +206,67 @@ function CodeEditorPanel({
         <span className="text-fg-faint">terminal</span>
         <span className="ml-auto text-fg-faint">⎘</span>
       </PanelHeader>
-      <pre className="overflow-hidden whitespace-pre-wrap break-words p-4 font-mono text-[11px] leading-relaxed md:text-[12px]">
+      <pre className="overflow-hidden whitespace-pre p-4 font-mono text-[11px] leading-relaxed">
         <code>
           <CodeLine n={1}>
             <Kw>import</Kw>
-            {" { "}
-            <Var>defineBrief</Var>
-            {" } "}
-            <Kw>from</Kw>{" "}
-            <Str>{`"@dvddev/core"`}</Str>;
+            {" {"}
+            <Var>defineField</Var>, <Var>defineType</Var>
+            {"} "}
+            <Kw>from</Kw>
           </CodeLine>
-          <CodeLine n={2} />
-          <CodeLine n={3}>
-            <Kw>export const</Kw>{" "}
-            <Var>brief</Var>
-            {" = "}
-            <Var>defineBrief</Var>
-            ({"{"}
-          </CodeLine>
-          <CodeLine n={4}>
+          <CodeLine n={2}>
             {"  "}
-            <Prop>client</Prop>:{" "}
-            <Str>
-              {'"'}
-              {title}
-              <Caret />
-              {'"'}
-            </Str>
-            ,
+            <Str>{`'@dvddev/core'`}</Str>
+          </CodeLine>
+          <CodeLine n={3} />
+          <CodeLine n={4}>
+            <Kw>export const</Kw> <Var>briefType</Var> ={" "}
+            <Var>defineType</Var>({"{"}
           </CodeLine>
           <CodeLine n={5}>
-            {"  "}
-            <Prop>scope</Prop>:{"  "}
-            <Str>
-              {'"'}
-              {description}
-              <Caret />
-              {'"'}
-            </Str>
-            ,
+            {"  "}name: <Str>{`'brief'`}</Str>,
           </CodeLine>
           <CodeLine n={6}>
-            {"  "}
-            <Prop>stack</Prop>:{"  "}[<Str>{`"next.js"`}</Str>,{" "}
-            <Str>{`"tailwind"`}</Str>],
+            {"  "}title: <Str>{`'Brief'`}</Str>,
           </CodeLine>
           <CodeLine n={7}>
-            {"  "}
-            <Prop>ship</Prop>:{"   "}
-            <Str>{`"soon"`}</Str>
+            {"  "}type: <Str>{`'document'`}</Str>,
           </CodeLine>
-          <CodeLine n={8}>{"}"});</CodeLine>
+          <CodeLine n={8}>{"  "}fields: [</CodeLine>
+          <CodeLine n={9}>
+            {"    "}
+            <Var>defineField</Var>({"{"}
+          </CodeLine>
+          <CodeLine n={10}>
+            {"      "}name: <Str>{`'title'`}</Str>,
+          </CodeLine>
+          <CodeLine n={11}>
+            {"      "}title: <Str>{`'Title'`}</Str>,
+          </CodeLine>
+          <CodeLine n={12}>
+            {"      "}type: <Str>{`'string'`}</Str>,
+          </CodeLine>
+          <CodeLine n={13}>
+            {"      "}validation: ({" "}
+            <Var>Rule</Var>
+            {" "}
+            )<Op>{` =>`}</Op> Rule.<Var>required</Var>
+          </CodeLine>
+          <CodeLine n={14}>{"    "}{`}),`}</CodeLine>
+          <CodeLine n={15}>
+            {"    "}
+            <Var>defineField</Var>({"{"}
+          </CodeLine>
+          <CodeLine n={16}>
+            {"      "}name: <Str>{`'description'`}</Str>,
+          </CodeLine>
+          <CodeLine n={17}>
+            {"      "}title: <Str>{`'Description'`}</Str>,
+          </CodeLine>
+          <CodeLine n={18}>
+            {"      "}type: <Str>{`'text'`}</Str>,
+          </CodeLine>
         </code>
       </pre>
     </PanelShell>
@@ -264,14 +290,14 @@ const Kw = ({ children }: { children: React.ReactNode }) => (
 const Var = ({ children }: { children: React.ReactNode }) => (
   <span className="text-blue-500">{children}</span>
 );
-const Prop = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-fg-base">{children}</span>
-);
 const Str = ({ children }: { children: React.ReactNode }) => (
   <span className="text-green-500">{children}</span>
 );
+const Op = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-magenta-500">{children}</span>
+);
 
-/* ─── Panel 2 · dvddev/brief/hero (Studio form) ─────────────────── */
+/* ─── Panel 2 · Studio / dvddev / hero ──────────────────────────── */
 
 function StudioFormPanel({
   title,
@@ -284,9 +310,9 @@ function StudioFormPanel({
     <PanelShell highlight>
       <PanelHeader>
         <span className="font-sans normal-case tracking-normal text-fg-dim">
-          Studio <span className="text-fg-faint">/</span> brief{" "}
+          Studio <span className="text-fg-faint">/</span> dvddev{" "}
           <span className="text-fg-faint">/</span>{" "}
-          <span className="text-fg-base">hero</span>
+          <span className="text-fg-base">Hero</span>
         </span>
         <MoreHorizontal
           className="ml-auto h-3.5 w-3.5 text-fg-faint"
@@ -307,13 +333,14 @@ function StudioFormPanel({
             <Caret />
           </div>
         </FormField>
+        <ImageField />
         <div className="flex items-center justify-between border-t border-border-faint pt-3">
           <div className="flex items-center gap-2">
             <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-ink-base">
               D
             </span>
             <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
-              @dvddev · just now
+              @dvddev: just now
             </span>
           </div>
           <button
@@ -346,92 +373,171 @@ function FormField({
   );
 }
 
-/* ─── Panel 3 · Terminal (pnpm dev output) ──────────────────────── */
+function ImageField() {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="font-sans text-[11px] text-fg-dim">Image</span>
+      <div className="flex items-center gap-3 rounded-md border border-border-faint bg-bg-elevated px-3 py-2">
+        <div className="flex h-9 w-12 shrink-0 items-center justify-center rounded-sm bg-bg-dim">
+          <ImageIcon
+            className="h-4 w-4 text-fg-faint"
+            strokeWidth={1.75}
+            aria-hidden
+          />
+        </div>
+        <span className="font-sans text-[11px] text-fg-faint">
+          hero-cover.webp
+        </span>
+        <MoreHorizontal
+          className="ml-auto h-3 w-3 text-fg-faint"
+          strokeWidth={2}
+          aria-hidden
+        />
+      </div>
+    </div>
+  );
+}
 
-const TERMINAL_LINES: Array<{ text: string; tone?: "info" | "ok" | "warn" }> = [
-  { text: "$ pnpm dev" },
-  { text: "" },
-  { text: "> dvddev@0.1.0 dev" },
-  { text: "> next dev --turbopack" },
-  { text: "" },
-  { text: "  ▲ Next.js 16.0.4 (Turbopack)", tone: "info" },
-  { text: "  - Local:        http://localhost:3000" },
-  { text: "" },
-  { text: " ✓ Ready in 1.4s", tone: "ok" },
-  { text: " ✓ Compiled / in 287ms", tone: "ok" },
-  { text: " ▲ Hot-reloaded brief.ts" },
+/* ─── Panel 3 · History (publish log) ───────────────────────────── */
+
+const HISTORY_ROWS: Array<{
+  initials: string;
+  bg: string;
+  fg: string;
+  when: string;
+  highlighted?: boolean;
+}> = [
+  {
+    initials: "CV",
+    bg: "bg-brand",
+    fg: "text-ink-base",
+    when: "just now",
+    highlighted: true,
+  },
+  {
+    initials: "WF",
+    bg: "bg-yellow-500",
+    fg: "text-ink-base",
+    when: "1 minute ago",
+  },
+  {
+    initials: "LX",
+    bg: "bg-blue-500",
+    fg: "text-ink-base",
+    when: "2 minutes ago",
+  },
+  {
+    initials: "PA",
+    bg: "bg-magenta-500",
+    fg: "text-ink-base",
+    when: "15 minutes ago",
+  },
+  {
+    initials: "PH",
+    bg: "bg-green-500",
+    fg: "text-ink-base",
+    when: "16 minutes ago",
+  },
 ];
 
-function TerminalPanel() {
+function HistoryPanel() {
   return (
     <PanelShell>
       <PanelHeader>
-        <span className="text-fg-base">terminal</span>
-        <span className="text-fg-faint">~/dvddev</span>
-        <span className="ml-auto inline-flex gap-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-red-500/70" />
-          <span className="h-1.5 w-1.5 rounded-full bg-yellow-500/70" />
-          <span className="h-1.5 w-1.5 rounded-full bg-green-500/70" />
-        </span>
+        <span className="text-fg-base">History</span>
+        <RotateCcw
+          className="ml-auto h-3.5 w-3.5 text-fg-faint"
+          strokeWidth={2}
+          aria-hidden
+        />
       </PanelHeader>
-      <pre className="overflow-hidden whitespace-pre-wrap break-words p-4 font-mono text-[11px] leading-relaxed">
-        <code>
-          {TERMINAL_LINES.map((line, i) => (
-            <div key={i} className="min-h-[1em]">
-              <span
-                className={
-                  line.tone === "ok"
-                    ? "text-green-500"
-                    : line.tone === "info"
-                      ? "text-blue-500"
-                      : line.tone === "warn"
-                        ? "text-yellow-500"
-                        : "text-fg-base"
-                }
-              >
-                {line.text}
+      <div className="flex flex-col gap-2 p-4">
+        <div className="mb-1 flex items-start gap-2 rounded-md border border-border-faint bg-bg-elevated px-3 py-2">
+          <Info
+            className="mt-0.5 h-3 w-3 shrink-0 text-fg-faint"
+            strokeWidth={2}
+            aria-hidden
+          />
+          <span className="font-sans text-[11px] leading-relaxed text-fg-dim">
+            dvddev ships every project under version control.
+          </span>
+        </div>
+        <ul className="flex flex-col">
+          {HISTORY_ROWS.map((row, i) => (
+            <li
+              key={`${row.initials}-${i}`}
+              className={`flex items-center gap-3 rounded-md px-2 py-2 ${
+                row.highlighted ? "bg-bg-elevated" : ""
+              }`}
+            >
+              <span className="relative">
+                <span
+                  className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${row.bg} ${row.fg} text-[10px] font-bold tracking-tight`}
+                >
+                  {row.initials}
+                </span>
+                <ArrowUp
+                  className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 p-0.5 text-ink-base"
+                  strokeWidth={3}
+                  aria-hidden
+                />
               </span>
-            </div>
+              <span className="flex-1 font-sans text-[12px] text-fg-base">
+                Published
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
+                {row.when}
+              </span>
+            </li>
           ))}
-          <div>
-            <span className="text-brand">›</span>{" "}
-            <span className="text-fg-base">_</span>
-            <Caret />
-          </div>
-        </code>
-      </pre>
+        </ul>
+      </div>
     </PanelShell>
   );
 }
 
-/* ─── Panel 4 · ai studio (with confetti easter egg) ────────────── */
+/* ─── Panel 4 · New brief release (with confetti easter egg) ───── */
 
-const AI_SAMPLES = [
-  "/ai-samples/01-cosmic.jpg",
-  "/ai-samples/02-matrix.jpg",
-  "/ai-samples/03-neon.jpg",
-  "/ai-samples/04-sunset.jpg",
-  "/ai-samples/05-rocket.jpg",
+const RELEASE_ROWS: Array<{
+  Icon: React.ComponentType<{
+    className?: string;
+    strokeWidth?: number;
+    "aria-hidden"?: boolean;
+  }>;
+  label: string;
+  action: string;
+  actionColor: string;
+}> = [
+  {
+    Icon: Languages,
+    label: "Locale: EN-US",
+    action: "Add",
+    actionColor: "text-green-500",
+  },
+  {
+    Icon: Languages,
+    label: "Locale: PT-BR",
+    action: "Add",
+    actionColor: "text-green-500",
+  },
+  {
+    Icon: Menu,
+    label: "Site nav bar",
+    action: "Change",
+    actionColor: "text-yellow-500",
+  },
+  {
+    Icon: RotateCw,
+    label: "AI hero generator",
+    action: "Publish",
+    actionColor: "text-green-500",
+  },
 ];
 
-function AIStudioPanel({
-  title,
-  pairIdx,
-}: {
-  title: string;
-  pairIdx: number;
-}) {
-  // The "regenerate" click bumps a manual offset on top of pairIdx so
-  // clicking the button visibly swaps the image without waiting for
-  // the typewriter cycle.
-  const [manualOffset, setManualOffset] = useState(0);
+function ReleasePanel() {
   const [bursts, setBursts] = useState<number[]>([]);
 
-  const imageIdx = (pairIdx + manualOffset) % AI_SAMPLES.length;
-  const currentImage = AI_SAMPLES[imageIdx];
-
-  const handleRegenerate = () => {
-    setManualOffset((o) => o + 1);
+  const handleRunRelease = () => {
     const id = Date.now();
     setBursts((b) => [...b, id]);
     setTimeout(() => {
@@ -442,82 +548,64 @@ function AIStudioPanel({
   return (
     <PanelShell>
       <PanelHeader>
-        <Sparkles
-          className="h-3 w-3 text-brand"
+        <span className="text-fg-base">New brief release</span>
+        <Info
+          className="ml-auto h-3.5 w-3.5 text-fg-faint"
           strokeWidth={2}
           aria-hidden
         />
-        <span className="text-fg-base">ai studio</span>
-        <span className="text-fg-faint">generate</span>
-        <span className="ml-auto text-fg-faint">⌘K</span>
       </PanelHeader>
-      <div className="flex flex-col gap-3 p-4">
-        {/* Model selector (decorative) */}
-        <FormField label="Model">
-          <div className="flex items-center justify-between font-sans text-[13px] text-fg-base">
-            <span>Claude Fable 5</span>
-            <ChevronDown
-              className="h-3 w-3 text-fg-faint"
-              strokeWidth={2}
-              aria-hidden
-            />
-          </div>
-        </FormField>
-
-        {/* Prompt — interpolates the current typewriter title */}
-        <FormField label="Prompt">
-          <div className="font-sans text-[12px] leading-relaxed text-fg-base">
-            Hero image for{" "}
-            <span className="text-brand">
-              {title ? `"${title}"` : "..."}
-            </span>
-            <Caret />
-          </div>
-        </FormField>
-
-        {/* Generated image preview — fades between samples as the
-            brief cycles, plus on manual regen. */}
-        <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-border-faint bg-bg-elevated">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={currentImage}
-              src={currentImage}
-              alt=""
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-              className="absolute inset-0 h-full w-full object-cover"
-              loading="lazy"
-            />
-          </AnimatePresence>
-          <div className="absolute bottom-2 left-2 inline-flex items-center gap-1.5 rounded-full bg-ink-base/70 px-2 py-1 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500 [animation:caret-blink_1.4s_steps(2,end)_infinite]" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-base">
-              generated · 1024×640
-            </span>
+      <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-1.5">
+          <span className="font-sans text-[11px] text-fg-dim">
+            Set publishing date
+          </span>
+          <div className="flex items-center justify-between rounded-md border border-border-faint bg-bg-elevated px-3 py-2 font-sans text-[12px] text-fg-faint">
+            <span>dd/mm/aaaa</span>
+            <ChevronDown className="h-3 w-3" strokeWidth={2} aria-hidden />
           </div>
         </div>
-
-        {/* Footer: token meter + regenerate button (with confetti) */}
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
-            ~1.4k tokens
-          </span>
-          <div className="relative">
-            <button
-              type="button"
-              onClick={handleRegenerate}
-              className="rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
-            >
-              Regenerate
-            </button>
-            <AnimatePresence>
-              {bursts.map((id) => (
-                <ConfettiBurst key={id} />
-              ))}
-            </AnimatePresence>
+        <div className="flex flex-col">
+          <div className="flex items-center justify-between border-b border-border-faint pb-1 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-faint">
+            <span>Documents</span>
+            <span>Action</span>
           </div>
+          {RELEASE_ROWS.map((row, i) => (
+            <div
+              key={`${row.label}-${i}`}
+              className="flex items-center justify-between border-b border-border-faint/40 py-2 last:border-b-0"
+            >
+              <span className="flex items-center gap-2 font-sans text-[12px] text-fg-base">
+                <row.Icon
+                  className="h-3.5 w-3.5 text-fg-faint"
+                  strokeWidth={2}
+                  aria-hidden
+                />
+                {row.label}
+              </span>
+              <button
+                type="button"
+                disabled
+                className={`font-mono text-[10px] uppercase tracking-[0.14em] ${row.actionColor}`}
+              >
+                {row.action}
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="relative self-start">
+          <button
+            type="button"
+            onClick={handleRunRelease}
+            className="rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
+          >
+            Run release
+          </button>
+          <AnimatePresence>
+            {bursts.map((id) => (
+              <ConfettiBurst key={id} />
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </PanelShell>
@@ -529,9 +617,6 @@ function AIStudioPanel({
 const CONFETTI_COLORS = ["#a855f7", "#7c3aed", "#38bdf8", "#f472b6", "#fde047"];
 
 function ConfettiBurst() {
-  // 14 particles, each gets a random angle + distance + color. Frozen
-  // at mount (no re-randomization on re-render) so the burst is
-  // deterministic from mount to unmount.
   const particles = Array.from({ length: 14 }, (_, i) => {
     const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.5;
     const distance = 40 + Math.random() * 30;
@@ -577,11 +662,6 @@ function PanelShell({
   children: React.ReactNode;
   highlight?: boolean;
 }) {
-  // Translucent frosted-glass surface — the gradient mesh + grain
-  // behind the section bleeds through, which is the whole point of
-  // having an ambient bg in the first place. backdrop-blur-md picks up
-  // enough of the surface to keep text readable without sealing the
-  // panel into a flat black tile.
   return (
     <div
       className={`relative flex h-full flex-col overflow-hidden rounded-[11px] border bg-bg-dim/45 backdrop-blur-xl ${
