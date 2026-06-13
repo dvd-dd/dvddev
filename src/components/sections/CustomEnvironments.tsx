@@ -632,10 +632,14 @@ function PanelShell({
   children: React.ReactNode;
   highlight?: boolean;
 }) {
+  // Solid ink-base ("real terminal color") so the panels read as
+  // small editor windows on top of the Sanity-style warm bg, exactly
+  // how sanity.io paints them. No backdrop-blur — the gradient mesh
+  // shouldn't bleed through the surface anymore.
   return (
     <div
-      className={`relative flex h-full flex-col overflow-hidden rounded-[11px] border bg-bg-dim/45 backdrop-blur-xl ${
-        highlight ? "border-fg-base/15" : "border-fg-base/10"
+      className={`relative flex h-full flex-col overflow-hidden rounded-[11px] border bg-ink-base ${
+        highlight ? "border-fg-base/20" : "border-fg-base/10"
       }`}
     >
       {children}
