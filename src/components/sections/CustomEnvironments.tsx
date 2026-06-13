@@ -67,8 +67,8 @@ export function CustomEnvironments() {
     >
       <AmbientBackdrop />
 
-      {/* Heading sits in the tighter 1248 container so the editorial
-          read still feels centered to the page rhythm. */}
+      {/* Heading + browser preview share the tighter 1248 column so
+          the editorial read still feels centered to the page rhythm. */}
       <div className="relative mx-auto max-w-[1248px] px-6 md:px-12">
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between md:gap-16">
           <div className="md:max-w-[640px]">
@@ -83,13 +83,19 @@ export function CustomEnvironments() {
             {ce.subhead}
           </p>
         </div>
+
+        {/* Live browser preview frame — dotted outline, fully
+            transparent so the warm Sanity bg shows through ("nao
+            cobre os 1080p"). Closes the loop with the Studio panel
+            below: edit a brief there, the rendered hero updates here. */}
+        <BrowserPreview title={title} description={description} />
       </div>
 
       {/* Panel grid breaks out of the 1248 column into a near-full-bleed
           1800 container so the row reads "wide CMS-editor mockup" the
           way sanity.io does ("uma lateral ate a outra cobrindo a tela
           inteira"). */}
-      <div className="relative mx-auto max-w-[1800px] px-4 md:px-8">
+      <div className="relative mx-auto mt-4 max-w-[1800px] px-4 md:mt-5 md:px-8">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           <FloatingPanel>
             <CodeEditorPanel />
@@ -139,6 +145,64 @@ function AmbientBackdrop() {
           Projects grid below. */}
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg-base to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg-base to-transparent" />
+    </div>
+  );
+}
+
+/* ─── Browser preview (live frame above the editor row) ────────── */
+
+function BrowserPreview({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-[11px] border border-dotted border-fg-base/25 px-6 py-8 md:px-12 md:py-14">
+      {/* Faux site chrome — window dots, draft indicator, nav links,
+          locale switcher. */}
+      <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
+        <div className="flex items-center gap-3">
+          <span className="flex gap-1" aria-hidden>
+            <span className="h-2 w-2 rounded-full bg-fg-faint/50" />
+            <span className="h-2 w-2 rounded-full bg-fg-faint/50" />
+            <span className="h-2 w-2 rounded-full bg-fg-faint/50" />
+          </span>
+          <span className="text-yellow-500">draft</span>
+        </div>
+        <ul className="hidden gap-6 md:flex">
+          <li>home</li>
+          <li>work</li>
+          <li>about</li>
+          <li>contact</li>
+        </ul>
+        <div className="flex items-center gap-3">
+          <span>en</span>
+          <span className="text-fg-faint" aria-hidden>
+            |
+          </span>
+          <span className="text-fg-faint">pt</span>
+        </div>
+      </div>
+
+      {/* Faux hero — typewriter title rendered large, description in a
+          selection-style outlined box (mirrors Sanity's blue focus
+          ring on the field being edited). */}
+      <div className="mt-14 flex flex-col gap-10 md:mt-20 md:flex-row md:items-end md:justify-between md:gap-12">
+        <h3 className="max-w-[14ch] text-balance text-3xl font-normal leading-[1.05] tracking-[-0.03em] text-fg-base md:text-4xl lg:text-5xl">
+          {title}
+          <Caret />
+        </h3>
+        <div className="md:max-w-md">
+          <div className="rounded-md border-2 border-blue-500/60 px-4 py-3 ring-1 ring-blue-500/20">
+            <p className="text-sm leading-relaxed text-fg-base md:text-base">
+              {description}
+              <Caret />
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
