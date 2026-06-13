@@ -63,12 +63,13 @@ export function CustomEnvironments() {
     <section
       ref={sectionRef}
       id="capabilities"
-      className="relative isolate w-full overflow-hidden px-6 py-24 md:px-12 md:py-32"
+      className="relative isolate w-full overflow-hidden py-24 md:py-32"
     >
       <AmbientBackdrop />
 
-      <div className="relative mx-auto max-w-[1248px]">
-        {/* Header row: heading left, subhead right (Sanity layout) */}
+      {/* Heading sits in the tighter 1248 container so the editorial
+          read still feels centered to the page rhythm. */}
+      <div className="relative mx-auto max-w-[1248px] px-6 md:px-12">
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between md:gap-16">
           <div className="md:max-w-[640px]">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
@@ -82,8 +83,13 @@ export function CustomEnvironments() {
             {ce.subhead}
           </p>
         </div>
+      </div>
 
-        {/* Mockup grid — 4 panels, equal width, baseline-aligned */}
+      {/* Panel grid breaks out of the 1248 column into a near-full-bleed
+          1800 container so the row reads "wide CMS-editor mockup" the
+          way sanity.io does ("uma lateral ate a outra cobrindo a tela
+          inteira"). */}
+      <div className="relative mx-auto max-w-[1800px] px-4 md:px-8">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           <FloatingPanel>
             <CodeEditorPanel />
@@ -111,62 +117,26 @@ function AmbientBackdrop() {
       aria-hidden
       className="pointer-events-none absolute inset-0 -z-10 bg-bg-base"
     >
-      {/* The "subject" smear — Sanity's bg reads as a heavily motion-
-          blurred photo of someone in a red outfit; the warmth wraps
-          the section while ink-base fills the corners. We rebuild
-          that composition in pure CSS using brand violet so it stays
-          locked to the dvddev palette without an extra asset.
+      {/* Sanity.io's actual editorial-environments bg, scraped from
+          cdn.sanity.io via the Playwright network sniffer (the user
+          asked: "usa ela igual ao sanity.io"). It's a heavily
+          motion-blurred photo with built-in film grain — using their
+          original asset reads as the silky organic smear we couldn't
+          fake with pure CSS gradients.
 
-          Three stacked layers:
-            (a) tall violet ellipse, left-center — the "figure",
-            (b) magenta highlight band, slightly diagonal — the
-                lit-from-behind stripe in Sanity's reference,
-            (c) deep-violet shadow on the right — gives volumetric
-                depth, keeps the blob from reading as a single circle.
-
-          Using radial gradients (no <img>) avoids the spotty halo
-          you get when an actual cosmic photo's stars survive blur. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: [
-            "radial-gradient(60% 75% at 35% 50%, rgba(168, 85, 247, 0.70), transparent 75%)",
-            "linear-gradient(170deg, transparent 30%, rgba(217, 70, 239, 0.35) 48%, transparent 65%)",
-            "radial-gradient(45% 60% at 75% 60%, rgba(124, 58, 237, 0.45), transparent 75%)",
-          ].join(", "),
-        }}
+          object-position bottom keeps the warm subject hovering
+          where it naturally sits relative to the panels — same
+          composition Sanity uses on their home page. */}
+      <img
+        src="/textures/sanity-bg.webp"
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover object-bottom"
       />
 
-      {/* Heavy SVG turbulence grain — Sanity's reference is *very*
-          grainy, which is the strongest tell that it's a photograph
-          rather than a synthetic gradient. Opacity bumped to 0.32
-          (was 0.18) and mix-blend-overlay keeps it from washing the
-          violet out. baseFrequency stays at 0.85 for fine photo-film
-          grain texture. */}
-      <svg
-        className="absolute inset-0 h-full w-full opacity-[0.32] mix-blend-overlay"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <filter id="dvddev-grain">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.85"
-            numOctaves="2"
-            stitchTiles="stitch"
-          />
-          <feColorMatrix
-            values="0 0 0 0 0
-                    0 0 0 0 0
-                    0 0 0 0 0
-                    0 0 0 0.6 0"
-          />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#dvddev-grain)" />
-      </svg>
-
-      {/* Top + bottom vignettes contain the smear to this section —
-          stops it bleeding into the hero reel above or Projects
-          grid below. */}
+      {/* Top + bottom vignettes contain the warm wash to this section,
+          stopping it from bleeding into the hero reel above or the
+          Projects grid below. */}
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg-base to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-bg-base to-transparent" />
     </div>
