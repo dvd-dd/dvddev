@@ -84,34 +84,40 @@ export function CustomEnvironments() {
         </div>
       </div>
 
-      {/* Editor frame: ONE outer dotted box (top + left + right, no
-          bottom — "sem fim, parece que os mini terminais tao dentro
-          desse terminal maior transparente") containing both the
-          live browser preview AND the mini-terminal panel row. Width
-          breaks out to 1800 so the frame visually wraps the wide
-          panel grid below. */}
+      {/* Editor frame, sanity.io structure: the dashed outline is
+          NARROWER than the panel row and passes BEHIND it — the four
+          mini terminals overflow the frame on both sides, and the
+          frame has no bottom edge ("sem fim"). The frame is drawn as
+          an absolutely-positioned ghost so its geometry NEVER moves
+          when the typewriter text reflows. */}
       <div className="relative mx-auto max-w-[1800px] px-4 md:px-8">
-        <div className="relative rounded-t-[11px] border-l border-r border-t border-dotted border-fg-base/25 p-4 pb-8 md:p-8 md:pb-12 lg:p-12 lg:pb-16">
-          {/* Live browser preview — no own border now; the outer frame
-              owns it. Closes the loop with the Studio panel below. */}
-          <BrowserPreview title={title} description={description} />
+        {/* Dashed ghost frame — thinner than the panels, full height
+            of the block, open at the bottom. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-12 right-12 border-l border-r border-t border-dotted border-fg-base/25 md:left-24 md:right-24"
+        />
 
-          {/* Panel row sits inside the same dotted frame, mt-8/12
-              breathing between the preview hero and the editor panels. */}
-          <div className="mt-8 grid grid-cols-1 gap-4 md:mt-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-5">
-            <FloatingPanel>
-              <CodeEditorPanel />
-            </FloatingPanel>
-            <FloatingPanel>
-              <StudioFormPanel title={title} description={description} />
-            </FloatingPanel>
-            <FloatingPanel>
-              <HistoryPanel />
-            </FloatingPanel>
-            <FloatingPanel>
-              <ReleasePanel />
-            </FloatingPanel>
-          </div>
+        {/* Live browser preview — constrained to the frame's column. */}
+        <div className="relative mx-auto max-w-[1248px] px-6 pt-8 md:px-12 md:pt-12">
+          <BrowserPreview title={title} description={description} />
+        </div>
+
+        {/* Panel row — WIDER than the dashed frame, drawn on top of
+            its vertical lines (z stacking via position relative). */}
+        <div className="relative mt-10 grid grid-cols-1 gap-4 md:mt-14 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <FloatingPanel>
+            <CodeEditorPanel />
+          </FloatingPanel>
+          <FloatingPanel interactive>
+            <StudioFormPanel title={title} description={description} />
+          </FloatingPanel>
+          <FloatingPanel interactive>
+            <HistoryPanel />
+          </FloatingPanel>
+          <FloatingPanel interactive>
+            <ReleasePanel />
+          </FloatingPanel>
         </div>
       </div>
     </section>
@@ -193,15 +199,18 @@ function BrowserPreview({
 
       {/* Faux hero — typewriter title rendered large, description in a
           selection-style outlined box (mirrors Sanity's blue focus
-          ring on the field being edited). */}
-      <div className="mt-14 flex flex-col gap-10 md:mt-20 md:flex-row md:items-end md:justify-between md:gap-12">
-        <h3 className="max-w-[14ch] text-balance text-3xl font-normal leading-[1.05] tracking-[-0.03em] text-fg-base md:text-4xl lg:text-5xl">
+          ring on the field being edited). Both slots carry FIXED
+          min-heights sized to the longest brief in lib/briefs.ts so
+          the frame geometry never reflows while the typewriter
+          types/deletes. */}
+      <div className="mt-14 flex flex-col gap-10 md:mt-20 md:flex-row md:items-start md:justify-between md:gap-12">
+        <h3 className="min-h-[2.4em] max-w-[20ch] flex-1 text-balance text-3xl font-normal leading-[1.1] tracking-[-0.03em] text-fg-base md:text-4xl lg:text-5xl">
           {title}
           <Caret />
         </h3>
-        <div className="md:max-w-md">
+        <div className="w-full md:max-w-md md:shrink-0">
           <div className="rounded-md border-2 border-blue-500/60 px-4 py-3 ring-1 ring-blue-500/20">
-            <p className="text-sm leading-relaxed text-fg-base md:text-base">
+            <p className="min-h-[6.5em] text-sm leading-relaxed text-fg-base md:text-base">
               {description}
               <Caret />
             </p>
@@ -214,9 +223,23 @@ function BrowserPreview({
 
 /* ─── Floating panel wrapper (hover swell + shadow) ─────────────── */
 
-function FloatingPanel({ children }: { children: React.ReactNode }) {
+function FloatingPanel({
+  children,
+  interactive = false,
+}: {
+  children: React.ReactNode;
+  interactive?: boolean;
+}) {
   return (
     <div className="relative h-full transform-gpu">
+      {/* Yellow sticky tag — sanity.io drops one on each panel that
+          accepts input. Sits OUTSIDE PanelShell (which clips overflow)
+          so it can hang over the top edge. */}
+      {interactive && (
+        <span className="absolute -top-2.5 right-5 z-20 rotate-2 rounded-[3px] bg-yellow-500 px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-ink-base shadow-md">
+          Click to interact
+        </span>
+      )}
       <div className="h-full transform-gpu shadow-[0_20px_48px_-16px_rgba(0,0,0,0.45)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.025] hover:shadow-[0_28px_56px_-12px_rgba(168,85,247,0.35)]">
         {children}
       </div>
@@ -245,6 +268,10 @@ function CodeEditorPanel() {
         <span className="text-fg-faint">terminal</span>
         <span className="ml-auto text-fg-faint">⎘</span>
       </PanelHeader>
+      {/* Line layout mirrors sanity.io's hero.ts panel 1:1 — the
+          import sits on ONE line and clips at the panel edge (theirs
+          does too), and the visible code cuts off mid-block at line
+          18 (`rows: 3,`). */}
       <pre className="overflow-hidden whitespace-pre p-5 font-mono text-[12px] leading-relaxed md:text-[13px]">
         <code>
           <CodeLine n={1}>
@@ -252,59 +279,56 @@ function CodeEditorPanel() {
             {" {"}
             <Var>defineField</Var>, <Var>defineType</Var>
             {"} "}
-            <Kw>from</Kw>
+            <Kw>from</Kw> <Str>{`'@dvddev/core'`}</Str>
           </CodeLine>
-          <CodeLine n={2}>
-            {"  "}
-            <Str>{`'@dvddev/core'`}</Str>
-          </CodeLine>
-          <CodeLine n={3} />
-          <CodeLine n={4}>
+          <CodeLine n={2} />
+          <CodeLine n={3}>
             <Kw>export const</Kw> <Var>briefType</Var> ={" "}
             <Var>defineType</Var>({"{"}
           </CodeLine>
-          <CodeLine n={5}>
+          <CodeLine n={4}>
             {"  "}name: <Str>{`'brief'`}</Str>,
           </CodeLine>
-          <CodeLine n={6}>
+          <CodeLine n={5}>
             {"  "}title: <Str>{`'Brief'`}</Str>,
           </CodeLine>
-          <CodeLine n={7}>
+          <CodeLine n={6}>
             {"  "}type: <Str>{`'document'`}</Str>,
           </CodeLine>
-          <CodeLine n={8}>{"  "}fields: [</CodeLine>
-          <CodeLine n={9}>
+          <CodeLine n={7}>{"  "}fields: [</CodeLine>
+          <CodeLine n={8}>
             {"    "}
             <Var>defineField</Var>({"{"}
           </CodeLine>
-          <CodeLine n={10}>
+          <CodeLine n={9}>
             {"      "}name: <Str>{`'title'`}</Str>,
           </CodeLine>
-          <CodeLine n={11}>
+          <CodeLine n={10}>
             {"      "}title: <Str>{`'Title'`}</Str>,
           </CodeLine>
-          <CodeLine n={12}>
+          <CodeLine n={11}>
             {"      "}type: <Str>{`'string'`}</Str>,
           </CodeLine>
-          <CodeLine n={13}>
-            {"      "}validation: ({" "}
-            <Var>Rule</Var>
-            {" "}
-            )<Op>{` =>`}</Op> Rule.<Var>required</Var>
+          <CodeLine n={12}>
+            {"      "}validation: (<Var>Rule</Var>)<Op>{` =>`}</Op>{" "}
+            Rule.<Var>required</Var>(),
           </CodeLine>
-          <CodeLine n={14}>{"    "}{`}),`}</CodeLine>
-          <CodeLine n={15}>
+          <CodeLine n={13}>{"    "}{`}),`}</CodeLine>
+          <CodeLine n={14}>
             {"    "}
             <Var>defineField</Var>({"{"}
           </CodeLine>
-          <CodeLine n={16}>
+          <CodeLine n={15}>
             {"      "}name: <Str>{`'description'`}</Str>,
           </CodeLine>
-          <CodeLine n={17}>
+          <CodeLine n={16}>
             {"      "}title: <Str>{`'Description'`}</Str>,
           </CodeLine>
-          <CodeLine n={18}>
+          <CodeLine n={17}>
             {"      "}type: <Str>{`'text'`}</Str>,
+          </CodeLine>
+          <CodeLine n={18}>
+            {"      "}rows: <Num>3</Num>,
           </CodeLine>
         </code>
       </pre>
@@ -334,6 +358,9 @@ const Str = ({ children }: { children: React.ReactNode }) => (
 );
 const Op = ({ children }: { children: React.ReactNode }) => (
   <span className="text-magenta-500">{children}</span>
+);
+const Num = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-yellow-500">{children}</span>
 );
 
 /* ─── Panel 2 · Studio / dvddev / hero ──────────────────────────── */
@@ -367,7 +394,9 @@ function StudioFormPanel({
           </div>
         </FormField>
         <FormField label="Description">
-          <div className="min-h-[80px] whitespace-pre-wrap break-words font-sans text-[15px] leading-relaxed text-fg-base">
+          {/* min-h sized for the longest brief so the panel (and the
+              shared grid row) never reflows while typing/deleting. */}
+          <div className="min-h-[8em] whitespace-pre-wrap break-words font-sans text-[15px] leading-relaxed text-fg-base">
             {description}
             <Caret />
           </div>
@@ -444,6 +473,7 @@ const HISTORY_ROWS: Array<{
   bg: string;
   fg: string;
   when: string;
+  label?: string;
   highlighted?: boolean;
 }> = [
   {
@@ -466,6 +496,13 @@ const HISTORY_ROWS: Array<{
     when: "2 minutes ago",
   },
   {
+    initials: "DD",
+    bg: "bg-bg-elevated",
+    fg: "text-fg-base",
+    when: "14 minutes ago",
+    label: "me: updated",
+  },
+  {
     initials: "PA",
     bg: "bg-magenta-500",
     fg: "text-ink-base",
@@ -476,6 +513,18 @@ const HISTORY_ROWS: Array<{
     bg: "bg-green-500",
     fg: "text-ink-base",
     when: "16 minutes ago",
+  },
+  {
+    initials: "SF",
+    bg: "bg-blue-300",
+    fg: "text-ink-base",
+    when: "21 minutes ago",
+  },
+  {
+    initials: "UP",
+    bg: "bg-green-300",
+    fg: "text-ink-base",
+    when: "25 minutes ago",
   },
 ];
 
@@ -522,7 +571,7 @@ function HistoryPanel() {
                 />
               </span>
               <span className="flex-1 font-sans text-[14px] text-fg-base">
-                Published
+                {row.label ?? "Published"}
               </span>
               <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-faint">
                 {row.when}
