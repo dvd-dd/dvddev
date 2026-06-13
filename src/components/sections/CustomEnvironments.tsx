@@ -67,8 +67,7 @@ export function CustomEnvironments() {
     >
       <AmbientBackdrop />
 
-      {/* Heading + browser preview share the tighter 1248 column so
-          the editorial read still feels centered to the page rhythm. */}
+      {/* Heading stays in the tighter 1248 column — page rhythm. */}
       <div className="relative mx-auto max-w-[1248px] px-6 md:px-12">
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between md:gap-16">
           <div className="md:max-w-[640px]">
@@ -83,32 +82,36 @@ export function CustomEnvironments() {
             {ce.subhead}
           </p>
         </div>
-
-        {/* Live browser preview frame — dotted outline, fully
-            transparent so the warm Sanity bg shows through ("nao
-            cobre os 1080p"). Closes the loop with the Studio panel
-            below: edit a brief there, the rendered hero updates here. */}
-        <BrowserPreview title={title} description={description} />
       </div>
 
-      {/* Panel grid breaks out of the 1248 column into a near-full-bleed
-          1800 container so the row reads "wide CMS-editor mockup" the
-          way sanity.io does ("uma lateral ate a outra cobrindo a tela
-          inteira"). */}
-      <div className="relative mx-auto mt-4 max-w-[1800px] px-4 md:mt-5 md:px-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          <FloatingPanel>
-            <CodeEditorPanel />
-          </FloatingPanel>
-          <FloatingPanel>
-            <StudioFormPanel title={title} description={description} />
-          </FloatingPanel>
-          <FloatingPanel>
-            <HistoryPanel />
-          </FloatingPanel>
-          <FloatingPanel>
-            <ReleasePanel />
-          </FloatingPanel>
+      {/* Editor frame: ONE outer dotted box (top + left + right, no
+          bottom — "sem fim, parece que os mini terminais tao dentro
+          desse terminal maior transparente") containing both the
+          live browser preview AND the mini-terminal panel row. Width
+          breaks out to 1800 so the frame visually wraps the wide
+          panel grid below. */}
+      <div className="relative mx-auto max-w-[1800px] px-4 md:px-8">
+        <div className="relative rounded-t-[11px] border-l border-r border-t border-dotted border-fg-base/25 p-4 pb-8 md:p-8 md:pb-12 lg:p-12 lg:pb-16">
+          {/* Live browser preview — no own border now; the outer frame
+              owns it. Closes the loop with the Studio panel below. */}
+          <BrowserPreview title={title} description={description} />
+
+          {/* Panel row sits inside the same dotted frame, mt-8/12
+              breathing between the preview hero and the editor panels. */}
+          <div className="mt-8 grid grid-cols-1 gap-4 md:mt-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-5">
+            <FloatingPanel>
+              <CodeEditorPanel />
+            </FloatingPanel>
+            <FloatingPanel>
+              <StudioFormPanel title={title} description={description} />
+            </FloatingPanel>
+            <FloatingPanel>
+              <HistoryPanel />
+            </FloatingPanel>
+            <FloatingPanel>
+              <ReleasePanel />
+            </FloatingPanel>
+          </div>
         </div>
       </div>
     </section>
@@ -158,8 +161,10 @@ function BrowserPreview({
   title: string;
   description: string;
 }) {
+  // No outer border anymore — the parent EditorFrame in the section
+  // owns the dotted box. This component is just nav + faux hero.
   return (
-    <div className="relative overflow-hidden rounded-[11px] border border-dotted border-fg-base/25 px-6 py-8 md:px-12 md:py-14">
+    <div className="relative">
       {/* Faux site chrome — window dots, draft indicator, nav links,
           locale switcher. */}
       <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">
@@ -240,7 +245,7 @@ function CodeEditorPanel() {
         <span className="text-fg-faint">terminal</span>
         <span className="ml-auto text-fg-faint">⎘</span>
       </PanelHeader>
-      <pre className="overflow-hidden whitespace-pre p-4 font-mono text-[11px] leading-relaxed">
+      <pre className="overflow-hidden whitespace-pre p-5 font-mono text-[12px] leading-relaxed md:text-[13px]">
         <code>
           <CodeLine n={1}>
             <Kw>import</Kw>
@@ -354,33 +359,33 @@ function StudioFormPanel({
           aria-hidden
         />
       </PanelHeader>
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-5 p-5">
         <FormField label="Title">
-          <div className="font-sans text-[13px] text-fg-base">
+          <div className="font-sans text-[15px] text-fg-base">
             {title}
             <Caret />
           </div>
         </FormField>
         <FormField label="Description">
-          <div className="min-h-[64px] whitespace-pre-wrap break-words font-sans text-[13px] leading-relaxed text-fg-base">
+          <div className="min-h-[80px] whitespace-pre-wrap break-words font-sans text-[15px] leading-relaxed text-fg-base">
             {description}
             <Caret />
           </div>
         </FormField>
         <ImageField />
-        <div className="flex items-center justify-between border-t border-border-faint pt-3">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-ink-base">
+        <div className="flex items-center justify-between border-t border-border-faint pt-4">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-ink-base">
               D
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-faint">
               @dvddev: just now
             </span>
           </div>
           <button
             type="button"
             disabled
-            className="rounded-md bg-bg-elevated px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim"
+            className="rounded-md bg-bg-elevated px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-fg-dim"
           >
             Publish
           </button>
@@ -398,9 +403,9 @@ function FormField({
   children: React.ReactNode;
 }) {
   return (
-    <label className="flex flex-col gap-1.5">
-      <span className="font-sans text-[11px] text-fg-dim">{label}</span>
-      <div className="rounded-md border border-border-faint bg-bg-elevated px-3 py-2">
+    <label className="flex flex-col gap-2">
+      <span className="font-sans text-[13px] text-fg-dim">{label}</span>
+      <div className="rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5">
         {children}
       </div>
     </label>
@@ -409,21 +414,21 @@ function FormField({
 
 function ImageField() {
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="font-sans text-[11px] text-fg-dim">Image</span>
-      <div className="flex items-center gap-3 rounded-md border border-border-faint bg-bg-elevated px-3 py-2">
-        <div className="flex h-9 w-12 shrink-0 items-center justify-center rounded-sm bg-bg-dim">
+    <div className="flex flex-col gap-2">
+      <span className="font-sans text-[13px] text-fg-dim">Image</span>
+      <div className="flex items-center gap-3 rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5">
+        <div className="flex h-10 w-14 shrink-0 items-center justify-center rounded-sm bg-bg-dim">
           <ImageIcon
             className="h-4 w-4 text-fg-faint"
             strokeWidth={1.75}
             aria-hidden
           />
         </div>
-        <span className="font-sans text-[11px] text-fg-faint">
+        <span className="font-sans text-[13px] text-fg-faint">
           hero-cover.webp
         </span>
         <MoreHorizontal
-          className="ml-auto h-3 w-3 text-fg-faint"
+          className="ml-auto h-3.5 w-3.5 text-fg-faint"
           strokeWidth={2}
           aria-hidden
         />
@@ -485,14 +490,14 @@ function HistoryPanel() {
           aria-hidden
         />
       </PanelHeader>
-      <div className="flex flex-col gap-2 p-4">
-        <div className="mb-1 flex items-start gap-2 rounded-md border border-border-faint bg-bg-elevated px-3 py-2">
+      <div className="flex flex-col gap-2.5 p-5">
+        <div className="mb-1 flex items-start gap-2 rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5">
           <Info
-            className="mt-0.5 h-3 w-3 shrink-0 text-fg-faint"
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-fg-faint"
             strokeWidth={2}
             aria-hidden
           />
-          <span className="font-sans text-[11px] leading-relaxed text-fg-dim">
+          <span className="font-sans text-[13px] leading-relaxed text-fg-dim">
             dvddev ships every project under version control.
           </span>
         </div>
@@ -500,26 +505,26 @@ function HistoryPanel() {
           {HISTORY_ROWS.map((row, i) => (
             <li
               key={`${row.initials}-${i}`}
-              className={`flex items-center gap-3 rounded-md px-2 py-2 ${
+              className={`flex items-center gap-3 rounded-md px-2 py-2.5 ${
                 row.highlighted ? "bg-bg-elevated" : ""
               }`}
             >
               <span className="relative">
                 <span
-                  className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${row.bg} ${row.fg} text-[10px] font-bold tracking-tight`}
+                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${row.bg} ${row.fg} text-[11px] font-bold tracking-tight`}
                 >
                   {row.initials}
                 </span>
                 <ArrowUp
-                  className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 p-0.5 text-ink-base"
+                  className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-green-500 p-0.5 text-ink-base"
                   strokeWidth={3}
                   aria-hidden
                 />
               </span>
-              <span className="flex-1 font-sans text-[12px] text-fg-base">
+              <span className="flex-1 font-sans text-[14px] text-fg-base">
                 Published
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
+              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-faint">
                 {row.when}
               </span>
             </li>
@@ -589,29 +594,29 @@ function ReleasePanel() {
           aria-hidden
         />
       </PanelHeader>
-      <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
-          <span className="font-sans text-[11px] text-fg-dim">
+      <div className="flex flex-col gap-5 p-5">
+        <div className="flex flex-col gap-2">
+          <span className="font-sans text-[13px] text-fg-dim">
             Set publishing date
           </span>
-          <div className="flex items-center justify-between rounded-md border border-border-faint bg-bg-elevated px-3 py-2 font-sans text-[12px] text-fg-faint">
+          <div className="flex items-center justify-between rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5 font-sans text-[14px] text-fg-faint">
             <span>dd/mm/aaaa</span>
-            <ChevronDown className="h-3 w-3" strokeWidth={2} aria-hidden />
+            <ChevronDown className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex items-center justify-between border-b border-border-faint pb-1 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-faint">
+          <div className="flex items-center justify-between border-b border-border-faint pb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-faint">
             <span>Documents</span>
             <span>Action</span>
           </div>
           {RELEASE_ROWS.map((row, i) => (
             <div
               key={`${row.label}-${i}`}
-              className="flex items-center justify-between border-b border-border-faint/40 py-2 last:border-b-0"
+              className="flex items-center justify-between border-b border-border-faint/40 py-2.5 last:border-b-0"
             >
-              <span className="flex items-center gap-2 font-sans text-[12px] text-fg-base">
+              <span className="flex items-center gap-2.5 font-sans text-[14px] text-fg-base">
                 <row.Icon
-                  className="h-3.5 w-3.5 text-fg-faint"
+                  className="h-4 w-4 text-fg-faint"
                   strokeWidth={2}
                   aria-hidden
                 />
@@ -620,7 +625,7 @@ function ReleasePanel() {
               <button
                 type="button"
                 disabled
-                className={`font-mono text-[10px] uppercase tracking-[0.14em] ${row.actionColor}`}
+                className={`font-mono text-[11px] uppercase tracking-[0.14em] ${row.actionColor}`}
               >
                 {row.action}
               </button>
@@ -631,7 +636,7 @@ function ReleasePanel() {
           <button
             type="button"
             onClick={handleRunRelease}
-            className="rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
+            className="rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
           >
             Run release
           </button>
@@ -713,7 +718,7 @@ function PanelShell({
 
 function PanelHeader({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 border-b border-border-faint px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em]">
+    <div className="flex items-center gap-3 border-b border-border-faint px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em]">
       {children}
     </div>
   );
