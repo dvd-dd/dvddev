@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { useInView } from "framer-motion";
-import { ChevronDown, Info, MoreHorizontal, RotateCcw } from "lucide-react";
+import { useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { ChevronDown, Info, MoreHorizontal } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { BRIEFS_EN, BRIEFS_PT } from "@/lib/briefs";
@@ -10,30 +10,33 @@ import { BRIEFS_EN, BRIEFS_PT } from "@/lib/briefs";
 /**
  * Custom build environments — Sanity's editorial-environments
  * showcase, dvddev-flavored. Replaces the older 5-card UseCases
- * section. Four panels arranged in a CMS-editor mockup; the two
- * "writable" panels (code editor + Studio form) stream live values
- * from useTypewriter, which paged-cycles the 20 briefs in
- * `src/lib/briefs.ts` while the section is in view.
+ * section. Four panels arranged in a CMS-editor mockup over an
+ * ambient violet-cyan gradient mesh + SVG grain bg.
  *
  *   eyebrow  ┊  heading left / subhead right
  *   ─────────────────────────────────────────────
- *   ╭ brief.ts ╮ ╭ Studio ╮ ╭ History ╮ ╭ Release ╮
- *   │ "title": │ │ Title: │ │ ▴ SF    │ │ EN-US   │
- *   │ "${TW}"  │ │ {TW}   │ │ ▴ LX    │ │ PT-BR   │
- *   │ "scope": │ │ Desc:  │ │ ▴ UP    │ │ Run     │
- *   │ "${TW}"  │ │ {TW}   │ │ ⋯        │ │ Release │
- *   ╰──────────╯ ╰────────╯ ╰─────────╯ ╰─────────╯
+ *   ╭ brief.ts ╮ ╭ Studio ╮ ╭ terminal ╮ ╭ release ╮
+ *   │ TW       │ │ TW     │ │ pnpm dev │ │ Run     │  ← each panel
+ *   │          │ │        │ │ output   │ │ release │    sits on its
+ *   ╰──────────╯ ╰────────╯ ╰──────────╯ ╰─────────╯    own Y offset
  *
- * Panel chrome labels are deliberately English (IDE/CMS convention);
- * only the section heading + typewriter content is bilingual. The
- * caret blink is a single keyframe in globals.css (`caret-blink`).
+ * Panels intentionally NOT same-height: each has a static lg+ Y
+ * translate (−12 / +8 / −16 / +14) + a drop shadow tuned to suggest
+ * the layer is closer or further from the viewer. No cursor-tilt JS;
+ * the depth read is from the bg + offsets alone, which is what Sanity
+ * does too.
+ *
+ * Honesty pass: a previous V1 had a fake "History" panel timeline
+ * (Shipped — just now, Shipped — a minute ago) for projects that
+ * weren't actually shipping. Replaced with a stylized `pnpm dev`
+ * terminal output — no false claim, anchored to actual dev work. The
+ * one interactive moment is the "Run release" button, which throws
+ * a small brand-violet confetti burst on click (purely cosmetic).
  */
 export function CustomEnvironments() {
   const { t, locale } = useTranslation();
   const ce = t.sections.customEnvironments;
   const sectionRef = useRef<HTMLElement>(null);
-  // Run the typewriter while ANY part of the section is in view; pause
-  // when scrolled fully off-screen.
   const inView = useInView(sectionRef, { margin: "-10% 0px -10% 0px" });
 
   const pairs = locale === "pt" ? BRIEFS_PT : BRIEFS_EN;
@@ -43,9 +46,12 @@ export function CustomEnvironments() {
     <section
       ref={sectionRef}
       id="capabilities"
-      className="relative w-full px-6 py-24 md:px-12 md:py-32"
+      className="relative isolate w-full overflow-hidden px-6 py-24 md:px-12 md:py-32"
     >
-      <div className="mx-auto max-w-[1248px]">
+      {/* ─── Ambient bg: gradient mesh + SVG grain ────────────────── */}
+      <AmbientBackdrop />
+
+      <div className="relative mx-auto max-w-[1248px]">
         {/* Header row: heading left, subhead right (Sanity layout) */}
         <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between md:gap-16">
           <div className="md:max-w-[640px]">
@@ -61,15 +67,90 @@ export function CustomEnvironments() {
           </p>
         </div>
 
-        {/* Mockup grid — 4 panels */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <CodeEditorPanel title={title} description={description} />
-          <StudioFormPanel title={title} description={description} />
-          <HistoryPanel />
-          <ReleasePanel />
+        {/* Mockup grid — 4 panels at staggered Y offsets on lg+ */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <FloatingPanel offsetClass="lg:-translate-y-3">
+            <CodeEditorPanel title={title} description={description} />
+          </FloatingPanel>
+          <FloatingPanel offsetClass="lg:translate-y-2">
+            <StudioFormPanel title={title} description={description} />
+          </FloatingPanel>
+          <FloatingPanel offsetClass="lg:-translate-y-4">
+            <TerminalPanel />
+          </FloatingPanel>
+          <FloatingPanel offsetClass="lg:translate-y-4">
+            <ReleasePanel />
+          </FloatingPanel>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ─── Ambient backdrop ──────────────────────────────────────────── */
+
+function AmbientBackdrop() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      {/* Gradient mesh — violet + cyan + magenta blobs */}
+      <div
+        className="absolute inset-0 opacity-70 [filter:blur(80px)]"
+        style={{
+          background: [
+            "radial-gradient(45% 40% at 25% 35%, rgba(168, 85, 247, 0.55), transparent 70%)",
+            "radial-gradient(40% 35% at 75% 55%, rgba(56, 189, 248, 0.30), transparent 70%)",
+            "radial-gradient(35% 30% at 50% 80%, rgba(244, 114, 182, 0.25), transparent 70%)",
+            "radial-gradient(50% 45% at 95% 15%, rgba(124, 58, 237, 0.30), transparent 70%)",
+          ].join(", "),
+        }}
+      />
+
+      {/* SVG turbulence grain — gives depth, hides the seams between
+          the radial gradients, matches Sanity's grainy bg texture. */}
+      <svg
+        className="absolute inset-0 h-full w-full opacity-[0.18] mix-blend-overlay"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <filter id="dvddev-grain">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.85"
+            numOctaves="2"
+            stitchTiles="stitch"
+          />
+          <feColorMatrix
+            values="0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0.55 0"
+          />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#dvddev-grain)" />
+      </svg>
+
+      {/* Vignette so the gradient doesn't bleed into trust marquee
+          above or projects below. */}
+      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-bg-base to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg-base to-transparent" />
+    </div>
+  );
+}
+
+/* ─── Floating panel wrapper (Y offset + shadow) ────────────────── */
+
+function FloatingPanel({
+  children,
+  offsetClass,
+}: {
+  children: React.ReactNode;
+  offsetClass: string;
+}) {
+  return (
+    <div
+      className={`relative transform-gpu shadow-[0_24px_64px_-12px_rgba(0,0,0,0.6)] transition-transform duration-500 ${offsetClass}`}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -107,14 +188,12 @@ function CodeEditorPanel({
             {" { "}
             <Var>defineBrief</Var>
             {" } "}
-            <Kw>from</Kw>
-            {" "}
+            <Kw>from</Kw>{" "}
             <Str>{`"@dvddev/core"`}</Str>;
           </CodeLine>
           <CodeLine n={2} />
           <CodeLine n={3}>
-            <Kw>export const</Kw>
-            {" "}
+            <Kw>export const</Kw>{" "}
             <Var>brief</Var>
             {" = "}
             <Var>defineBrief</Var>
@@ -144,8 +223,7 @@ function CodeEditorPanel({
           </CodeLine>
           <CodeLine n={6}>
             {"  "}
-            <Prop>stack</Prop>:{"  "}[
-            <Str>{`"next.js"`}</Str>,{" "}
+            <Prop>stack</Prop>:{"  "}[<Str>{`"next.js"`}</Str>,{" "}
             <Str>{`"tailwind"`}</Str>],
           </CodeLine>
           <CodeLine n={7}>
@@ -259,72 +337,65 @@ function FormField({
   );
 }
 
-/* ─── Panel 3 · History ─────────────────────────────────────────── */
+/* ─── Panel 3 · Terminal (pnpm dev output) ──────────────────────── */
 
-const HISTORY_ROWS: Array<{
-  initials: string;
-  bg: string;
-  fg: string;
-  when: string;
-}> = [
-  { initials: "CV", bg: "bg-brand", fg: "text-ink-base", when: "just now" },
-  { initials: "WF", bg: "bg-yellow-500", fg: "text-ink-base", when: "a few seconds ago" },
-  { initials: "LX", bg: "bg-blue-500", fg: "text-ink-base", when: "a minute ago" },
-  { initials: "PA", bg: "bg-magenta-500", fg: "text-ink-base", when: "a minute ago" },
-  { initials: "PH", bg: "bg-green-500", fg: "text-ink-base", when: "a minute ago" },
+const TERMINAL_LINES: Array<{ text: string; tone?: "info" | "ok" | "warn" }> = [
+  { text: "$ pnpm dev" },
+  { text: "" },
+  { text: "> dvddev@0.1.0 dev" },
+  { text: "> next dev --turbopack" },
+  { text: "" },
+  { text: "  ▲ Next.js 16.0.4 (Turbopack)", tone: "info" },
+  { text: "  - Local:        http://localhost:3000" },
+  { text: "" },
+  { text: " ✓ Ready in 1.4s", tone: "ok" },
+  { text: " ✓ Compiled / in 287ms", tone: "ok" },
+  { text: " ▲ Hot-reloaded brief.ts" },
 ];
 
-function HistoryPanel() {
+function TerminalPanel() {
   return (
     <PanelShell>
-      <div className="absolute -top-2 right-3 z-10 rotate-[3deg] rounded-sm bg-yellow-500 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-base shadow-md">
-        Click to interact
-      </div>
       <PanelHeader>
-        <span className="text-fg-base">History</span>
-        <RotateCcw
-          className="ml-auto h-3.5 w-3.5 text-fg-faint"
-          strokeWidth={2}
-          aria-hidden
-        />
+        <span className="text-fg-base">terminal</span>
+        <span className="text-fg-faint">~/dvddev</span>
+        <span className="ml-auto inline-flex gap-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-red-500/70" />
+          <span className="h-1.5 w-1.5 rounded-full bg-yellow-500/70" />
+          <span className="h-1.5 w-1.5 rounded-full bg-green-500/70" />
+        </span>
       </PanelHeader>
-      <div className="flex flex-col gap-3 p-4">
-        <div className="flex items-start gap-2 rounded-md border border-border-faint bg-bg-elevated px-3 py-2">
-          <Info
-            className="mt-0.5 h-3 w-3 shrink-0 text-fg-faint"
-            strokeWidth={2}
-            aria-hidden
-          />
-          <span className="font-sans text-[11px] leading-relaxed text-fg-dim">
-            dvddev ships every project under version control.
-          </span>
-        </div>
-        <ul className="flex flex-col gap-2">
-          {HISTORY_ROWS.map((row, i) => (
-            <li
-              key={`${row.initials}-${i}`}
-              className="flex items-center gap-3 rounded-md px-1 py-1"
-            >
+      <pre className="overflow-hidden whitespace-pre-wrap break-words p-4 font-mono text-[11px] leading-relaxed">
+        <code>
+          {TERMINAL_LINES.map((line, i) => (
+            <div key={i} className="min-h-[1em]">
               <span
-                className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${row.bg} ${row.fg} text-[10px] font-bold tracking-tight`}
+                className={
+                  line.tone === "ok"
+                    ? "text-green-500"
+                    : line.tone === "info"
+                      ? "text-blue-500"
+                      : line.tone === "warn"
+                        ? "text-yellow-500"
+                        : "text-fg-base"
+                }
               >
-                {row.initials}
+                {line.text}
               </span>
-              <span className="flex-1 font-sans text-[12px] text-fg-base">
-                Shipped
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint">
-                {row.when}
-              </span>
-            </li>
+            </div>
           ))}
-        </ul>
-      </div>
+          <div>
+            <span className="text-brand">›</span>{" "}
+            <span className="text-fg-base">_</span>
+            <Caret />
+          </div>
+        </code>
+      </pre>
     </PanelShell>
   );
 }
 
-/* ─── Panel 4 · New Release ─────────────────────────────────────── */
+/* ─── Panel 4 · New brief release (with confetti easter egg) ───── */
 
 const RELEASE_ROWS: Array<{
   symbol: string;
@@ -339,10 +410,21 @@ const RELEASE_ROWS: Array<{
 ];
 
 function ReleasePanel() {
+  const [bursts, setBursts] = useState<number[]>([]);
+
+  const handleRunRelease = () => {
+    const id = Date.now();
+    setBursts((b) => [...b, id]);
+    // Auto-cleanup after the burst animation finishes.
+    setTimeout(() => {
+      setBursts((b) => b.filter((x) => x !== id));
+    }, 1500);
+  };
+
   return (
     <PanelShell>
       <PanelHeader>
-        <span className="text-fg-base">New brief release</span>
+        <span className="text-fg-base">new brief release</span>
         <Info
           className="ml-auto h-3.5 w-3.5 text-fg-faint"
           strokeWidth={2}
@@ -385,15 +467,66 @@ function ReleasePanel() {
             </div>
           ))}
         </div>
-        <button
-          type="button"
-          disabled
-          className="self-start rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim"
-        >
-          Run release
-        </button>
+        <div className="relative self-start">
+          <button
+            type="button"
+            onClick={handleRunRelease}
+            className="rounded-md border border-border-faint bg-bg-elevated px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-fg-base transition-colors hover:border-brand hover:text-brand"
+          >
+            Run release
+          </button>
+          <AnimatePresence>
+            {bursts.map((id) => (
+              <ConfettiBurst key={id} />
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
     </PanelShell>
+  );
+}
+
+/* ─── Confetti burst ────────────────────────────────────────────── */
+
+const CONFETTI_COLORS = ["#a855f7", "#7c3aed", "#38bdf8", "#f472b6", "#fde047"];
+
+function ConfettiBurst() {
+  // 14 particles, each gets a random angle + distance + color. Frozen
+  // at mount (no re-randomization on re-render) so the burst is
+  // deterministic from mount to unmount.
+  const particles = Array.from({ length: 14 }, (_, i) => {
+    const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.5;
+    const distance = 40 + Math.random() * 30;
+    return {
+      i,
+      x: Math.cos(angle) * distance,
+      y: Math.sin(angle) * distance,
+      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      delay: Math.random() * 0.05,
+    };
+  });
+
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute left-1/2 top-1/2 z-10"
+    >
+      {particles.map((p) => (
+        <motion.span
+          key={p.i}
+          initial={{ x: 0, y: 0, opacity: 1, scale: 0.6 }}
+          animate={{ x: p.x, y: p.y, opacity: 0, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: 0.9,
+            delay: p.delay,
+            ease: [0.2, 0.7, 0.3, 1],
+          }}
+          className="absolute h-1.5 w-1.5 rounded-full"
+          style={{ background: p.color }}
+        />
+      ))}
+    </span>
   );
 }
 
@@ -408,7 +541,7 @@ function PanelShell({
 }) {
   return (
     <div
-      className={`relative flex flex-col overflow-hidden rounded-[11px] border bg-bg-dim ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-[11px] border bg-bg-dim/95 backdrop-blur-sm ${
         highlight ? "border-border-dim" : "border-border-faint"
       }`}
     >
