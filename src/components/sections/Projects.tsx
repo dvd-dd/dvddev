@@ -57,9 +57,9 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="relative w-full px-6 py-24 md:px-12 md:py-32"
+      className="relative w-full bg-bg-base px-6 py-24 md:px-10 md:py-32 lg:px-14"
     >
-      <div className="mx-auto max-w-[1248px]">
+      <div className="mx-auto w-full max-w-[1840px]">
         {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -79,9 +79,9 @@ export function Projects() {
           </p>
         </motion.div>
 
-        <div className="lg:grid lg:grid-cols-12 lg:gap-10">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12">
           {/* Sticky index rail */}
-          <aside className="hidden lg:col-span-3 lg:block">
+          <aside className="hidden lg:col-span-2 lg:block">
             <div className="sticky top-[120px]">
               <ol className="flex flex-col gap-1">
                 {featured.map((p, i) => {
@@ -121,7 +121,7 @@ export function Projects() {
           </aside>
 
           {/* Project blocks */}
-          <div className="lg:col-span-9">
+          <div className="lg:col-span-10">
             {featured.map((p, i) => (
               <WorkBlock
                 key={p.id}
@@ -176,15 +176,15 @@ function WorkBlock({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
-        className="lg:w-[40%] lg:shrink-0"
+        className="lg:w-[34%] lg:shrink-0"
       >
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
           {nn} · {copy.category}
         </p>
-        <h3 className="mt-4 text-balance text-3xl font-normal leading-[1.05] tracking-[-0.03em] text-fg-base md:text-5xl">
+        <h3 className="mt-4 text-balance text-4xl font-normal leading-[1.04] tracking-[-0.03em] text-fg-base md:text-5xl xl:text-6xl">
           {project.name}
         </h3>
-        <p className="mt-5 text-base leading-relaxed text-fg-dim">
+        <p className="mt-5 text-base leading-relaxed text-fg-dim lg:text-lg">
           {copy.description}
         </p>
         <ul className="mt-6 flex flex-col gap-2">
