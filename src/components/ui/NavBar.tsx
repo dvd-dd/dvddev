@@ -74,21 +74,23 @@ export function NavBar() {
             Intro paints in left→right via clip-path, then idles. On
             hover the glow intensifies (no scale, per the motion
             contract). */}
+        {/* Hugs the top-left corner: self-start pins it to the top of
+            the nav row (not vertically centered), and the wordmark is
+            pushed hard left + down just enough that the rotated top
+            corner clears the announcement strip above. Stays in flex
+            flow so the centered links + right cluster keep their
+            layout. */}
         <a
           href="/"
           aria-label="dvddev — home"
-          className="group flex items-center text-fg-base transition-colors hover:text-brand"
+          className="group flex self-start text-fg-base transition-colors hover:text-brand"
         >
           <motion.span
             initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0 }}
             animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
             transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-            className="block origin-center -translate-x-[12px] -rotate-[12deg] md:-translate-x-[22px] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(168,85,247,0.65))_drop-shadow(0_0_16px_rgba(168,85,247,0.35))]"
+            className="block origin-center -translate-x-[16px] translate-y-[12px] -rotate-[12deg] md:-translate-x-[34px] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(168,85,247,0.65))_drop-shadow(0_0_16px_rgba(168,85,247,0.35))]"
           >
-            {/* h-64 at -12° → rotated bbox ~89px, fits the 96px nav row
-                with margin; no translate-y so origin-center rotation
-                keeps it vertically centered (never pokes into the
-                announcement bar above). */}
             <DvdWordmark
               className="h-[64px] w-auto"
               thicken
