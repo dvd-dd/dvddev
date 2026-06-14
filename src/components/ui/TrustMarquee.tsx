@@ -47,7 +47,12 @@ const CLIENTS: Logo[] = [
   { name: "Corvin Protection", src: "/brand/clients/corvin.svg" },
 ];
 
-const FLAGS = ["🇺🇸 Connecticut", "🇧🇷 São Paulo", "🇬🇧 Birmingham"];
+// Flag only (no city) — rendered large so the region reads at a glance.
+const FLAGS = [
+  { emoji: "🇺🇸", label: "United States" },
+  { emoji: "🇧🇷", label: "Brazil" },
+  { emoji: "🇬🇧", label: "United Kingdom" },
+];
 
 const Divider = ({ label }: { label: string }) => (
   <span className="mx-8 font-mono text-[11px] uppercase tracking-[0.22em]">
@@ -67,7 +72,7 @@ export function TrustMarquee() {
           src={c.src}
           alt={c.name}
           loading="lazy"
-          className="mx-7 h-6 w-auto shrink-0"
+          className="mx-7 h-10 w-auto shrink-0"
         />
       ))}
 
@@ -75,10 +80,12 @@ export function TrustMarquee() {
       <Divider label="Clients in" />
       {FLAGS.map((f) => (
         <span
-          key={`flag-${f}`}
-          className="mx-6 whitespace-nowrap font-mono text-[13px] uppercase tracking-[0.18em]"
+          key={`flag-${f.label}`}
+          role="img"
+          aria-label={f.label}
+          className="mx-5 select-none text-[34px] leading-none"
         >
-          {f}
+          {f.emoji}
         </span>
       ))}
 
