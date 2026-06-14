@@ -63,7 +63,7 @@ export function NavBar() {
     <header
       data-scrolled={scrolled ? "true" : "false"}
       className={cn(
-        "sticky top-0 z-50 flex h-[80px] w-full items-center transition-colors duration-200",
+        "sticky top-0 z-50 flex h-[96px] w-full items-center transition-colors duration-200",
         scrolled
           ? "border-b border-border-faint bg-bg-base/95 backdrop-blur"
           : "border-b border-transparent bg-transparent"
@@ -83,13 +83,14 @@ export function NavBar() {
             initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0 }}
             animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
             transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
-            className="block origin-center -translate-x-[10px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(168,85,247,0.65))_drop-shadow(0_0_16px_rgba(168,85,247,0.35))]"
+            className="block origin-center -translate-x-[12px] -rotate-[12deg] md:-translate-x-[22px] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))] transition-[filter] duration-500 group-hover:[filter:drop-shadow(0_0_6px_rgba(168,85,247,0.65))_drop-shadow(0_0_16px_rgba(168,85,247,0.35))]"
           >
-            {/* h-52 at -12° → rotated bbox ~72px, fits the 80px nav row
-                with no translate-y so it stays vertically centered (was
-                poking above into the announcement bar at h-64 +14y). */}
+            {/* h-64 at -12° → rotated bbox ~89px, fits the 96px nav row
+                with margin; no translate-y so origin-center rotation
+                keeps it vertically centered (never pokes into the
+                announcement bar above). */}
             <DvdWordmark
-              className="h-[52px] w-auto"
+              className="h-[64px] w-auto"
               thicken
             />
           </motion.span>
@@ -166,7 +167,7 @@ export function NavBar() {
           aria-label="Site menu"
           className="fixed inset-0 z-50 flex flex-col bg-bg-base"
         >
-          <div className="flex h-[80px] items-center justify-between px-6">
+          <div className="flex h-[96px] items-center justify-between px-6">
             <a
               href="/"
               aria-label="dvddev — home"
@@ -174,7 +175,7 @@ export function NavBar() {
               className="flex items-center text-fg-base"
             >
               <DvdWordmark
-                className="h-[52px] w-auto origin-center -translate-x-[10px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))]"
+                className="h-[64px] w-auto origin-center -translate-x-[12px] -rotate-[12deg] [filter:drop-shadow(0_0_4px_rgba(168,85,247,0.35))_drop-shadow(0_0_10px_rgba(168,85,247,0.18))]"
                 thicken
               />
             </a>
