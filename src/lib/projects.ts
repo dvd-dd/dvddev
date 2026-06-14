@@ -43,6 +43,13 @@ export interface Project {
    *  panel. Optional — projects without a screenshot just show the
    *  planet + telemetry without the preview tile. */
   screenshot?: string;
+  /** Ordered set of project images for the Selected Work scroll
+   *  showcase (each variant arranges them differently). Falls back to
+   *  the single `screenshot` when absent. */
+  screenshots?: string[];
+  /** Position in the Selected Work showcase (1-based). Drives the
+   *  sticky 01…07 index + block order; unset → excluded from it. */
+  featureOrder?: number;
 }
 
 export const PROJECTS: Project[] = [
@@ -54,6 +61,8 @@ export const PROJECTS: Project[] = [
     url: "https://upwardbr.com",
     techStack: ["Next.js", "Tailwind", "i18n PT/EN", "Dynamic Routes"],
     screenshot: "/screenshots/upward.webp",
+    featureOrder: 2,
+    screenshots: ["/screenshots/upward/01.webp", "/screenshots/upward/02.webp"],
     orbit: {
       ring: 1,
       startAngle: 0,
@@ -70,6 +79,13 @@ export const PROJECTS: Project[] = [
     url: "https://smartfloorservices.com",
     techStack: ["Next.js", "i18n EN/ES", "Image Optim"],
     screenshot: "/screenshots/smartfloors.webp",
+    featureOrder: 7,
+    screenshots: [
+      "/screenshots/smartfloors/01.webp",
+      "/screenshots/smartfloors/02.webp",
+      "/screenshots/smartfloors/03.webp",
+      "/screenshots/smartfloors/04.webp",
+    ],
     orbit: {
       ring: 1,
       startAngle: 180,
@@ -86,6 +102,13 @@ export const PROJECTS: Project[] = [
     url: "/phoenix",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Dual Theme"],
     screenshot: "/screenshots/phoenix.webp",
+    featureOrder: 3,
+    screenshots: [
+      "/screenshots/phoenix/01.webp",
+      "/screenshots/phoenix/02.webp",
+      "/screenshots/phoenix/03.webp",
+      "/screenshots/phoenix/04.webp",
+    ],
     orbit: {
       ring: 2,
       startAngle: 60,
@@ -104,6 +127,8 @@ export const PROJECTS: Project[] = [
     url: "/pecaai",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n PT/EN"],
     screenshot: "/screenshots/pecaai.webp",
+    featureOrder: 5,
+    screenshots: ["/screenshots/pecaai/01.webp", "/screenshots/pecaai/02.webp"],
     orbit: {
       ring: 2,
       startAngle: 240,
@@ -120,6 +145,8 @@ export const PROJECTS: Project[] = [
     url: "/luxor",
     techStack: ["HTML", "CSS", "Vanilla JS", "Custom i18n", "Cursor FX"],
     screenshot: "/screenshots/luxor.webp",
+    featureOrder: 4,
+    screenshots: ["/screenshots/luxor/01.webp", "/screenshots/luxor/02.webp"],
     orbit: {
       ring: 3,
       startAngle: 30,
@@ -136,6 +163,11 @@ export const PROJECTS: Project[] = [
     url: "/woodframe",
     techStack: ["HTML", "CSS", "Vanilla JS", "i18n", "Light/Dark"],
     screenshot: "/screenshots/woodframe.webp",
+    featureOrder: 6,
+    screenshots: [
+      "/screenshots/woodframe/01.webp",
+      "/screenshots/woodframe/02.webp",
+    ],
     orbit: {
       ring: 3,
       startAngle: 210,
@@ -152,6 +184,8 @@ export const PROJECTS: Project[] = [
     url: "https://www.corvinprotection.com/",
     techStack: ["Web design", "Next.js", "Sanity CMS", "Animated contact"],
     screenshot: "/screenshots/corvin.webp",
+    featureOrder: 1,
+    screenshots: ["/screenshots/corvin/01.webp"],
     orbit: {
       ring: 2,
       startAngle: 120,
@@ -166,6 +200,13 @@ export const PROJECTS: Project[] = [
 export function getProjectById(id: string | null): Project | null {
   if (!id) return null;
   return PROJECTS.find((p) => p.id === id) ?? null;
+}
+
+/** Projects shown in the Selected Work scroll showcase, in order. */
+export function getFeaturedProjects(): Project[] {
+  return PROJECTS.filter((p) => p.featureOrder != null).sort(
+    (a, b) => (a.featureOrder ?? 0) - (b.featureOrder ?? 0),
+  );
 }
 
 /**

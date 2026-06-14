@@ -66,10 +66,11 @@ export const translations = {
       projects: {
         chapter: "Chapter 02 — Selected work",
         heading: "Selected work.",
-        instruction: "Six sites I built. Click any to step in.",
+        instruction: "Seven sites I built — scroll through each one.",
         statusLive: "◉ LIVE",
         statusCase: "◌ CASE STUDY",
         ctaVisit: "Visit Surface →",
+        ctaVisitSite: "Visit site →",
         ctaClose: "Close",
         signatureFeature: "SIGNATURE FEATURE",
         techStackLabel: "TECH STACK",
@@ -78,53 +79,122 @@ export const translations = {
         screenshotPending: "Screenshot pending",
         items: {
           upward: {
-            tagline:
-              "Digital studio I co-founded — built end-to-end",
+            category: "Studio site",
+            tagline: "Digital studio I co-founded — built end-to-end",
             description:
-              "Full-stack site for the digital studio I co-founded. Multi-route Next.js architecture with dynamic case study pages, native EN/PT i18n, and a content layer tuned for rapid client onboarding.",
+              "The full-stack site for the digital studio I co-founded. A multi-route Next.js build with dynamic case-study pages, native EN/PT bilingual content, and a layout system tuned to onboard new clients fast.",
             highlight:
               "Multi-route portfolio with dynamic case studies + native bilingual i18n",
+            bullets: [
+              "Multi-route Next.js architecture",
+              "Dynamic case-study pages",
+              "Native EN/PT i18n",
+              "Tailwind design system",
+            ],
           },
           smartfloors: {
+            category: "Services site",
             tagline: "Family-run hardwood flooring services in Connecticut",
             description:
-              "Production marketing site for a family-run Connecticut flooring business — installation, sanding, and refinishing across hardwood, epoxy, vinyl, tile, and carpet. EN/ES bilingual, built around a single-team promise: the crew that estimates the job is the crew that does the work.",
+              "A production marketing site for a family-run Connecticut flooring company — installation, sanding and refinishing across hardwood, epoxy, vinyl, tile and carpet. EN/ES bilingual, built around one promise: the crew that estimates the job is the crew that does the work.",
             highlight:
-              "Project gallery carousel walking through real completed jobs across material types — the social proof that does the closing for a regional home-services brand.",
+              "Project gallery carousel walking through real completed jobs across material types.",
+            bullets: [
+              "EN/ES bilingual",
+              "Real project-gallery carousel",
+              "Image-optimized delivery",
+              "Single-team trust framing",
+            ],
           },
           phoenix: {
+            category: "Security SaaS",
             tagline: "AI-native cybersecurity platform",
             description:
-              "Marketing site for a fictional SaaS in the spirit of Vercel + Linear, but tuned for security ops: dashboard mockup, terminal UI, live-ticking counters, threat feed.",
+              "A marketing site for an AI-native cybersecurity platform — Vercel-meets-Linear polish tuned for security operations. Dashboard mockups, a terminal UI, a live-ticking threat counter and a dual light/dark theme.",
             highlight:
               "Live-ticking ops counter that keeps incrementing in real time after the reveal",
+            bullets: [
+              "Live-ticking ops counters",
+              "Terminal + dashboard UI",
+              "Dual light/dark theme",
+              "Hand-built HTML/CSS/JS",
+            ],
           },
           pecaai: {
+            category: "Marketplace app",
             tagline: "Auto parts at the speed of an app",
             description:
-              "Landing page for a B2B marketplace app connecting mechanics to parts suppliers in real time. Clean app-marketing aesthetic with dual narratives.",
+              "The landing page for a B2B marketplace connecting mechanics to auto-parts suppliers in real time. A clean app-marketing aesthetic with dual narratives and a phone mockup built entirely in CSS — notch, orbit ring and all.",
             highlight:
               "CSS-only phone mockup with orbit ring — pure CSS, no images, even the notch",
+            bullets: [
+              "CSS-only phone mockup",
+              "Dual mechanic/supplier narrative",
+              "EN/PT i18n",
+              "App-marketing aesthetic",
+            ],
           },
           luxor: {
+            category: "Luxury membership",
             tagline: "Private membership for an invitation-only world",
             description:
-              "Editorial-luxury institutional site for a fictional ultra-exclusive club. Soho House / NoMad territory. Monastic minimalism, Roman numerals, four-city geography.",
+              "An editorial-luxury site for an invitation-only private club — Soho House / NoMad territory. Monastic minimalism, Roman numerals and a four-city geography, carried by a cursor spotlight and a char-by-char hero reveal.",
             highlight:
               "Cursor spotlight with lerp + char-by-char hero stagger + SVG film grain overlay",
+            bullets: [
+              "Cursor spotlight with lerp",
+              "Char-by-char hero stagger",
+              "SVG film-grain overlay",
+              "Roman-numeral editorial system",
+            ],
           },
           woodframe: {
+            category: "Design boutique",
             tagline: "Objects & interiors hand-carved in Minas Gerais",
             description:
-              "Institutional site for a fictional design boutique — handcrafted furniture and bespoke interiors from Minas Gerais, Brazil. Kinfolk magazine territory.",
+              "An institutional site for a design boutique of hand-carved furniture and bespoke interiors from Minas Gerais, Brazil — Kinfolk-magazine territory. A triple typographic stack does the storytelling: Clash Display, Inter and Instrument Serif italic.",
             highlight:
               "Triple typography stack — Clash Display + Inter + Instrument Serif italic — for editorial-magazine personality",
+            bullets: [
+              "Triple typographic stack",
+              "Editorial-magazine layout",
+              "Light / dark theme",
+              "Handcrafted-warmth art direction",
+            ],
           },
           corvin: {
+            category: "Brand site · UK",
             tagline: "Bespoke brand site for a UK close-protection firm",
             description:
-              "Editorial brand site for a UK close-protection firm. Sanity-CMS backed, with a quietly animated contact section that contrasts the composed feel of the rest of the site.",
+              "A bespoke brand site for a UK close-protection firm, backed by Sanity CMS. Composed, authoritative art direction across the whole experience, with a quietly animated contact section that breaks the stillness exactly where it matters.",
             highlight: "Animated contact backdrop",
+            bullets: [
+              "Sanity CMS backed",
+              "Animated contact backdrop",
+              "Editorial, authoritative art direction",
+              "Live for a real UK client",
+            ],
+          },
+        },
+      },
+      reviews: {
+        eyebrow: "Client reviews",
+        heading: "Loved by the people I build for.",
+        items: {
+          corvin: {
+            quote:
+              "Rather than simply creating a website, he took the time to understand my goals and vision, turning them into a professional, modern, and highly effective website. The finished product exceeded all of my expectations — it not only looks fantastic but performs exceptionally well. I would wholeheartedly recommend David to anyone seeking web development services.",
+            author: "Client",
+            role: "Corvin Protection · UK",
+            source: "Upwork-verified review",
+            rating: 5,
+            badges: [
+              "Collaborative",
+              "Committed to Quality",
+              "Clear Communicator",
+              "Accountable for Outcomes",
+              "Detail Oriented",
+            ],
           },
         },
       },
@@ -314,10 +384,11 @@ export const translations = {
       projects: {
         chapter: "Capítulo 02 — Trabalho selecionado",
         heading: "Trabalho selecionado.",
-        instruction: "Seis sites que construí. Clique em qualquer um pra entrar.",
+        instruction: "Sete sites que construí — role por cada um.",
         statusLive: "◉ NO AR",
         statusCase: "◌ ESTUDO DE CASO",
         ctaVisit: "Visitar Superfície →",
+        ctaVisitSite: "Visitar site →",
         ctaClose: "Fechar",
         signatureFeature: "DIFERENCIAL",
         techStackLabel: "STACK TÉCNICA",
@@ -326,55 +397,125 @@ export const translations = {
         screenshotPending: "Screenshot em breve",
         items: {
           upward: {
+            category: "Site de estúdio",
             tagline: "Estúdio digital que co-fundei — construído ponta a ponta",
             description:
-              "Site full-stack pro estúdio digital que co-fundei. Arquitetura Next.js multi-rota com páginas de case dinâmicas, i18n bilíngue EN/PT nativo, e camada de conteúdo afinada pra onboarding rápido de clientes.",
+              "O site full-stack do estúdio digital que co-fundei. Build Next.js multi-rota com páginas de case dinâmicas, conteúdo bilíngue EN/PT nativo e um sistema de layout afinado pra onboarding rápido de clientes.",
             highlight:
               "Portfólio multi-rota com cases dinâmicos + i18n bilíngue nativo",
+            bullets: [
+              "Arquitetura Next.js multi-rota",
+              "Páginas de case dinâmicas",
+              "i18n EN/PT nativo",
+              "Design system em Tailwind",
+            ],
           },
           smartfloors: {
+            category: "Site de serviços",
             tagline: "Empresa familiar de pisos em Connecticut",
             description:
-              "Site institucional em produção pra empresa familiar de pisos em Connecticut — instalação, lixamento e acabamento em madeira, epoxy, vinil, cerâmica e carpete. Bilíngue EN/ES, construído em torno da promessa one-team: a mesma equipe que orça é a que executa.",
+              "Site institucional em produção pra empresa familiar de pisos em Connecticut — instalação, lixamento e acabamento em madeira, epoxy, vinil, cerâmica e carpete. Bilíngue EN/ES, em torno de uma promessa: a mesma equipe que orça é a que executa.",
             highlight:
-              "Carrossel de galeria percorrendo projetos reais entregues em vários tipos de material — a prova social que fecha a venda em marca de serviços residenciais.",
+              "Carrossel de galeria percorrendo projetos reais entregues em vários tipos de material.",
+            bullets: [
+              "Bilíngue EN/ES",
+              "Carrossel de projetos reais",
+              "Entrega de imagens otimizada",
+              "Promessa de equipe única",
+            ],
           },
           phoenix: {
+            category: "SaaS de segurança",
             tagline: "Plataforma de cibersegurança AI-native",
             description:
-              "Site institucional pra SaaS fictício no espírito Vercel + Linear, mas afinado pra security ops: dashboard mockup, terminal UI, contadores live, threat feed.",
+              "Site institucional pra plataforma de cibersegurança AI-native — acabamento Vercel-meets-Linear afinado pra security ops. Dashboard mockups, terminal UI, contador de ameaças live e tema claro/escuro.",
             highlight:
               "Contador live de ops que continua incrementando em tempo real depois do reveal",
+            bullets: [
+              "Contadores de ops live",
+              "Terminal + dashboard UI",
+              "Tema claro/escuro",
+              "HTML/CSS/JS na mão",
+            ],
           },
           pecaai: {
+            category: "App marketplace",
             tagline: "Peças automotivas na velocidade de um app",
             description:
-              "Landing page de app marketplace B2B conectando oficinas a fornecedores em tempo real. Estética app-marketing limpa com narrativas duplas.",
+              "A landing de um marketplace B2B conectando oficinas a fornecedores de peças em tempo real. Estética app-marketing limpa com narrativas duplas e um phone mockup feito 100% em CSS — notch, orbit e tudo.",
             highlight:
               "Phone mockup em CSS puro com orbit decorativo — sem imagens, até o notch é CSS",
+            bullets: [
+              "Phone mockup só em CSS",
+              "Narrativa oficina/fornecedor",
+              "i18n EN/PT",
+              "Estética app-marketing",
+            ],
           },
           luxor: {
+            category: "Membership de luxo",
             tagline:
               "Membership privado pra um mundo que só entra por convite",
             description:
-              "Site institucional editorial-luxury pra clube privado fictício ultra-exclusivo. Território Soho House / NoMad. Minimalismo monástico, algarismos romanos, geografia de quatro cidades.",
+              "Um site editorial-luxury pra clube privado que só entra por convite — território Soho House / NoMad. Minimalismo monástico, algarismos romanos e geografia de quatro cidades, conduzido por cursor spotlight e reveal char-por-char.",
             highlight:
               "Cursor spotlight com lerp + stagger char-por-char + SVG film grain overlay",
+            bullets: [
+              "Cursor spotlight com lerp",
+              "Stagger char-por-char no hero",
+              "Overlay de film grain em SVG",
+              "Sistema editorial com romanos",
+            ],
           },
           woodframe: {
+            category: "Boutique de design",
             tagline:
               "Objetos e interiores entalhados à mão em Minas Gerais",
             description:
-              "Site institucional pra boutique fictícia de design — móveis entalhados à mão e interiores sob encomenda de Minas Gerais, Brasil. Território Kinfolk magazine.",
+              "Site institucional pra boutique de design de móveis entalhados à mão e interiores sob encomenda de Minas Gerais — território Kinfolk magazine. Uma stack tipográfica tripla conduz a narrativa: Clash Display, Inter e Instrument Serif itálico.",
             highlight:
               "Stack tipográfico tripla — Clash Display + Inter + Instrument Serif itálico — pra personalidade editorial-revista",
+            bullets: [
+              "Stack tipográfica tripla",
+              "Layout editorial-revista",
+              "Tema claro / escuro",
+              "Direção de arte artesanal",
+            ],
           },
           corvin: {
+            category: "Site de marca · UK",
             tagline:
               "Site de marca sob medida para empresa britânica de close protection",
             description:
-              "Site editorial para uma firma britânica de close protection. Backend em Sanity CMS e seção de contato com fundo em movimento leve, contrastando com o tom composto do resto.",
+              "Um site de marca sob medida pra firma britânica de close protection, com Sanity CMS por trás. Direção de arte composta e autoritária em toda a experiência, com uma seção de contato com fundo em movimento leve que quebra a quietude exatamente onde importa.",
             highlight: "Contato com fundo em movimento",
+            bullets: [
+              "Backend em Sanity CMS",
+              "Contato com fundo em movimento",
+              "Direção de arte editorial e autoritária",
+              "No ar pra um cliente real no UK",
+            ],
+          },
+        },
+      },
+      reviews: {
+        eyebrow: "Avaliações de clientes",
+        heading: "Amado por quem eu construo.",
+        items: {
+          corvin: {
+            quote:
+              "Em vez de simplesmente criar um site, ele dedicou tempo pra entender meus objetivos e minha visão, transformando-os num site profissional, moderno e altamente eficaz. O resultado superou todas as minhas expectativas — não só fica ótimo como performa excepcionalmente bem. Recomendo o David de coração pra qualquer um buscando desenvolvimento web.",
+            author: "Cliente",
+            role: "Corvin Protection · UK",
+            source: "Avaliação verificada no Upwork",
+            rating: 5,
+            badges: [
+              "Colaborativo",
+              "Comprometido com qualidade",
+              "Comunicação clara",
+              "Responsável pelos resultados",
+              "Atento aos detalhes",
+            ],
           },
         },
       },

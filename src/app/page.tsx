@@ -2,6 +2,7 @@ import { Hero } from "@/components/sections/Hero";
 import { TrustMarquee } from "@/components/ui/TrustMarquee";
 import { CustomEnvironments } from "@/components/sections/CustomEnvironments";
 import { Projects } from "@/components/sections/Projects";
+import { Reviews } from "@/components/sections/Reviews";
 import { Process } from "@/components/sections/Process";
 import { About } from "@/components/sections/About";
 import { Contact } from "@/components/sections/Contact";
@@ -20,6 +21,7 @@ export default function HomePage() {
       <TrustMarquee />
       <CustomEnvironments />
       <Projects />
+      <Reviews />
       <Process />
       <About />
       <Contact />

@@ -3,6 +3,12 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 
+declare global {
+  interface Window {
+    __dvddevLenis?: Lenis;
+  }
+}
+
 /**
  * Boots a Lenis instance that drives the page scroll on every RAF tick.
  * Returns nothing — consumers just mount it once at the root.
@@ -32,6 +38,12 @@ export function useSmoothScroll() {
       smoothWheel: true,
     });
 
+    // Expose the instance so components (e.g. the Selected Work index)
+    // can drive a smooth `scrollTo` that cooperates with Lenis instead
+    // of fighting it. Consumers must null-check (Lenis is absent on
+    // touch / reduced-motion).
+    window.__dvddevLenis = lenis;
+
     let rafId = 0;
     const raf = (time: number) => {
       lenis.raf(time);
@@ -42,6 +54,7 @@ export function useSmoothScroll() {
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      window.__dvddevLenis = undefined;
     };
   }, []);
 }
