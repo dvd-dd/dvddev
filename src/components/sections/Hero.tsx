@@ -165,17 +165,29 @@ export function Hero() {
           style={{
             backgroundImage:
               "linear-gradient(90deg,#1b004b,#4c007d,#7f00b2,#bc4ed8,#f988ff,#bc4ed8,#7f00b2,#4c007d,#1b004b)",
-            backgroundSize: "200% 100%",
+            backgroundSize: "300% 100%",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
             color: "transparent",
-            animation: "hero-gradient 2.5s linear infinite",
+            // Neon glow + legibility shadow.
+            textShadow:
+              "0 2px 20px rgba(0,0,0,0.4), 0 0 26px rgba(168,85,247,0.45)",
+            animation: "hero-neon 2.4s linear infinite",
           }}
-          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)] md:text-[72px] lg:text-[96px] xl:text-[112px]"
+          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] md:text-[72px] lg:text-[96px] xl:text-[112px]"
         >
           {t.hero.headline}
         </motion.h1>
+        {/* Keyframe injected by the component (not via globals.css) so the
+            constant purple-RGB color cycle runs even when the dev server
+            hasn't hot-reloaded the stylesheet. */}
+        <style>{`
+          @keyframes hero-neon {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+          }
+        `}</style>
 
         {/* Subhead */}
         <motion.p
