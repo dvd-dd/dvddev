@@ -143,7 +143,7 @@ function AmbientBackdrop() {
           where it naturally sits relative to the panels — same
           composition Sanity uses on their home page. */}
       <img
-        src="/textures/sanity-bg.webp"
+        src="/textures/sanity-bg-violet.webp"
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover object-bottom"
