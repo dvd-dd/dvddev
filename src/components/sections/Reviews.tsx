@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Star } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -26,6 +26,8 @@ type Review = {
   mp4: string;
   poster: string;
   wordmark: string;
+  /** Permalink to the original review (opens in a new tab). */
+  reviewUrl?: string;
 };
 
 const REVIEWS: Review[] = [
@@ -35,6 +37,8 @@ const REVIEWS: Review[] = [
     mp4: "/corvin-reel.mp4",
     poster: "/corvin-reel-poster.jpg",
     wordmark: "/brand/clients/corvin.svg",
+    reviewUrl:
+      "https://www.upwork.com/freelancers/~01d8af8bffe7ae5a35#:~:text=Website%20development%20for-,professional,-security%20services%20company",
   },
 ];
 
@@ -67,18 +71,23 @@ export function Reviews() {
       {/* Background: the client's site being scrolled, dimmed */}
       <ReviewVideo review={review} active={inView} />
 
-      {/* Scrims — match the hero treatment so the copy always reads */}
+      {/* Scrims — left-biased so the copy reads on the left while the
+          site recording stays clearly visible on the right. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-0 bg-ink-base/45"
+        className="pointer-events-none absolute inset-0 -z-0 bg-ink-base/25"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-t from-ink-base via-ink-base/40 to-ink-base/70"
+        className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-r from-ink-base via-ink-base/55 to-ink-base/10"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(70%_60%_at_15%_85%,rgba(168,85,247,0.18),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-0 h-1/3 bg-gradient-to-t from-ink-base to-transparent"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(70%_60%_at_15%_85%,rgba(168,85,247,0.16),transparent_70%)]"
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1248px] flex-col justify-between gap-16 px-6 py-20 md:px-12 md:py-24">
@@ -144,6 +153,21 @@ export function Reviews() {
             <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim">
               {copy.rating.toFixed(1)} · {copy.source}
             </span>
+            {review.reviewUrl && (
+              <a
+                href={review.reviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group ml-1 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-brand transition-colors hover:text-fg-base"
+              >
+                {r.readMore}
+                <ArrowUpRight
+                  className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  strokeWidth={2}
+                  aria-hidden
+                />
+              </a>
+            )}
           </div>
 
           <blockquote className="mt-6 text-balance text-xl font-normal leading-relaxed text-fg-base md:text-[28px] md:leading-[1.4]">
@@ -202,7 +226,7 @@ function ReviewVideo({ review, active }: { review: Review; active: boolean }) {
       preload="none"
       poster={review.poster}
       aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-55"
+      className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-[0.72]"
     >
       <source src={review.webm} type="video/webm" />
       <source src={review.mp4} type="video/mp4" />

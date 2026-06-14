@@ -180,6 +180,7 @@ export const translations = {
       reviews: {
         eyebrow: "Client reviews",
         heading: "Loved by the people I build for.",
+        readMore: "Read on Upwork",
         items: {
           corvin: {
             quote:
@@ -501,6 +502,7 @@ export const translations = {
       reviews: {
         eyebrow: "Avaliações de clientes",
         heading: "Amado por quem eu construo.",
+        readMore: "Ver no Upwork",
         items: {
           corvin: {
             quote:
