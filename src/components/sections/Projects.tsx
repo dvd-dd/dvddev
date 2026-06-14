@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  type TargetAndTransition,
+} from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/lib/projects";
 import { getFeaturedProjects } from "@/lib/projects";
@@ -9,18 +14,17 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 /**
  * Selected Work — sanity.io's "Everything your team needs in one place"
- * pattern, dvddev-flavored. A sticky left index (01…07 + category) that
- * highlights the active project as you scroll, and a tall right column
- * with one block per project. Each block keeps the same skeleton
- * (eyebrow · name · description · bullets · Visit-site CTA) but renders a
- * DIFFERENT visual arrangement of its screenshots, so every project
- * reads unique — like Sanity's five distinct section visuals.
+ * pattern, dvddev-flavored and full-bleed. Three zones:
  *
- * Scroll-spy: each block tracks its own `useInView` (centered band); the
- * one crossing the viewport center lifts the active index to the rail.
- * Index clicks scroll via the Lenis instance (window.lenis) so they
- * cooperate with the smooth-scroll instead of fighting it; falls back to
- * native smooth scroll on touch/reduced-motion.
+ *   [ sticky index 01…07 ] [ scrolling text ] [ sticky visual ]
+ *
+ * ONLY the middle text column scrolls. The left index + the big right
+ * visual are both pinned (sticky). As a text block crosses the viewport
+ * centre, scroll-spy lifts the active project → the index highlights it
+ * AND the sticky visual TRANSITIONS to that project's images with a
+ * per-project entrance effect (each one different — slide from the
+ * right, zoom, wipe up, slide from the left, …). On mobile the sticky
+ * columns collapse and each block shows its text + visual inline.
  */
 
 type ProjectCopy = {
@@ -31,20 +35,36 @@ type ProjectCopy = {
   bullets: readonly string[];
 };
 
-const ENTRY = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const },
-  },
+const TXN = { duration: 0.55, ease: [0.4, 0, 0.2, 1] as const };
+
+/** Each project's visual enters with its OWN effect. */
+type V = {
+  initial: TargetAndTransition;
+  animate: TargetAndTransition;
+  exit: TargetAndTransition;
 };
+const VISUAL_FX: Record<string, V> = {
+  corvin: { initial: { opacity: 0, x: 90 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -70 } }, // slide ← from right
+  upward: { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 1.05 } }, // zoom in
+  phoenix: { initial: { opacity: 0, y: 90 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -70 } }, // rise up
+  luxor: { initial: { opacity: 0, x: -90 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: 70 } }, // slide → from left
+  pecaai: { initial: { opacity: 0, y: -80 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 60 } }, // drop down
+  woodframe: {
+    initial: { opacity: 0, clipPath: "inset(0 0 100% 0)" },
+    animate: { opacity: 1, clipPath: "inset(0 0 0% 0)" },
+    exit: { opacity: 0, clipPath: "inset(100% 0 0 0)" },
+  }, // wipe up
+  smartfloors: { initial: { opacity: 0, x: 80, y: 40 }, animate: { opacity: 1, x: 0, y: 0 }, exit: { opacity: 0, x: -60, y: -30 } }, // diagonal
+};
+const DEFAULT_FX: V = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } };
 
 export function Projects() {
   const { t } = useTranslation();
   const featured = getFeaturedProjects();
   const items = t.sections.projects.items as Record<string, ProjectCopy>;
   const [active, setActive] = useState(0);
+  const activeProject = featured[active];
+  const fx = VISUAL_FX[activeProject?.id] ?? DEFAULT_FX;
 
   const scrollToBlock = useCallback((id: string) => {
     const el = document.getElementById(`work-${id}`);
@@ -57,7 +77,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="relative w-full bg-bg-base px-6 py-24 md:px-10 md:py-32 lg:px-14"
+      className="relative w-full overflow-x-clip bg-bg-base px-6 py-24 md:px-10 md:py-32 lg:px-14"
     >
       <div className="mx-auto w-full max-w-[1840px]">
         {/* Heading */}
@@ -80,9 +100,9 @@ export function Projects() {
         </motion.div>
 
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12">
-          {/* Sticky index rail */}
+          {/* Zone 1 — sticky index rail + dotted field */}
           <aside className="hidden lg:col-span-2 lg:block">
-            <div className="sticky top-[120px]">
+            <div className="sticky top-[120px] flex h-[calc(100vh-150px)] flex-col">
               <ol className="flex flex-col gap-1">
                 {featured.map((p, i) => {
                   const on = i === active;
@@ -104,9 +124,7 @@ export function Projects() {
                         </span>
                         <span
                           className={`font-mono text-[11px] uppercase tracking-[0.16em] transition-colors ${
-                            on
-                              ? "text-fg-base"
-                              : "text-fg-faint group-hover:text-fg-dim"
+                            on ? "text-fg-base" : "text-fg-faint group-hover:text-fg-dim"
                           }`}
                         >
                           {items[p.id]?.category}
@@ -116,14 +134,27 @@ export function Projects() {
                   );
                 })}
               </ol>
-              <DottedGrid />
+              {/* Dotted field — fills the rest of the rail, all the way down */}
+              <div
+                aria-hidden
+                className="mt-10 w-full flex-1"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(rgba(185,185,185,0.45) 1.3px, transparent 1.3px)",
+                  backgroundSize: "15px 15px",
+                  maskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)",
+                }}
+              />
             </div>
           </aside>
 
-          {/* Project blocks */}
-          <div className="lg:col-span-10">
+          {/* Zone 2 — scrolling text column */}
+          <div className="lg:col-span-4">
             {featured.map((p, i) => (
-              <WorkBlock
+              <WorkText
                 key={p.id}
                 project={p}
                 copy={items[p.id]}
@@ -133,15 +164,35 @@ export function Projects() {
               />
             ))}
           </div>
+
+          {/* Zone 3 — sticky visual that transitions per active project */}
+          <div className="hidden lg:col-span-6 lg:block">
+            <div className="sticky top-[120px] flex h-[calc(100vh-150px)] items-center">
+              <div className="w-full">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeProject?.id}
+                    initial={fx.initial}
+                    animate={fx.animate}
+                    exit={fx.exit}
+                    transition={TXN}
+                    className="w-full"
+                  >
+                    {activeProject && <ProjectVisual project={activeProject} />}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── One project block ─────────────────────────────────────────── */
+/* ─── One text block (scroll-spy) + inline visual on mobile ──────── */
 
-function WorkBlock({
+function WorkText({
   project,
   copy,
   index,
@@ -168,15 +219,13 @@ function WorkBlock({
     <article
       id={`work-${project.id}`}
       ref={ref}
-      className="flex scroll-mt-28 flex-col justify-center gap-10 border-t border-border-faint/60 py-16 first:border-t-0 md:py-24 lg:min-h-[82vh] lg:flex-row lg:items-center lg:gap-12"
+      className="flex scroll-mt-28 flex-col justify-center gap-10 py-16 md:py-20 lg:min-h-[92vh] lg:py-0"
     >
-      {/* Text */}
       <motion.div
-        variants={ENTRY}
-        initial="hidden"
-        whileInView="visible"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
-        className="lg:w-[34%] lg:shrink-0"
+        transition={TXN}
       >
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
           {nn} · {copy.category}
@@ -184,15 +233,12 @@ function WorkBlock({
         <h3 className="mt-4 text-balance text-4xl font-normal leading-[1.04] tracking-[-0.03em] text-fg-base md:text-5xl xl:text-6xl">
           {project.name}
         </h3>
-        <p className="mt-5 text-base leading-relaxed text-fg-dim lg:text-lg">
+        <p className="mt-5 max-w-md text-base leading-relaxed text-fg-dim lg:text-lg">
           {copy.description}
         </p>
         <ul className="mt-6 flex flex-col gap-2">
           {copy.bullets.map((b) => (
-            <li
-              key={b}
-              className="flex items-start gap-2.5 text-sm text-fg-dim"
-            >
+            <li key={b} className="flex items-start gap-2.5 text-sm text-fg-dim">
               <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-brand" />
               {b}
             </li>
@@ -213,16 +259,10 @@ function WorkBlock({
         </a>
       </motion.div>
 
-      {/* Visual */}
-      <motion.div
-        variants={ENTRY}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        className="min-w-0 flex-1"
-      >
+      {/* Inline visual — mobile only (the sticky column handles lg+) */}
+      <div className="lg:hidden">
         <ProjectVisual project={project} />
-      </motion.div>
+      </div>
     </article>
   );
 }
@@ -279,7 +319,7 @@ function SingleDevice({ src, alt }: { src?: string; alt: string }) {
 /* 2 · upward — two staggered, back one rotated + dimmed */
 function StaggeredPair({ imgs, alt }: { imgs: string[]; alt: string }) {
   return (
-    <div className="relative pb-10 pr-10">
+    <div className="relative pb-12 pr-12">
       <div className={`${FRAME} ml-auto w-[82%] rotate-[2deg] opacity-60`}>
         <Img src={imgs[1]} alt={alt} className="block w-full" />
       </div>
@@ -309,12 +349,12 @@ function WideFloatingCard({ imgs, alt }: { imgs: string[]; alt: string }) {
     <div className="relative">
       <div
         aria-hidden
-        className="absolute -inset-4 -z-10 rounded-[16px] bg-[radial-gradient(60%_60%_at_70%_30%,rgba(168,85,247,0.25),transparent_70%)]"
+        className="absolute -inset-6 -z-10 rounded-[16px] bg-[radial-gradient(60%_60%_at_70%_30%,rgba(168,85,247,0.25),transparent_70%)]"
       />
       <div className={`${FRAME}`}>
         <Img src={imgs[0]} alt={alt} className="block w-full" />
       </div>
-      <div className={`${FRAME} absolute -bottom-8 -left-6 w-[42%] sm:w-[36%]`}>
+      <div className={`${FRAME} absolute -bottom-8 -left-8 w-[38%]`}>
         <Img src={imgs[1]} alt={alt} className="block w-full" />
       </div>
     </div>
@@ -324,11 +364,11 @@ function WideFloatingCard({ imgs, alt }: { imgs: string[]; alt: string }) {
 /* 5 · pecaai — desktop crop + tall mobile beside it */
 function MobileBesideDesktop({ imgs, alt }: { imgs: string[]; alt: string }) {
   return (
-    <div className="flex items-end gap-4">
+    <div className="flex items-end gap-5">
       <div className={`${FRAME} flex-1`}>
         <Img src={imgs[0]} alt={alt} className="block w-full" />
       </div>
-      <div className="w-[28%] shrink-0 overflow-hidden rounded-[18px] border-4 border-bg-elevated bg-bg-elevated shadow-[0_24px_60px_-24px_rgba(0,0,0,0.6)]">
+      <div className="w-[26%] shrink-0 overflow-hidden rounded-[20px] border-4 border-bg-elevated bg-bg-elevated shadow-[0_24px_60px_-24px_rgba(0,0,0,0.6)]">
         <Img src={imgs[1]} alt={alt} className="block w-full" />
       </div>
     </div>
@@ -339,10 +379,10 @@ function MobileBesideDesktop({ imgs, alt }: { imgs: string[]; alt: string }) {
 function EditorialDuo({ imgs, alt }: { imgs: string[]; alt: string }) {
   return (
     <div className="flex flex-col gap-5">
-      <div className={`${FRAME} w-[88%]`}>
+      <div className={`${FRAME} w-[86%]`}>
         <Img src={imgs[0]} alt={alt} className="block w-full" />
       </div>
-      <div className={`${FRAME} ml-auto w-[88%]`}>
+      <div className={`${FRAME} ml-auto w-[86%]`}>
         <Img src={imgs[1]} alt={alt} className="block w-full" />
       </div>
     </div>
@@ -364,30 +404,5 @@ function WideWithStrip({ imgs, alt }: { imgs: string[]; alt: string }) {
         ))}
       </div>
     </div>
-  );
-}
-
-/* ─── Dotted grid decoration under the index rail ────────────────── */
-
-function DottedGrid() {
-  return (
-    <svg
-      aria-hidden
-      className="mt-12 h-40 w-40 text-fg-faint/40"
-      viewBox="0 0 160 160"
-      fill="none"
-    >
-      <defs>
-        <pattern
-          id="work-dots"
-          width="16"
-          height="16"
-          patternUnits="userSpaceOnUse"
-        >
-          <circle cx="1.5" cy="1.5" r="1.5" fill="currentColor" />
-        </pattern>
-      </defs>
-      <rect width="160" height="160" fill="url(#work-dots)" />
-    </svg>
   );
 }
