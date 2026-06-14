@@ -153,12 +153,26 @@ export function Hero() {
 
         {/* Headline — left-aligned, weight 400, max-w-[12ch] cap forces
             the natural 2-line break. */}
+        {/* Inline gradient (not a CSS class) so it renders even when the
+            dev server hasn't hot-reloaded globals.css — only the flowing
+            animation depends on the @keyframes in globals.css; the
+            static purple gradient always shows. */}
         <motion.h1
           custom={1}
           variants={ENTRY}
           initial="hidden"
           animate="visible"
-          className="text-hero-gradient mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)] md:text-[72px] lg:text-[96px] xl:text-[112px]"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg,#1b004b,#4c007d,#7f00b2,#bc4ed8,#f988ff,#bc4ed8,#7f00b2,#4c007d,#1b004b)",
+            backgroundSize: "200% 100%",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            color: "transparent",
+            animation: "hero-gradient 2.5s linear infinite",
+          }}
+          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)] md:text-[72px] lg:text-[96px] xl:text-[112px]"
         >
           {t.hero.headline}
         </motion.h1>
