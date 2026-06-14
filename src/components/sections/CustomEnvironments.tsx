@@ -5,7 +5,6 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
   ArrowUp,
   ChevronDown,
-  Globe,
   Image as ImageIcon,
   Info,
   Languages,
@@ -50,6 +49,8 @@ import { BRIEFS_EN, BRIEFS_PT } from "@/lib/briefs";
  * stagger). Depth comes entirely from the ambient backdrop +
  * translucent panel surfaces + hover swell.
  */
+type Brief = { title: string; description: string };
+
 export function CustomEnvironments() {
   const { t, locale } = useTranslation();
   const ce = t.sections.customEnvironments;
@@ -57,7 +58,32 @@ export function CustomEnvironments() {
   const inView = useInView(sectionRef, { margin: "-10% 0px -10% 0px" });
 
   const pairs = locale === "pt" ? BRIEFS_PT : BRIEFS_EN;
-  const { title, description } = useTypewriter({ pairs, enabled: inView });
+
+  // When the visitor types in the Studio fields (or picks a revision in
+  // History), `override` holds their brief and the auto-typewriter
+  // pauses — this is what makes the "click to interact" badge honest:
+  // edit the CMS here → the live browser preview above updates. Clear
+  // the override (Reset / the "just now" revision) to resume the demo.
+  const [override, setOverride] = useState<Brief | null>(null);
+  const editing = override !== null;
+  const { title: twTitle, description: twDescription } = useTypewriter({
+    pairs,
+    enabled: inView && !editing,
+  });
+
+  const title = override ? override.title : twTitle;
+  const description = override ? override.description : twDescription;
+
+  // Seed with what's on screen so focusing a field doesn't blank it.
+  const current = (): Brief => ({ title: twTitle, description: twDescription });
+  const beginEdit = () => setOverride((o) => o ?? current());
+  const setTitle = (v: string) =>
+    setOverride((o) => ({ ...(o ?? current()), title: v }));
+  const setDescription = (v: string) =>
+    setOverride((o) => ({ ...(o ?? current()), description: v }));
+  const resume = () => setOverride(null);
+  const loadBrief = (b: Brief) =>
+    setOverride({ title: b.title, description: b.description });
 
   return (
     <section
@@ -100,7 +126,11 @@ export function CustomEnvironments() {
 
         {/* Live browser preview — constrained to the frame's column. */}
         <div className="relative mx-auto max-w-[1248px] px-6 pt-8 md:px-12 md:pt-12">
-          <BrowserPreview title={title} description={description} />
+          <BrowserPreview
+            title={title}
+            description={description}
+            editing={editing}
+          />
         </div>
 
         {/* Panel row — WIDER than the dashed frame, drawn on top of
@@ -110,10 +140,23 @@ export function CustomEnvironments() {
             <CodeEditorPanel />
           </FloatingPanel>
           <FloatingPanel interactive>
-            <StudioFormPanel title={title} description={description} />
+            <StudioFormPanel
+              title={title}
+              description={description}
+              editing={editing}
+              onBeginEdit={beginEdit}
+              onTitleChange={setTitle}
+              onDescriptionChange={setDescription}
+              onResume={resume}
+            />
           </FloatingPanel>
           <FloatingPanel interactive>
-            <HistoryPanel />
+            <HistoryPanel
+              briefs={pairs}
+              editing={editing}
+              onPick={loadBrief}
+              onResume={resume}
+            />
           </FloatingPanel>
           <FloatingPanel interactive>
             <ReleasePanel />
@@ -163,12 +206,17 @@ function AmbientBackdrop() {
 function BrowserPreview({
   title,
   description,
+  editing,
 }: {
   title: string;
   description: string;
+  editing: boolean;
 }) {
   // No outer border anymore — the parent EditorFrame in the section
-  // owns the dotted box. This component is just nav + faux hero.
+  // owns the dotted box. This component is just nav + faux hero, a live
+  // mirror of the Studio fields. The blinking caret only shows while
+  // the auto-demo is typing; once the visitor takes over (editing) the
+  // native caret lives in the Studio inputs instead.
   return (
     <div className="relative">
       {/* Faux site chrome — window dots, draft indicator, nav links,
@@ -206,13 +254,13 @@ function BrowserPreview({
       <div className="mt-14 flex flex-col gap-10 md:mt-20 md:flex-row md:items-start md:justify-between md:gap-12">
         <h3 className="min-h-[2.4em] max-w-[20ch] flex-1 text-balance text-3xl font-normal leading-[1.1] tracking-[-0.03em] text-fg-base md:text-4xl lg:text-5xl">
           {title}
-          <Caret />
+          {!editing && <Caret />}
         </h3>
         <div className="w-full md:max-w-md md:shrink-0">
           <div className="rounded-md border-2 border-blue-500/60 px-4 py-3 ring-1 ring-blue-500/20">
             <p className="min-h-[6.5em] text-sm leading-relaxed text-fg-base md:text-base">
               {description}
-              <Caret />
+              {!editing && <Caret />}
             </p>
           </div>
         </div>
@@ -368,9 +416,19 @@ const Num = ({ children }: { children: React.ReactNode }) => (
 function StudioFormPanel({
   title,
   description,
+  editing,
+  onBeginEdit,
+  onTitleChange,
+  onDescriptionChange,
+  onResume,
 }: {
   title: string;
   description: string;
+  editing: boolean;
+  onBeginEdit: () => void;
+  onTitleChange: (v: string) => void;
+  onDescriptionChange: (v: string) => void;
+  onResume: () => void;
 }) {
   return (
     <PanelShell highlight>
@@ -380,27 +438,51 @@ function StudioFormPanel({
           <span className="text-fg-faint">/</span>{" "}
           <span className="text-fg-base">Hero</span>
         </span>
-        <MoreHorizontal
-          className="ml-auto h-3.5 w-3.5 text-fg-faint"
-          strokeWidth={2}
-          aria-hidden
-        />
+        {/* Reset back to the auto-demo. Shown once the visitor has
+            taken over so the typewriter can be handed control again. */}
+        {editing ? (
+          <button
+            type="button"
+            onClick={onResume}
+            title="Resume the live demo"
+            className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-faint transition-colors hover:text-brand"
+          >
+            <RotateCcw className="h-3 w-3" strokeWidth={2} aria-hidden />
+            Reset
+          </button>
+        ) : (
+          <MoreHorizontal
+            className="ml-auto h-3.5 w-3.5 text-fg-faint"
+            strokeWidth={2}
+            aria-hidden
+          />
+        )}
       </PanelHeader>
       <div className="flex flex-col gap-5 p-5">
-        <FormField label="Title">
-          <div className="font-sans text-[15px] text-fg-base">
-            {title}
-            <Caret />
-          </div>
-        </FormField>
-        <FormField label="Description">
+        <label className="flex flex-col gap-2">
+          <span className="font-sans text-[13px] text-fg-dim">Title</span>
+          <input
+            value={title}
+            onFocus={onBeginEdit}
+            onChange={(e) => onTitleChange(e.target.value)}
+            spellCheck={false}
+            aria-label="Brief title"
+            className="w-full rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5 font-sans text-[15px] text-fg-base outline-none transition-colors focus:border-blue-500"
+          />
+        </label>
+        <label className="flex flex-col gap-2">
+          <span className="font-sans text-[13px] text-fg-dim">Description</span>
           {/* min-h sized for the longest brief so the panel (and the
               shared grid row) never reflows while typing/deleting. */}
-          <div className="min-h-[8em] whitespace-pre-wrap break-words font-sans text-[15px] leading-relaxed text-fg-base">
-            {description}
-            <Caret />
-          </div>
-        </FormField>
+          <textarea
+            value={description}
+            onFocus={onBeginEdit}
+            onChange={(e) => onDescriptionChange(e.target.value)}
+            spellCheck={false}
+            aria-label="Brief description"
+            className="min-h-[8em] w-full resize-none rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5 font-sans text-[15px] leading-relaxed text-fg-base outline-none transition-colors focus:border-blue-500"
+          />
+        </label>
         <ImageField />
         <div className="flex items-center justify-between border-t border-border-faint pt-4">
           <div className="flex items-center gap-2.5">
@@ -408,7 +490,7 @@ function StudioFormPanel({
               D
             </span>
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-faint">
-              @dvddev: just now
+              @dvddev: {editing ? "editing…" : "just now"}
             </span>
           </div>
           <button
@@ -421,23 +503,6 @@ function StudioFormPanel({
         </div>
       </div>
     </PanelShell>
-  );
-}
-
-function FormField({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="flex flex-col gap-2">
-      <span className="font-sans text-[13px] text-fg-dim">{label}</span>
-      <div className="rounded-md border border-border-faint bg-bg-elevated px-3.5 py-2.5">
-        {children}
-      </div>
-    </label>
   );
 }
 
@@ -528,7 +593,20 @@ const HISTORY_ROWS: Array<{
   },
 ];
 
-function HistoryPanel() {
+function HistoryPanel({
+  briefs,
+  editing,
+  onPick,
+  onResume,
+}: {
+  briefs: Brief[];
+  editing: boolean;
+  onPick: (b: Brief) => void;
+  onResume: () => void;
+}) {
+  // Each revision row is a real button: the top "just now" row hands
+  // control back to the live demo; every older row loads that brief
+  // into the Studio + preview (time-travel through past briefs).
   return (
     <PanelShell>
       <PanelHeader>
@@ -547,37 +625,47 @@ function HistoryPanel() {
             aria-hidden
           />
           <span className="font-sans text-[13px] leading-relaxed text-fg-dim">
-            dvddev ships every project under version control.
+            Click a revision to load it — the top row resumes the live
+            preview.
           </span>
         </div>
         <ul className="flex flex-col">
-          {HISTORY_ROWS.map((row, i) => (
-            <li
-              key={`${row.initials}-${i}`}
-              className={`flex items-center gap-3 rounded-md px-2 py-2.5 ${
-                row.highlighted ? "bg-bg-elevated" : ""
-              }`}
-            >
-              <span className="relative">
-                <span
-                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${row.bg} ${row.fg} text-[11px] font-bold tracking-tight`}
+          {HISTORY_ROWS.map((row, i) => {
+            const isLive = i === 0;
+            // Older rows map onto the locale's briefs so picking one
+            // genuinely restores it; loops if there are fewer briefs.
+            const brief = briefs[(i + 2) % briefs.length];
+            return (
+              <li key={`${row.initials}-${i}`}>
+                <button
+                  type="button"
+                  onClick={() => (isLive ? onResume() : onPick(brief))}
+                  className={`flex w-full items-center gap-3 rounded-md px-2 py-2.5 text-left transition-colors hover:bg-bg-elevated ${
+                    isLive && !editing ? "bg-bg-elevated" : ""
+                  }`}
                 >
-                  {row.initials}
-                </span>
-                <ArrowUp
-                  className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-green-500 p-0.5 text-ink-base"
-                  strokeWidth={3}
-                  aria-hidden
-                />
-              </span>
-              <span className="flex-1 font-sans text-[14px] text-fg-base">
-                {row.label ?? "Published"}
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-faint">
-                {row.when}
-              </span>
-            </li>
-          ))}
+                  <span className="relative">
+                    <span
+                      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${row.bg} ${row.fg} text-[11px] font-bold tracking-tight`}
+                    >
+                      {row.initials}
+                    </span>
+                    <ArrowUp
+                      className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-green-500 p-0.5 text-ink-base"
+                      strokeWidth={3}
+                      aria-hidden
+                    />
+                  </span>
+                  <span className="flex-1 font-sans text-[14px] text-fg-base">
+                    {isLive ? "Live preview" : (row.label ?? "Published")}
+                  </span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-fg-faint">
+                    {row.when}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </PanelShell>
