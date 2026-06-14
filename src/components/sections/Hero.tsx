@@ -102,7 +102,7 @@ export function Hero() {
         preload="auto"
         poster={HERO_POSTER}
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-0 h-full w-full object-cover opacity-65"
+        className="pointer-events-none absolute inset-0 -z-0 h-full w-full object-cover object-top opacity-65"
       >
         {/* Responsive contract — breakpoint media hint wired in for
             when a higher-res cosmic clip later replaces the current
