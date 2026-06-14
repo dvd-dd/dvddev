@@ -173,7 +173,7 @@ export function Hero() {
             // Neon glow + legibility shadow.
             textShadow:
               "0 2px 20px rgba(0,0,0,0.4), 0 0 26px rgba(168,85,247,0.45)",
-            animation: "hero-neon 2.4s linear infinite",
+            animation: "hero-neon 7s linear infinite",
           }}
           className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] md:text-[72px] lg:text-[96px] xl:text-[112px]"
         >
