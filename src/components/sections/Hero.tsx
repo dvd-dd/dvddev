@@ -134,7 +134,12 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-1/4 bg-gradient-to-t from-ink-base/95 to-transparent"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-80px)] max-w-[1248px] flex-col justify-center px-6 py-12 md:px-12 lg:py-16">
+      {/* The subtracted value MUST equal the TrustMarquee's rendered
+          height so the violet strip lands flush at the viewport bottom
+          (the hero's footer band) on any screen. Marquee = py-7 (56px)
+          + tallest row item (client logos h-10 = 40px) = 96px. Both
+          are fixed px while 100dvh adapts, so this holds at any height. */}
+      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-96px)] max-w-[1248px] flex-col justify-center px-6 py-12 md:px-12 lg:py-16">
         {/* Eyebrow */}
         <motion.p
           custom={0}
