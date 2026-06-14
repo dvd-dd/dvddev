@@ -158,7 +158,7 @@ export function Hero() {
           variants={ENTRY}
           initial="hidden"
           animate="visible"
-          className="mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] text-fg-base [text-shadow:0_2px_16px_rgba(0,0,0,0.45)] md:text-[72px] lg:text-[96px] xl:text-[112px]"
+          className="text-hero-gradient mt-8 max-w-[12ch] text-balance text-[60px] font-normal leading-[1.05] tracking-[-0.04em] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)] md:text-[72px] lg:text-[96px] xl:text-[112px]"
         >
           {t.hero.headline}
         </motion.h1>
