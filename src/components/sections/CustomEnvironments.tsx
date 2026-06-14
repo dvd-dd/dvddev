@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
   ArrowUp,
@@ -70,6 +70,16 @@ export function CustomEnvironments() {
     pairs,
     enabled: inView && !editing,
   });
+
+  // Auto-resume the live demo ~4s after the last edit/pick so it never
+  // stays frozen — every keystroke resets the timer (override changes
+  // → effect re-runs), and once the visitor pauses the typewriter
+  // takes back over.
+  useEffect(() => {
+    if (!editing) return;
+    const id = setTimeout(() => setOverride(null), 4000);
+    return () => clearTimeout(id);
+  }, [editing, override]);
 
   const title = override ? override.title : twTitle;
   const description = override ? override.description : twDescription;
@@ -150,7 +160,7 @@ export function CustomEnvironments() {
               onResume={resume}
             />
           </FloatingPanel>
-          <FloatingPanel interactive>
+          <FloatingPanel>
             <HistoryPanel
               briefs={pairs}
               editing={editing}
@@ -158,7 +168,7 @@ export function CustomEnvironments() {
               onResume={resume}
             />
           </FloatingPanel>
-          <FloatingPanel interactive>
+          <FloatingPanel>
             <ReleasePanel />
           </FloatingPanel>
         </div>
