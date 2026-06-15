@@ -133,68 +133,102 @@ function ProcessCard({
   step: { title: string; body: string; Icon: LucideIcon };
   index: number;
 }) {
-  const ref = useRef<HTMLLIElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { Icon } = step;
   const nn = String(index + 1).padStart(2, "0");
 
-  const onMove = (e: React.MouseEvent<HTMLLIElement>) => {
+  // Cursor → 3D tilt + highlight position (the "ice slab" turns toward
+  // the pointer and the specular sheen tracks it).
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    el.style.setProperty("--my", `${e.clientY - r.top}px`);
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--ry", `${(px - 0.5) * 18}deg`);
+    el.style.setProperty("--rx", `${(0.5 - py) * 18}deg`);
+    el.style.setProperty("--mx", `${px * 100}%`);
+    el.style.setProperty("--my", `${py * 100}%`);
+  };
+  const onLeave = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.setProperty("--ry", "0deg");
+    el.style.setProperty("--rx", "0deg");
   };
 
   return (
     <motion.li
-      ref={ref}
-      onMouseMove={onMove}
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.55, delay: 0.08 * index, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-md transition-[transform,border-color] duration-300 hover:-translate-y-1.5 hover:border-brand/40"
+      className="group h-full [perspective:1100px]"
     >
-      {/* Cursor-following violet spotlight */}
+      {/* The frozen-glass slab — tilts in 3D toward the cursor, bright
+          edge highlights catch the light, frosted backdrop, glossy
+          specular sheen, content floating above on translateZ. */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background:
-            "radial-gradient(240px circle at var(--mx, 50%) var(--my, 0px), rgba(168,85,247,0.22), transparent 65%)",
-        }}
-      />
-
-      <div className="relative flex items-center justify-between">
-        <span
-          className="font-mono text-[40px] font-normal leading-none"
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        className="relative flex h-full flex-col overflow-hidden rounded-[20px] border border-white/20 bg-gradient-to-br from-white/[0.12] via-white/[0.05] to-white/[0.02] p-6 backdrop-blur-xl transition-transform duration-200 ease-out [box-shadow:inset_1.5px_1.5px_0_rgba(255,255,255,0.3),inset_-1px_-1.5px_2px_rgba(140,160,255,0.12),0_24px_60px_-24px_rgba(0,0,0,0.7)] [transform-style:preserve-3d] [transform:perspective(1100px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
+      >
+        {/* Icy specular highlight (glossy reflection) following the cursor */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
           style={{
-            backgroundImage: "linear-gradient(135deg,#a855f7,#f988ff 55%,#bc4ed8)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            color: "transparent",
+            background:
+              "radial-gradient(180px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.22), transparent 55%)",
           }}
-        >
-          {nn}
-        </span>
-        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-brand transition-colors duration-300 group-hover:border-brand/50 group-hover:text-fg-base">
-          <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
-        </span>
+        />
+        {/* Cool blue-violet inner glow on hover */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(260px circle at var(--mx,50%) var(--my,0%), rgba(150,160,255,0.22), transparent 65%)",
+          }}
+        />
+        {/* Frost sheen along the top edge */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/55 to-transparent"
+        />
+
+        <div className="relative flex items-center justify-between [transform:translateZ(45px)]">
+          <span
+            className="font-mono text-[40px] font-normal leading-none [text-shadow:0_2px_12px_rgba(168,85,247,0.4)]"
+            style={{
+              backgroundImage: "linear-gradient(135deg,#a855f7,#f988ff 55%,#bc4ed8)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+            }}
+          >
+            {nn}
+          </span>
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-fg-base shadow-[inset_1px_1px_0_rgba(255,255,255,0.35)] transition-colors duration-300 group-hover:border-brand/60">
+            <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+          </span>
+        </div>
+
+        <h3 className="relative mt-7 text-xl font-normal leading-tight tracking-tight text-fg-base [transform:translateZ(28px)]">
+          {step.title}
+        </h3>
+        <p className="relative mt-3 text-sm leading-relaxed text-fg-dim [transform:translateZ(16px)]">
+          {step.body}
+        </p>
+
+        {/* Underline that draws in on hover */}
+        <span
+          aria-hidden
+          className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-brand to-magenta-500 transition-[width] duration-500 ease-out group-hover:w-full"
+        />
       </div>
-
-      <h3 className="relative mt-7 text-xl font-normal leading-tight tracking-tight text-fg-base">
-        {step.title}
-      </h3>
-      <p className="relative mt-3 text-sm leading-relaxed text-fg-dim">
-        {step.body}
-      </p>
-
-      {/* Underline that draws in on hover */}
-      <span
-        aria-hidden
-        className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-brand to-magenta-500 transition-[width] duration-500 ease-out group-hover:w-full"
-      />
     </motion.li>
   );
 }
