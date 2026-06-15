@@ -119,6 +119,12 @@ export function Process() {
           92%  { opacity: 1; }
           100% { left: 100%; opacity: 0; }
         }
+        @keyframes ice-spin { to { transform: rotate(360deg); } }
+        @keyframes ice-glare {
+          0%   { transform: translateX(-140%) skewX(-20deg); }
+          60%  { transform: translateX(240%)  skewX(-20deg); }
+          100% { transform: translateX(240%)  skewX(-20deg); }
+        }
       `}</style>
     </section>
   );
@@ -163,17 +169,46 @@ function ProcessCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.55, delay: 0.08 * index, ease: [0.22, 1, 0.36, 1] }}
-      className="group h-full [perspective:1100px]"
+      className="group relative h-full [perspective:1100px]"
     >
+      {/* Rotating iridescent refraction glow — leaks at the ice edges */}
+      <div
+        aria-hidden
+        className="absolute -inset-[2px] -z-10 rounded-[22px] opacity-45 blur-[11px] transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background:
+            "conic-gradient(from 0deg,#a855f7,#67e8f9,#f988ff,#a855f7)",
+          animation: "ice-spin 6s linear infinite",
+        }}
+      />
+
       {/* The frozen-glass slab — tilts in 3D toward the cursor, bright
           edge highlights catch the light, frosted backdrop, glossy
-          specular sheen, content floating above on translateZ. */}
+          specular + glare sweep + frost grain, content floating above. */}
       <div
         ref={ref}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
-        className="relative flex h-full flex-col overflow-hidden rounded-[20px] border border-white/20 bg-gradient-to-br from-white/[0.12] via-white/[0.05] to-white/[0.02] p-6 backdrop-blur-xl transition-transform duration-200 ease-out [box-shadow:inset_1.5px_1.5px_0_rgba(255,255,255,0.3),inset_-1px_-1.5px_2px_rgba(140,160,255,0.12),0_24px_60px_-24px_rgba(0,0,0,0.7)] [transform-style:preserve-3d] [transform:perspective(1100px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
+        className="relative flex h-full flex-col overflow-hidden rounded-[20px] border border-white/20 bg-gradient-to-br from-white/[0.12] via-white/[0.05] to-white/[0.02] p-6 backdrop-blur-xl transition-transform duration-200 ease-out [box-shadow:inset_1.5px_1.5px_0_rgba(255,255,255,0.3),inset_-1px_-1.5px_2px_rgba(140,160,255,0.12),0_24px_60px_-24px_rgba(0,0,0,0.7)] [transform-style:preserve-3d] [transform:rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
       >
+        {/* Glare sweep — a light bar gliding across the ice on a loop */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[20px]">
+          <div
+            className="absolute -inset-y-6 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+            style={{ animation: "ice-glare 5s ease-in-out infinite" }}
+          />
+        </div>
+
+        {/* Frost grain — subtle crystalline texture */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E\")",
+          }}
+        />
+
         {/* Icy specular highlight (glossy reflection) following the cursor */}
         <div
           aria-hidden
