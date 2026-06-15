@@ -132,15 +132,6 @@ export function NavBar() {
             <FaLinkedin className="h-4 w-4" aria-hidden />
           </a>
 
-          {/* Outline Email */}
-          <a
-            href={EMAIL_HREF}
-            aria-label={t.chrome.nav.ctas.email}
-            className="hidden h-10 items-center justify-center gap-1.5 rounded-full border border-border-dim px-4 font-sans text-[14px] font-medium uppercase tracking-[0.01em] text-fg-base transition-colors hover:border-fg-base md:inline-flex"
-          >
-            <Mail className="h-4 w-4" strokeWidth={2} aria-hidden />
-          </a>
-
           {/* Brand fill — Hire me */}
           <a
             href="#contact"

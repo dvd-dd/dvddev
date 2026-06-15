@@ -94,16 +94,6 @@ export function Footer() {
             >
               <span>{f.ctas.community}</span>
             </a>
-
-            <p className="text-balance text-2xl font-normal leading-[1.2] text-fg-base md:text-[32px]">
-              {f.ctas.newsletter}{" "}
-              <a
-                href="mailto:nextnumberdev@gmail.com?subject=Newsletter"
-                className="ml-2 inline-flex h-12 items-center rounded-full bg-brand px-6 align-middle font-mono text-sm font-medium uppercase tracking-[0.18em] text-ink-base transition-colors hover:bg-brand-dim"
-              >
-                {f.ctas.newsletterButton}
-              </a>
-            </p>
           </div>
 
           {/* Right — 4-col link nav */}

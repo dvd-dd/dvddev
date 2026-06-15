@@ -24,7 +24,6 @@
 type Logo = { name: string; src: string };
 
 const STACK: Logo[] = [
-  { name: "Next.js", src: "/brand/stack/nextjs.svg" },
   { name: "React", src: "/brand/stack/react.svg" },
   { name: "TypeScript", src: "/brand/stack/typescript.svg" },
   { name: "Tailwind CSS", src: "/brand/stack/tailwind.svg" },
