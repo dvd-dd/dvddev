@@ -99,14 +99,17 @@ export function Process() {
               <span
                 key={d}
                 className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-brand shadow-[0_0_10px_2px_rgba(168,85,247,0.8)]"
-                style={{ animation: `process-flow 5s linear ${d * 1.6}s infinite` }}
+                style={{
+                  animation: `process-flow 5s linear ${d * 1.6}s infinite`,
+                  animationPlayState: inView ? "running" : "paused",
+                }}
               />
             ))}
           </div>
 
           <ol className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((step, i) => (
-              <ProcessCard key={step.title} step={step} index={i} />
+              <ProcessCard key={step.title} step={step} index={i} active={inView} />
             ))}
           </ol>
         </div>
@@ -135,10 +138,15 @@ export function Process() {
 function ProcessCard({
   step,
   index,
+  active,
 }: {
   step: { title: string; body: string; Icon: LucideIcon };
   index: number;
+  active: boolean;
 }) {
+  // Pause the continuous decorative animations while the section is
+  // off-screen — no GPU/compositing cost when you can't see them.
+  const playState = active ? "running" : "paused";
   const ref = useRef<HTMLDivElement>(null);
   const { Icon } = step;
   const nn = String(index + 1).padStart(2, "0");
@@ -179,6 +187,7 @@ function ProcessCard({
           background:
             "conic-gradient(from 0deg,#a855f7,#67e8f9,#f988ff,#a855f7)",
           animation: "ice-spin 6s linear infinite",
+          animationPlayState: playState,
         }}
       />
 
@@ -189,13 +198,16 @@ function ProcessCard({
         ref={ref}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
-        className="relative flex h-full flex-col overflow-hidden rounded-[20px] border border-white/20 bg-gradient-to-br from-white/[0.12] via-white/[0.05] to-white/[0.02] p-6 backdrop-blur-xl transition-transform duration-200 ease-out [box-shadow:inset_1.5px_1.5px_0_rgba(255,255,255,0.3),inset_-1px_-1.5px_2px_rgba(140,160,255,0.12),0_24px_60px_-24px_rgba(0,0,0,0.7)] [transform-style:preserve-3d] [transform:rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
+        className="relative flex h-full flex-col overflow-hidden rounded-[20px] border border-white/20 bg-gradient-to-br from-white/[0.13] via-white/[0.06] to-white/[0.03] p-6 backdrop-blur-md transition-transform duration-200 ease-out [box-shadow:inset_1.5px_1.5px_0_rgba(255,255,255,0.3),inset_-1px_-1.5px_2px_rgba(140,160,255,0.12),0_24px_60px_-24px_rgba(0,0,0,0.7)] [transform-style:preserve-3d] [transform:rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
       >
         {/* Glare sweep — a light bar gliding across the ice on a loop */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[20px]">
           <div
             className="absolute -inset-y-6 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-            style={{ animation: "ice-glare 5s ease-in-out infinite" }}
+            style={{
+              animation: "ice-glare 5s ease-in-out infinite",
+              animationPlayState: playState,
+            }}
           />
         </div>
 
