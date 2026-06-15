@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import {
-  MessageCircle,
+  Compass,
+  MonitorPlay,
   PencilRuler,
-  Radio,
   Rocket,
   type LucideIcon,
 } from "lucide-react";
@@ -22,10 +22,10 @@ import { useTranslation } from "@/hooks/useTranslation";
  */
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Discovery call",
+    title: "Discovery & scope",
     body:
-      'A 30-minute talk to understand the product, the audience, and what "shipped" actually means. No deck, no pitch — questions and clarity.',
-    Icon: MessageCircle,
+      'I dig into the product, the audience, and what "shipped" really means for you — so scope and priorities are locked before design starts.',
+    Icon: Compass,
   },
   {
     title: "Wireframes + tech plan",
@@ -34,15 +34,15 @@ const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: PencilRuler,
   },
   {
-    title: "Build in public",
+    title: "Build in the open",
     body:
-      "Daily preview URL, async updates, a private Slack/WhatsApp channel. You watch the site grow — no surprises at handoff.",
-    Icon: Radio,
+      "A live preview URL, async progress updates, and a private Slack/WhatsApp channel. You watch the site take shape — no surprises at handoff.",
+    Icon: MonitorPlay,
   },
   {
     title: "Ship + handoff",
     body:
-      "Production deploy, docs, source-repo access, plus 14 days of post-launch support for anything that surfaces in real traffic.",
+      "Production deploy, documentation, and source-repo access, plus 14 days of post-launch support for anything that surfaces in real traffic.",
     Icon: Rocket,
   },
 ];
@@ -98,9 +98,9 @@ export function Process() {
             {[0, 1, 2].map((d) => (
               <span
                 key={d}
-                className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-brand shadow-[0_0_10px_2px_rgba(168,85,247,0.8)]"
+                className="pm-dot absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-brand shadow-[0_0_8px_1px_rgba(168,85,247,0.6)]"
                 style={{
-                  animation: `process-flow 5s linear ${d * 1.6}s infinite`,
+                  animation: `process-flow 8s linear ${d * 2.4}s infinite`,
                   animationPlayState: inView ? "running" : "paused",
                 }}
               />
@@ -125,8 +125,12 @@ export function Process() {
         @keyframes ice-spin { to { transform: rotate(360deg); } }
         @keyframes ice-glare {
           0%   { transform: translateX(-140%) skewX(-20deg); }
-          60%  { transform: translateX(240%)  skewX(-20deg); }
+          32%  { transform: translateX(240%)  skewX(-20deg); }
           100% { transform: translateX(240%)  skewX(-20deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .pm-anim { animation: none !important; }
+          .pm-dot  { animation: none !important; opacity: 0 !important; }
         }
       `}</style>
     </section>
@@ -182,11 +186,11 @@ function ProcessCard({
       {/* Rotating iridescent refraction glow — leaks at the ice edges */}
       <div
         aria-hidden
-        className="absolute -inset-[2px] -z-10 rounded-[22px] opacity-45 blur-[11px] transition-opacity duration-300 group-hover:opacity-100"
+        className="pm-anim absolute -inset-[2px] -z-10 rounded-[22px] opacity-25 blur-[11px] transition-opacity duration-300 group-hover:opacity-55"
         style={{
           background:
             "conic-gradient(from 0deg,#a855f7,#67e8f9,#f988ff,#a855f7)",
-          animation: "ice-spin 6s linear infinite",
+          animation: "ice-spin 14s linear infinite",
           animationPlayState: playState,
         }}
       />
@@ -203,9 +207,9 @@ function ProcessCard({
         {/* Glare sweep — a light bar gliding across the ice on a loop */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[20px]">
           <div
-            className="absolute -inset-y-6 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+            className="pm-anim absolute -inset-y-6 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/[0.16] to-transparent"
             style={{
-              animation: "ice-glare 5s ease-in-out infinite",
+              animation: "ice-glare 10s ease-in-out infinite",
               animationPlayState: playState,
             }}
           />
@@ -221,13 +225,15 @@ function ProcessCard({
           }}
         />
 
-        {/* Icy specular highlight (glossy reflection) following the cursor */}
+        {/* Icy specular highlight (glossy reflection) following the cursor.
+            Kept gentle (0.15) so the cursor sheen never washes out the
+            copy as you move the pointer across a card to read it. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(180px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.22), transparent 55%)",
+              "radial-gradient(180px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.15), transparent 55%)",
           }}
         />
         {/* Cool blue-violet inner glow on hover */}
@@ -236,13 +242,25 @@ function ProcessCard({
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
             background:
-              "radial-gradient(260px circle at var(--mx,50%) var(--my,0%), rgba(150,160,255,0.22), transparent 65%)",
+              "radial-gradient(260px circle at var(--mx,50%) var(--my,0%), rgba(150,160,255,0.15), transparent 65%)",
           }}
         />
         {/* Frost sheen along the top edge */}
         <span
           aria-hidden
           className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/55 to-transparent"
+        />
+
+        {/* Legibility scrim — darkens only the lower half so the copy stays
+            crisp over the bright hover glow, while the glassy top keeps its
+            ice look. Sits above every decorative glow, below the text. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[20px]"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent 30%, rgba(6,4,14,0.32) 54%, rgba(6,4,14,0.55) 100%)",
+          }}
         />
 
         <div className="relative flex items-center justify-between [transform:translateZ(45px)]">
@@ -263,10 +281,10 @@ function ProcessCard({
           </span>
         </div>
 
-        <h3 className="relative mt-7 text-xl font-normal leading-tight tracking-tight text-fg-base [transform:translateZ(28px)]">
+        <h3 className="relative mt-7 text-xl font-normal leading-tight tracking-tight text-fg-base [transform:translateZ(28px)] [text-shadow:0_1px_3px_rgba(0,0,0,0.65)]">
           {step.title}
         </h3>
-        <p className="relative mt-3 text-sm leading-relaxed text-fg-dim [transform:translateZ(16px)]">
+        <p className="relative mt-3 text-sm leading-relaxed text-fg-base [transform:translateZ(16px)] [text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_2px_16px_rgba(0,0,0,0.6)]">
           {step.body}
         </p>
 
