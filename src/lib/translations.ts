@@ -32,8 +32,10 @@ export const translations = {
       cta: "Initiate Mission",
     },
     about: {
-      chapter: "· Chapter 01 · About",
-      heading: "Signal incoming.",
+      chapter: "· About · 01",
+      heading: "How I got here.",
+      intro:
+        "From the sales floor to shipping front-ends — the short version, in commits.",
       origin: {
         title: "Origin",
         body: "I started in sales. A friend who programmed introduced me to web development — and that encounter changed everything. In code, I found a way to channel my creativity into something tangible.",
@@ -44,7 +46,7 @@ export const translations = {
       },
       trajectory: {
         title: "Trajectory",
-        body: "I'm looking for partnerships with founders, startups, and agencies who understand that great design and clean code are a competitive edge. Every project I ship is another planet on the map.",
+        body: "I'm looking for partnerships with founders, startups, and agencies who understand that great design and clean code are a competitive edge. Every project I ship raises the bar for the next.",
       },
       studio: {
         title: "Studio",
@@ -53,9 +55,9 @@ export const translations = {
         linkUrl: "https://upwardbr.com",
       },
       timeline: {
-        heading: "Transmission log",
+        heading: "git log --oneline",
         events: [
-          { year: "2025", label: "First contact with code" },
+          { year: "2025", label: "First lines of code" },
           { year: "2026", label: "First production project" },
           { year: "2026", label: "Front-end focus" },
           { year: "2026", label: "dvddev launched" },
@@ -351,8 +353,10 @@ export const translations = {
       cta: "Iniciar Missão",
     },
     about: {
-      chapter: "· Capítulo 01 · Sobre",
-      heading: "Sinal recebido.",
+      chapter: "· Sobre · 01",
+      heading: "Como cheguei aqui.",
+      intro:
+        "Do balcão de vendas a entregar front-ends — a versão curta, em commits.",
       origin: {
         title: "Origem",
         body: "Comecei como vendedor. Foi através de um amigo programador que descobri o desenvolvimento web — e esse encontro mudou tudo. No código encontrei o espaço pra canalizar minha criatividade de forma concreta.",
@@ -363,7 +367,7 @@ export const translations = {
       },
       trajectory: {
         title: "Trajetória",
-        body: "Busco parcerias com fundadores, startups e agências que entendem que design e código bem feitos são vantagem competitiva. Cada projeto que entrego é mais um planeta no mapa.",
+        body: "Busco parcerias com fundadores, startups e agências que entendem que design e código bem feitos são vantagem competitiva. Cada projeto que entrego eleva a régua do próximo.",
       },
       studio: {
         title: "Estúdio",
@@ -372,9 +376,9 @@ export const translations = {
         linkUrl: "https://upwardbr.com",
       },
       timeline: {
-        heading: "Log de transmissão",
+        heading: "git log --oneline",
         events: [
-          { year: "2025", label: "Primeiro contato com código" },
+          { year: "2025", label: "Primeiras linhas de código" },
           { year: "2026", label: "Primeiro projeto em produção" },
           { year: "2026", label: "Foco em Front-end" },
           { year: "2026", label: "dvddev no ar" },
